@@ -1,9 +1,17 @@
 # Letras de Nil
 
+**https://kiwi8891.github.io/letras-nil/**
+
 App de lectoescritura para Nil. Lee la frase en el iPad, la escribe en el papel,
 papá valida, gana monedas y compra Pokémon en la tienda.
 
-Fichero único `index.html`. Añadir a la pantalla de inicio del iPad para que el
-progreso no se borre.
+Fichero único `index.html`, sin build system.
 
-Contexto completo en `CONTEXTO_PROYECTO.md`.
+> **Importante:** añadir a la pantalla de inicio del iPad. Safari borra el
+> `localStorage` de webs normales tras ~7 días sin visitas, pero no el de una
+> app añadida a la pantalla de inicio. Sin eso se pierden las monedas.
+
+Contexto completo y decisiones de diseño en `CONTEXTO_PROYECTO.md`.
+
+Los sprites de Pokémon se cargan desde [PokeAPI/sprites](https://github.com/PokeAPI/sprites).
+Pokémon es marca de Nintendo / Game Freak; esto es un juego personal sin ánimo de lucro.
