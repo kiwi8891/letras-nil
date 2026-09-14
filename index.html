@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>Letras de Nil</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Letras de Nil">
+<meta name="theme-color" content="#E03B2F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FDF6E9; --card:#FFFFFF; --ink:#2A2119; --muted:#8A7C6A; --line:#E8DAC2;
+  --red:#E03B2F; --red-dk:#A9271E; --green:#2E9E5B; --green-dk:#1F7040;
+  --gold:#E8A317; --blue:#3B72D9;
+  --shadow:0 3px 0 rgba(42,33,25,.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Andika',-apple-system,system-ui,sans-serif;
+  font-size:17px;line-height:1.45;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+h1,h2,h3{font-family:'Fredoka',-apple-system,system-ui,sans-serif;font-weight:600;letter-spacing:.01em}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:none;background:none}
+
+.screen{display:none;min-height:100vh;min-height:100dvh}
+.screen.active{display:block}
+.wrap{max-width:660px;margin:0 auto;padding:20px 20px 44px;padding-top:max(20px,env(safe-area-inset-top))}
+.wide{max-width:980px}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:18px;min-height:44px}
+.top h2{margin:0;font-size:20px;flex:1;text-align:center}
+.iconbtn{width:44px;height:44px;border-radius:14px;background:var(--card);border:2px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto;box-shadow:var(--shadow)}
+.iconbtn:active{transform:translateY(2px);box-shadow:none}
+
+.counters{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:7px 15px;
+  font-family:'Fredoka';font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow)}
+.chip b{font-size:17px}
+.chip.hot{border-color:var(--gold);background:#FFFBEF}
+
+.btn{display:block;width:100%;padding:18px;border-radius:18px;font-family:'Fredoka';font-weight:600;
+  font-size:21px;text-align:center;background:var(--card);border:3px solid var(--ink);
+  box-shadow:0 4px 0 var(--ink);margin-bottom:14px;transition:transform .06s,box-shadow .06s}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+.btn.primary{background:var(--red);color:#fff;border-color:var(--red-dk);box-shadow:0 4px 0 var(--red-dk)}
+.btn.primary:active{box-shadow:0 0 0 var(--red-dk)}
+.btn.ghost{background:transparent;border-width:2px;border-color:var(--line);box-shadow:none;font-size:17px;padding:13px}
+.btn.ghost:active{transform:translateY(2px)}
+
+/* ---------- inicio ---------- */
+#s-home .wrap{min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
+.home-hero{text-align:center;padding:10px 0 4px}
+.home-hero h1{font-size:clamp(34px,10vw,52px);margin:14px 0 4px;line-height:1}
+.home-hero p{color:var(--muted);margin:0 0 18px;font-size:16px}
+.pokeball{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative;
+  background:linear-gradient(180deg,var(--red) 0 47%,#231C16 47% 55%,#fff 55% 100%);
+  border:5px solid #231C16;box-shadow:0 6px 0 rgba(42,33,25,.2)}
+.pokeball::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:30px;height:30px;border-radius:50%;background:#fff;border:5px solid #231C16}
+.todaybar{text-align:center;color:var(--muted);font-size:15px;margin:0 0 18px}
+.todaybar b{color:var(--ink);font-family:'Fredoka';font-weight:600}
+.team{display:flex;gap:6px;justify-content:center;margin-bottom:18px;min-height:56px;flex-wrap:wrap}
+.team img{width:56px;height:56px;object-fit:contain}
+
+/* ---------- sesión ---------- */
+#s-play{display:none;flex-direction:column;height:100vh;height:100dvh}
+#s-play.active{display:flex}
+.play-top{display:flex;align-items:center;gap:12px;padding:14px 18px;
+  padding-top:max(14px,env(safe-area-inset-top));border-bottom:2px solid var(--line)}
+.play-top .pcount{font-family:'Fredoka';font-weight:700;font-size:19px}
+.play-top .ptimer{font-family:'Fredoka';font-weight:500;font-size:16px;color:var(--muted);flex:1;text-align:center}
+.play-top .pcoin{font-family:'Fredoka';font-weight:600;font-size:16px}
+.bar{height:7px;background:var(--line)}
+.bar i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:22px;text-align:center;min-height:0}
+#item-up{color:var(--muted);font-weight:700;line-height:1.12;margin-bottom:10px;display:none}
+#item-up.word{font-size:clamp(26px,7vw,48px)}
+#item-up.sent{font-size:clamp(19px,3.8vw,34px);max-width:27ch}
+#item-main{font-weight:700;line-height:1.14;word-break:break-word}
+#item-main.word{font-size:clamp(52px,15vw,130px)}
+#item-main.sent{font-size:clamp(28px,5.6vw,62px);max-width:15ch}
+.stage .hintline{color:var(--muted);font-size:15px;margin-top:26px}
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:18px 22px;
+  padding-bottom:max(22px,env(safe-area-inset-bottom))}
+.jbtn{padding:26px 10px;border-radius:22px;font-family:'Fredoka';font-weight:700;font-size:23px;
+  border:3px solid;min-height:104px}
+.jbtn:active{transform:translateY(5px)}
+.jok{background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 5px 0 var(--green-dk)}
+.jok:active{box-shadow:0 0 0 var(--green-dk)}
+.jno{background:#fff;color:var(--red-dk);border-color:var(--red);box-shadow:0 5px 0 var(--red)}
+.jno:active{box-shadow:0 0 0 var(--red)}
+.jbtn .em{display:block;font-size:30px;line-height:1;margin-bottom:6px}
+
+/* ---------- resultado ---------- */
+.res{text-align:center;padding-top:20px}
+.res h2{font-size:30px;margin:0 0 6px}
+.res .sub{color:var(--muted);margin-bottom:22px}
+.coinbig{font-family:'Fredoka';font-weight:700;font-size:clamp(44px,12vw,68px);line-height:1;margin:10px 0 2px}
+.statrow{display:flex;gap:12px;margin:22px 0 26px}
+.stat{flex:1;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 8px}
+.stat b{display:block;font-family:'Fredoka';font-size:24px;font-weight:700}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* ---------- tienda ---------- */
+.filters{display:flex;gap:8px;margin-bottom:16px}
+.filters .seg{flex:1;padding:11px;border-radius:13px;border:2px solid var(--line);background:var(--card);
+  font-family:'Fredoka';font-weight:600;text-align:center;font-size:15px}
+.filters .seg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chain{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:12px;
+  display:flex;align-items:stretch;gap:8px;overflow-x:auto}
+.mon{flex:1 1 0;min-width:104px;text-align:center;padding:8px 4px;border-radius:14px;border:2px solid transparent;position:relative}
+.mon img{width:100%;max-width:88px;aspect-ratio:1;object-fit:contain;display:block;margin:0 auto}
+.mon .nm{font-family:'Fredoka';font-weight:600;font-size:13px;line-height:1.2;margin-top:2px;word-break:break-word}
+.mon .pr{font-family:'Fredoka';font-weight:700;font-size:15px;margin-top:3px}
+.mon.owned{background:#F1FAF4;border-color:var(--green)}
+.mon.owned .pr{color:var(--green-dk)}
+.mon.buy{background:#FFFBEF;border-color:var(--gold)}
+.mon.poor img,.mon.locked img{filter:grayscale(1) opacity(.4)}
+.mon.poor .pr,.mon.locked .pr{color:var(--muted)}
+.mon.locked .nm{color:var(--muted)}
+.arrow{display:flex;align-items:center;color:var(--line);font-size:20px;flex:0 0 auto}
+.buybtn{display:block;width:100%;margin-top:6px;padding:8px;border-radius:11px;background:var(--gold);
+  color:#3A2A05;font-family:'Fredoka';font-weight:700;font-size:14px;border:2px solid #B37C0C;box-shadow:0 3px 0 #B37C0C}
+.buybtn:active{transform:translateY(3px);box-shadow:0 0 0 #B37C0C}
+.tag{position:absolute;top:2px;right:4px;font-size:15px}
+
+/* ---------- colección ---------- */
+.dexgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:9px}
+.dexcell{background:var(--card);border:2px solid var(--gold);border-radius:14px;padding:5px 3px 7px;text-align:center;background:#FFFBEF}
+.dexcell img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
+.dexcell .nm{font-size:11px;line-height:1.15;margin-top:2px;word-break:break-word;font-family:'Fredoka';font-weight:600}
+
+/* ---------- panel de papá ---------- */
+.sect{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
+.sect h3{margin:0 0 12px;font-size:16px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+.kv:last-child{border-bottom:none}
+.kv b{font-family:'Fredoka';font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.pill{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:999px;
+  padding:5px 12px;margin:0 6px 6px 0;font-size:15px}
+.pill b{color:var(--red);font-family:'Fredoka'}
+.optrow{margin-bottom:18px}
+.optrow .lab{font-size:15px;margin-bottom:8px}
+.optrow .lab small{color:var(--muted);display:block;font-size:13px;line-height:1.35}
+.segs{display:flex;gap:8px}
+.seg{flex:1;padding:12px 6px;border-radius:13px;border:2px solid var(--line);background:var(--bg);
+  font-family:'Fredoka';font-weight:600;text-align:center;font-size:15px;line-height:1.2}
+.seg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg small{display:block;font-weight:500;font-size:11px;opacity:.75;margin-top:2px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0}
+.switch small{display:block;color:var(--muted);font-size:13px;line-height:1.35}
+.tog{width:58px;height:33px;border-radius:999px;background:var(--line);position:relative;flex:0 0 auto;transition:background .2s}
+.tog i{position:absolute;top:3px;left:3px;width:27px;height:27px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+.tog.on{background:var(--green)}
+.tog.on i{left:28px}
+.empty{color:var(--muted);font-size:15px;text-align:center;padding:10px 0}
+
+/* ---------- overlay de compra ---------- */
+#overlay{position:fixed;inset:0;background:rgba(253,246,233,.97);z-index:60;display:none;
+  flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#overlay.on{display:flex}
+@keyframes pop{0%{transform:scale(.2);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.revealed{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+#ov-sprite{width:min(62vw,300px);height:min(62vw,300px);object-fit:contain}
+#ov-name{font-family:'Fredoka';font-weight:700;font-size:clamp(28px,8vw,44px);margin:6px 0 2px}
+#ov-note{color:var(--muted);margin-bottom:22px}
+#ov-tap{color:var(--muted);font-size:15px}
+
+.confetti{position:fixed;top:-14px;width:10px;height:16px;z-index:70;pointer-events:none;border-radius:2px}
+@keyframes fall{to{transform:translateY(108vh) rotate(760deg)}}
+</style>
+</head>
+<body>
+
+<!-- ============ INICIO ============ -->
+<div class="screen active" id="s-home">
+  <div class="wrap">
+    <div class="home-hero">
+      <div class="pokeball"></div>
+      <h1>LETRAS DE NIL</h1>
+      <p>Lee la frase, escríbela en el papel y gana monedas</p>
+    </div>
+    <div class="counters">
+      <div class="chip">🪙 <b id="h-coins">0</b></div>
+      <div class="chip" id="h-streakchip">🔥 <span><b id="h-streak">0</b> días</span></div>
+      <div class="chip">📕 <b id="h-dex">0</b></div>
+    </div>
+    <div class="team" id="h-team"></div>
+    <div class="todaybar" id="h-today"></div>
+    <button class="btn primary" onclick="startSession()">JUGAR</button>
+    <button class="btn" onclick="showShop()">🛒 TIENDA POKÉMON</button>
+    <button class="btn ghost" onclick="showDex()">📕 Mi colección</button>
+    <button class="btn ghost" onclick="showDad()">⚙️ Panel de papá</button>
+  </div>
+</div>
+
+<!-- ============ SESIÓN ============ -->
+<div class="screen" id="s-play">
+  <div class="play-top">
+    <button class="iconbtn" onclick="quitSession()">✕</button>
+    <div class="pcount" id="p-count">1/8</div>
+    <div class="ptimer" id="p-timer">0:00</div>
+    <div class="pcoin">🪙 <span id="p-coin">0</span></div>
+  </div>
+  <div class="bar"><i id="p-bar"></i></div>
+  <div class="stage">
+    <div id="item-up"></div>
+    <div id="item-main" class="sent"></div>
+    <div class="hintline" id="p-hint">Léela en voz alta y escríbela en el papel</div>
+  </div>
+  <div class="judge">
+    <button class="jbtn jno" onclick="judge(false)"><span class="em">✗</span>OTRA VEZ</button>
+    <button class="jbtn jok" onclick="judge(true)"><span class="em">✓</span>BIEN</button>
+  </div>
+</div>
+
+<!-- ============ RESULTADO ============ -->
+<div class="screen" id="s-result">
+  <div class="wrap">
+    <div class="res">
+      <div id="r-emoji" style="font-size:62px;line-height:1">🎉</div>
+      <h2 id="r-title">¡MUY BIEN!</h2>
+      <div class="coinbig" id="r-coins">+0 🪙</div>
+      <div class="sub" id="r-sub"></div>
+      <div class="statrow">
+        <div class="stat"><b id="r-ok">0</b><span>a la primera</span></div>
+        <div class="stat"><b id="r-fail">0</b><span>a repasar</span></div>
+        <div class="stat"><b id="r-time">0s</b><span>por frase</span></div>
+      </div>
+    </div>
+    <button class="btn primary" onclick="showShop()">IR A LA TIENDA 🛒</button>
+    <button class="btn ghost" onclick="startSession()">Jugar otra vez</button>
+    <button class="btn ghost" onclick="go('s-home')">Inicio</button>
+  </div>
+</div>
+
+<!-- ============ TIENDA ============ -->
+<div class="screen" id="s-shop">
+  <div class="wrap wide">
+    <div class="top">
+      <button class="iconbtn" onclick="go('s-home')">←</button>
+      <h2>TIENDA POKÉMON</h2>
+      <div style="width:44px"></div>
+    </div>
+    <div class="counters">
+      <div class="chip">🪙 <b id="sh-coins">0</b></div>
+      <div class="chip">📕 <span><b id="sh-dex">0</b>/151</span></div>
+    </div>
+    <div class="filters">
+      <button class="seg on" data-f="puedo" onclick="setFilter('puedo')">Puedo comprar</button>
+      <button class="seg" data-f="todos" onclick="setFilter('todos')">Todos</button>
+      <button class="seg" data-f="mios" onclick="setFilter('mios')">Los míos</button>
+    </div>
+    <div id="shoplist"></div>
+  </div>
+</div>
+
+<!-- ============ COLECCIÓN ============ -->
+<div class="screen" id="s-dex">
+  <div class="wrap wide">
+    <div class="top">
+      <button class="iconbtn" onclick="go('s-home')">←</button>
+      <h2>MI COLECCIÓN</h2>
+      <div style="width:44px"></div>
+    </div>
+    <div class="counters">
+      <div class="chip">📕 <span><b id="d-count">0</b>/151</span></div>
+      <div class="chip">🪙 <b id="d-coins">0</b></div>
+    </div>
+    <div class="empty" id="d-hint" style="display:none">Todavía no tienes ninguno. Juega, gana monedas y cómpralos en la tienda.</div>
+    <div class="dexgrid" id="dexgrid"></div>
+  </div>
+</div>
+
+<!-- ============ PANEL DE PAPÁ ============ -->
+<div class="screen" id="s-dad">
+  <div class="wrap">
+    <div class="top">
+      <button class="iconbtn" onclick="go('s-home')">←</button>
+      <h2>PANEL DE PAPÁ</h2>
+      <div style="width:44px"></div>
+    </div>
+
+    <div class="sect">
+      <h3>Dificultad de hoy</h3>
+      <div class="optrow">
+        <div class="lab">Longitud de la frase</div>
+        <div class="segs">
+          <button class="seg" data-len="corta" onclick="setLen('corta')">Corta<small>3-4 palabras</small></button>
+          <button class="seg" data-len="media" onclick="setLen('media')">Media<small>5-7 palabras</small></button>
+          <button class="seg" data-len="larga" onclick="setLen('larga')">Larga<small>8-11 palabras</small></button>
+        </div>
+      </div>
+      <div class="optrow">
+        <div class="lab">Tipo de letra</div>
+        <div class="segs">
+          <button class="seg" data-case="may" onclick="setCase('may')">MAYÚSCULA<small>EL BALÓN ES ROJO.</small></button>
+          <button class="seg" data-case="dos" onclick="setCase('dos')">LAS DOS<small>arriba MAY, abajo min</small></button>
+          <button class="seg" data-case="min" onclick="setCase('min')">Normal<small>El balón es rojo.</small></button>
+        </div>
+      </div>
+      <div class="optrow" style="margin-bottom:4px">
+        <div class="lab">Frases por sesión</div>
+        <div class="segs">
+          <button class="seg" data-items="5" onclick="setItems(5)">5</button>
+          <button class="seg" data-items="8" onclick="setItems(8)">8</button>
+          <button class="seg" data-items="12" onclick="setItems(12)">12</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>Resumen</h3>
+      <div id="dd-summary"></div>
+    </div>
+
+    <div class="sect">
+      <h3>Frases que más falla</h3>
+      <div id="dd-fails"></div>
+    </div>
+
+    <div class="sect">
+      <h3>Últimas sesiones</h3>
+      <div id="dd-hist"></div>
+    </div>
+
+    <div class="sect">
+      <h3>Otros ajustes</h3>
+      <div class="switch">
+        <div>
+          <div style="font-size:15px">Modo solo</div>
+          <small>Nil juega sin ti y se corrige él. Esas sesiones se marcan aparte.</small>
+        </div>
+        <button class="tog" id="tog-solo" onclick="toggleSolo()"><i></i></button>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>Copia de seguridad</h3>
+      <button class="btn ghost" onclick="exportData()">⬇︎ Exportar progreso (JSON)</button>
+      <button class="btn ghost" onclick="document.getElementById('importfile').click()">⬆︎ Importar progreso</button>
+      <input type="file" id="importfile" accept="application/json,.json" style="display:none" onchange="importData(this)">
+      <button class="btn ghost" style="color:var(--red)" onclick="resetAll()">Borrar todo el progreso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ OVERLAY DE COMPRA ============ -->
+<div id="overlay" onclick="closeOverlay()">
+  <img id="ov-sprite" alt="">
+  <div id="ov-name"></div>
+  <div id="ov-note"></div>
+  <div id="ov-tap">toca para seguir</div>
+</div>
+
+<script>
+/* =====================================================================
+   LETRAS DE NIL — datos
+   Las frases se guardan ya bien escritas (tildes, mayúscula inicial y
+   punto). La app deriva de ahí los otros dos modos de letra.
+   ===================================================================== */
+var BANK = {
+corta:[
+"El balón es rojo.","Papá juega al fútbol.","Mamá lee un libro.","El gato come pescado.",
+"Nil marca un gol.","La casa es grande.","El coche es azul.","La pelota bota mucho.",
+"Hoy vamos al parque.","Mi perro corre rápido.","El sol está fuera.","La luna es blanca.",
+"Quiero un helado.","El equipo gana hoy.","La puerta está abierta.","Nil come macarrones.",
+"Papá lava el coche.","El niño salta mucho.","La mesa es verde.","Mi bici es nueva.",
+"El portero para todo.","Mamá hace la cena.","El campo está mojado.","Tengo mucha sed.",
+"La clase empieza ya.","El libro es gordo.","Vamos a la playa.","El tren llega tarde.",
+"Mi silla está rota.","La fruta está rica.","El partido es hoy.","Nil tiene seis años.",
+"La flor es amarilla.","Papá mira la tele.","El gol fue precioso.","Mi mochila pesa mucho.",
+"El agua está fría.","La abuela hace galletas.","El árbol es alto.","Nil gana la carrera.",
+"Mi camiseta es azul.","El árbitro pita falta.","La pizza está caliente.","Hoy llueve mucho.",
+"El pan está duro."
+],
+media:[
+"El gato duerme encima de la cama.","Papá y Nil juegan al fútbol.",
+"Mamá prepara la comida en la cocina.","El portero para el balón con la mano.",
+"Mi perro corre por todo el parque.","Nil escribe las letras en su cuaderno.",
+"El equipo del cole gana el partido.","La pelota entra dentro de la portería.",
+"Hoy vamos a comer a la playa.","El árbol del jardín es muy alto.",
+"Mi hermano tiene una bici roja.","La maestra nos cuenta un cuento.",
+"Papá aparca el coche en la calle.","Nil se lava los dientes por la noche.",
+"El tren pasa por debajo del puente.","Mamá compra fruta en el mercado.",
+"Los jugadores salen al campo corriendo.","La lluvia moja todas las ventanas.",
+"Nil guarda los juguetes en la caja.","El delantero marca un gol de cabeza.",
+"Mi abuelo lee el periódico en el sofá.","El sol sale por la mañana temprano.",
+"Nil dibuja un dragón muy grande.","La bicicleta está en el garaje.",
+"Papá cocina pasta los domingos.","El balón se ha ido fuera del campo.",
+"Mamá me da un beso antes de dormir.","Los niños juegan en el patio del cole.",
+"El gato negro salta desde la silla.","Nil se pone las botas de fútbol.",
+"La profesora escribe en la pizarra.","Mi equipo lleva camiseta blanca.",
+"El pájaro canta en la ventana.","Nil bebe un vaso de leche.",
+"La playa está llena de gente.","Papá arregla la rueda de la bici.",
+"El perro mueve la cola contento.","Nil ordena su cuarto sin ayuda.",
+"La merienda está en la mochila.","El partido empieza a las cinco."
+],
+larga:[
+"Nil marca un gol en el campo del cole.",
+"Papá y mamá van al cine el domingo por la tarde.",
+"El gato de la vecina duerme en el sofá de casa.",
+"Mi equipo favorito juega el partido el sábado por la tarde.",
+"Nil escribe su nombre con letras grandes en el papel.",
+"Cuando llueve mucho jugamos dentro de casa con los juguetes.",
+"El portero salta y para el balón con las dos manos.",
+"En verano vamos a la playa y comemos un helado.",
+"La maestra escribe las palabras nuevas en la pizarra.",
+"Mi bicicleta roja corre más rápido que la de mi primo.",
+"Después de cenar Nil lee un cuento con mamá.",
+"El árbitro pita el final y todos salen corriendo del campo.",
+"Nil guarda la pelota dentro de la mochila del cole.",
+"Por la mañana desayunamos leche con galletas en la cocina.",
+"El perro mueve la cola cuando papá vuelve a casa.",
+"Los jugadores celebran el gol abrazados en medio del campo.",
+"Nil aprende palabras nuevas cada día en el colegio.",
+"El domingo montamos en bici por el camino del río.",
+"Mamá guarda la compra en los armarios de la cocina.",
+"Cuando hace frío nos ponemos el abrigo y los guantes.",
+"El equipo de Nil entrena todos los martes por la tarde.",
+"En el recreo los niños corren detrás de la pelota.",
+"Papá enciende la luz porque ya es de noche.",
+"Nil dibuja un cohete que viaja hasta la luna.",
+"La abuela prepara galletas de chocolate para la merienda.",
+"El tren sale de la estación a las nueve en punto.",
+"Nil se ata los cordones de las botas él solo.",
+"Los peces nadan despacio dentro de la pecera azul.",
+"El delantero chuta muy fuerte y marca desde lejos.",
+"Antes de dormir Nil guarda todos sus juguetes en la caja.",
+"En otoño las hojas de los árboles caen al suelo.",
+"Mi hermano pequeño todavía no sabe leer las palabras largas.",
+"El sábado vamos al parque con los amigos del colegio.",
+"Nil escribe una carta para los Reyes con mucha ilusión.",
+"La pelota rebota en el poste y entra en la portería."
+]
+};
+
+var LEN_LABEL  = {corta:"frases cortas", media:"frases medias", larga:"frases largas"};
+var CASE_LABEL = {may:"MAYÚSCULAS", dos:"las dos letras", min:"letra normal"};
+/* monedas por frase acertada a la primera, según longitud */
+var COIN_PER   = {corta:5, media:8, larga:12};
+
+/* ---- Pokémon 1ª generación ---- */
+var POKE = ["Bulbasaur","Ivysaur","Venusaur","Charmander","Charmeleon","Charizard",
+"Squirtle","Wartortle","Blastoise","Caterpie","Metapod","Butterfree","Weedle","Kakuna",
+"Beedrill","Pidgey","Pidgeotto","Pidgeot","Rattata","Raticate","Spearow","Fearow",
+"Ekans","Arbok","Pikachu","Raichu","Sandshrew","Sandslash","Nidoran H","Nidorina",
+"Nidoqueen","Nidoran M","Nidorino","Nidoking","Clefairy","Clefable","Vulpix","Ninetales",
+"Jigglypuff","Wigglytuff","Zubat","Golbat","Oddish","Gloom","Vileplume","Paras",
+"Parasect","Venonat","Venomoth","Diglett","Dugtrio","Meowth","Persian","Psyduck",
+"Golduck","Mankey","Primeape","Growlithe","Arcanine","Poliwag","Poliwhirl","Poliwrath",
+"Abra","Kadabra","Alakazam","Machop","Machoke","Machamp","Bellsprout","Weepinbell",
+"Victreebel","Tentacool","Tentacruel","Geodude","Graveler","Golem","Ponyta","Rapidash",
+"Slowpoke","Slowbro","Magnemite","Magneton","Farfetchd","Doduo","Dodrio","Seel",
+"Dewgong","Grimer","Muk","Shellder","Cloyster","Gastly","Haunter","Gengar","Onix",
+"Drowzee","Hypno","Krabby","Kingler","Voltorb","Electrode","Exeggcute","Exeggutor",
+"Cubone","Marowak","Hitmonlee","Hitmonchan","Lickitung","Koffing","Weezing","Rhyhorn",
+"Rhydon","Chansey","Tangela","Kangaskhan","Horsea","Seadra","Goldeen","Seaking",
+"Staryu","Starmie","Mr. Mime","Scyther","Jynx","Electabuzz","Magmar","Pinsir","Tauros",
+"Magikarp","Gyarados","Lapras","Ditto","Eevee","Vaporeon","Jolteon","Flareon","Porygon",
+"Omanyte","Omastar","Kabuto","Kabutops","Aerodactyl","Snorlax","Articuno","Zapdos",
+"Moltres","Dratini","Dragonair","Dragonite","Mewtwo","Mew"];
+
+/* de quién evoluciona cada uno: id -> id anterior de la cadena */
+var PREV = {2:1,3:2,5:4,6:5,8:7,9:8,11:10,12:11,14:13,15:14,17:16,18:17,20:19,22:21,
+24:23,26:25,28:27,30:29,31:30,33:32,34:33,36:35,38:37,40:39,42:41,44:43,45:44,47:46,
+49:48,51:50,53:52,55:54,57:56,59:58,61:60,62:61,64:63,65:64,67:66,68:67,70:69,71:70,
+73:72,75:74,76:75,78:77,80:79,82:81,85:84,87:86,89:88,91:90,93:92,94:93,97:96,99:98,
+101:100,103:102,105:104,110:109,112:111,117:116,119:118,121:120,130:129,
+134:133,135:133,136:133,139:138,141:140,148:147,149:148};
+
+var LEGEND = [144,145,146,150,151];
+
+function spriteUrl(id){
+  return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+id+".png";
+}
+
+/* etapa dentro de la cadena: 1 básico, 2 primera evolución, 3 segunda */
+function stageOf(id){
+  var s = 1, cur = id;
+  while(PREV[cur]){ cur = PREV[cur]; s++; }
+  return s;
+}
+function hasEvolution(id){
+  for(var k in PREV) if(PREV[k] === id) return true;
+  return false;
+}
+/* precio: las evoluciones cuestan bastante más que los básicos */
+function priceOf(id){
+  if(id === 151) return 1500;              /* Mew */
+  if(id === 150) return 1200;              /* Mewtwo */
+  if(LEGEND.indexOf(id) >= 0) return 900;  /* aves legendarias */
+  var st = stageOf(id);
+  if(st === 3) return 350;
+  if(st === 2) return 120;
+  return hasEvolution(id) ? 40 : 150;      /* básico con evolución / sin evolución */
+}
+
+/* cadenas de evolución, construidas a partir de PREV */
+var CHAINS = (function(){
+  var kids = {}, k;
+  for(k in PREV){ var p = PREV[k]; (kids[p] = kids[p] || []).push(+k); }
+  var out = [];
+  for(var id=1; id<=151; id++){
+    if(PREV[id]) continue;                 /* no es el principio de una cadena */
+    var chain = [id], cur = id;
+    while(kids[cur]){
+      chain = chain.concat(kids[cur]);
+      cur = kids[cur][0];
+      if(kids[cur] === undefined) break;
+    }
+    out.push(chain);
+  }
+  return out;
+})();
+
+/* =====================================================================
+   Estado y persistencia
+   ===================================================================== */
+var KEY = "letras_nil_v2";
+
+var state = {
+  v:2,
+  coins:0,
+  dex:[],                                   /* ids comprados, en orden de compra */
+  streak:{count:0, last:""},                /* días seguidos jugando */
+  settings:{len:"corta", case:"may", items:8, solo:false},
+  history:[],
+  fails:{},                                 /* frase -> veces fallada */
+  times:{}                                  /* longitud -> {n, ms} */
+};
+
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(!raw) return;
+    var d = JSON.parse(raw);
+    for(var k in state) if(d[k] !== undefined) state[k] = d[k];
+    var s = state.settings;
+    if(!s.len) s.len = "corta";
+    if(!s.case) s.case = "may";
+    if(!s.items) s.items = 8;
+    if(!state.streak || state.streak.count === undefined) state.streak = {count:0, last:""};
+  }catch(e){ console.warn("No se pudo leer el progreso", e); }
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch(e){ console.warn("No se pudo guardar", e); }
+}
+
+/* =====================================================================
+   Utilidades
+   ===================================================================== */
+function go(id){
+  var all = document.querySelectorAll(".screen");
+  for(var i=0;i<all.length;i++) all[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+  if(id === "s-home") renderHome();
+}
+function shuffle(a){
+  a = a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function fmtTime(ms){
+  var s = Math.round(ms/1000);
+  return Math.floor(s/60) + ":" + ("0"+(s%60)).slice(-2);
+}
+function isoDay(d){
+  return d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0"+d.getDate()).slice(-2);
+}
+function streakMult(){ return state.streak.count >= 3 ? 1.5 : 1; }
+
+/* la racha se actualiza una vez por día, al terminar la primera sesión */
+function touchStreak(){
+  var today = isoDay(new Date());
+  if(state.streak.last === today) return;
+  var y = new Date(); y.setDate(y.getDate()-1);
+  state.streak.count = (state.streak.last === isoDay(y)) ? state.streak.count + 1 : 1;
+  state.streak.last = today;
+}
+/* si se salta un día, la racha se ha roto: se muestra 0 hasta que vuelva a jugar */
+function liveStreak(){
+  if(!state.streak.last) return 0;
+  var today = isoDay(new Date());
+  var y = new Date(); y.setDate(y.getDate()-1);
+  if(state.streak.last === today || state.streak.last === isoDay(y)) return state.streak.count;
+  return 0;
+}
+
+/* =====================================================================
+   Inicio
+   ===================================================================== */
+function renderHome(){
+  document.getElementById("h-coins").textContent  = state.coins;
+  document.getElementById("h-dex").textContent    = state.dex.length;
+  var s = liveStreak();
+  document.getElementById("h-streak").textContent = s;
+  document.getElementById("h-streakchip").classList.toggle("hot", s >= 3);
+
+  /* los 6 últimos Pokémon comprados */
+  var team = state.dex.slice(-6);
+  document.getElementById("h-team").innerHTML = team.map(function(id){
+    return '<img src="'+spriteUrl(id)+'" alt="'+POKE[id-1]+'" title="'+POKE[id-1]+'">';
+  }).join("");
+
+  var st = state.settings;
+  document.getElementById("h-today").innerHTML =
+    "Hoy toca: <b>" + LEN_LABEL[st.len] + "</b> en <b>" + CASE_LABEL[st.case] + "</b>" +
+    (streakMult() > 1 ? ' · <b style="color:var(--gold)">monedas x1,5 🔥</b>' : "");
+}
+
+/* =====================================================================
+   Sesión
+   ===================================================================== */
+var S = null;
+
+function startSession(){
+  var st = state.settings;
+  var pool = BANK[st.len];
+  var n = Math.min(st.items, pool.length);
+
+  /* hasta un tercio de la sesión son frases que ya ha fallado */
+  var weak = [];
+  for(var i=0;i<pool.length;i++) if(state.fails[pool[i]]) weak.push(pool[i]);
+  weak = shuffle(weak).slice(0, Math.floor(n/3));
+
+  var rest = shuffle(pool), queue = weak.slice();
+  for(var j=0; j<rest.length && queue.length<n; j++)
+    if(queue.indexOf(rest[j]) < 0) queue.push(rest[j]);
+  queue = shuffle(queue);
+
+  S = {
+    len: st.len, mode: st.case,
+    queue: queue.map(function(t){ return {text:t, retry:false}; }),
+    total: queue.length,
+    idx:0, ok:0, fail:0, coins:0,
+    t0: Date.now(), itemT0:0, itemMs:[], timer:null
+  };
+
+  document.getElementById("p-hint").textContent = st.solo
+    ? "Escríbela en el papel y mira si está igual"
+    : "Léela en voz alta y escríbela en el papel";
+  S.timer = setInterval(function(){
+    document.getElementById("p-timer").textContent = fmtTime(Date.now() - S.t0);
+  }, 500);
+
+  renderItem();
+  go("s-play");
+}
+
+function renderItem(){
+  var it = S.queue[S.idx];
+  var up = document.getElementById("item-up");
+  var main = document.getElementById("item-main");
+  var isSent = it.text.indexOf(" ") >= 0;
+  var cls = isSent ? "sent" : "word";
+
+  up.style.display = "none"; up.textContent = ""; up.className = cls;
+  if(S.mode === "may")       main.textContent = it.text.toUpperCase();
+  else if(S.mode === "min")  main.textContent = it.text;
+  else { up.textContent = it.text.toUpperCase(); up.style.display = "block"; main.textContent = it.text; }
+  main.className = cls;
+
+  document.getElementById("p-count").textContent = (S.idx+1) + "/" + S.queue.length;
+  document.getElementById("p-coin").textContent  = S.coins;
+  document.getElementById("p-bar").style.width   = (S.idx / S.queue.length * 100) + "%";
+  S.itemT0 = Date.now();
+}
+
+function judge(ok){
+  var it = S.queue[S.idx];
+  S.itemMs.push(Date.now() - S.itemT0);
+
+  if(ok){
+    S.ok++;
+    var full = COIN_PER[S.len];
+    S.coins += it.retry ? Math.round(full/2) : full;
+  }else{
+    S.fail++;
+    state.fails[it.text] = (state.fails[it.text] || 0) + 1;
+    if(!it.retry) S.queue.push({text:it.text, retry:true});   /* se repite una vez, al final */
+  }
+
+  S.idx++;
+  if(S.idx >= S.queue.length) endSession(); else renderItem();
+}
+
+function quitSession(){
+  if(!confirm("¿Salir de la sesión? No se guardará.")) return;
+  clearInterval(S.timer); S = null;
+  go("s-home");
+}
+
+function endSession(){
+  clearInterval(S.timer);
+  var totalMs = Date.now() - S.t0;
+  var perfect = S.fail === 0;
+
+  var base = S.coins + (perfect ? 20 : 0);
+  touchStreak();
+  var mult = streakMult();
+  var earned = Math.round(base * mult);
+  state.coins += earned;
+
+  var t = state.times[S.len] || {n:0, ms:0};
+  t.n += S.itemMs.length;
+  for(var i=0;i<S.itemMs.length;i++) t.ms += S.itemMs[i];
+  state.times[S.len] = t;
+
+  state.history.unshift({
+    d: isoDay(new Date()), len:S.len, mode:S.mode, items:S.total,
+    fails:S.fail, ms:totalMs, coins:earned, solo:!!state.settings.solo
+  });
+  state.history = state.history.slice(0, 40);
+  save();
+
+  var avg = S.itemMs.length
+    ? Math.round(S.itemMs.reduce(function(a,b){return a+b;},0)/S.itemMs.length/1000) : 0;
+
+  document.getElementById("r-emoji").textContent = perfect ? "🏆" : S.fail <= 2 ? "🎉" : "💪";
+  document.getElementById("r-title").textContent = perfect ? "¡PERFECTO!" : "¡MUY BIEN!";
+  document.getElementById("r-coins").textContent = "+" + earned + " 🪙";
+  document.getElementById("r-sub").innerHTML =
+    (perfect ? "Ni un fallo: +20 de regalo. " : "") +
+    (mult > 1 ? "Racha de " + state.streak.count + " días 🔥 x1,5. " : "") +
+    "Tienes <b>" + state.coins + "</b> monedas.";
+  document.getElementById("r-ok").textContent   = S.ok;
+  document.getElementById("r-fail").textContent = S.fail;
+  document.getElementById("r-time").textContent = avg + "s";
+
+  go("s-result");
+  if(perfect){ playVictoryFanfare(); startConfetti(); }
+}
+
+/* =====================================================================
+   Tienda
+   ===================================================================== */
+var filter = "puedo";
+function setFilter(f){ filter = f; showShop(); }
+
+function owned(id){ return state.dex.indexOf(id) >= 0; }
+function canBuy(id){
+  if(owned(id)) return false;
+  if(PREV[id] && !owned(PREV[id])) return false;     /* falta el anterior de la cadena */
+  return state.coins >= priceOf(id);
+}
+function unlocked(id){ return !PREV[id] || owned(PREV[id]); }
+
+function showShop(){
+  document.getElementById("sh-coins").textContent = state.coins;
+  document.getElementById("sh-dex").textContent   = state.dex.length;
+  var segs = document.querySelectorAll(".filters .seg");
+  for(var i=0;i<segs.length;i++) segs[i].classList.toggle("on", segs[i].getAttribute("data-f") === filter);
+
+  var html = "";
+  for(var c=0;c<CHAINS.length;c++){
+    var chain = CHAINS[c];
+    var show = true;
+    if(filter === "puedo") show = chain.some(canBuy);
+    if(filter === "mios")  show = chain.some(owned);
+    if(!show) continue;
+
+    html += '<div class="chain">';
+    for(var i2=0;i2<chain.length;i2++){
+      var id = chain[i2];
+      /* flecha solo si evoluciona del anterior; Eevee y compañía son hermanos */
+      if(i2 > 0) html += '<div class="arrow">' + (PREV[id] === chain[i2-1] ? "→" : "·") + '</div>';
+      var cls = owned(id) ? "owned" : canBuy(id) ? "buy" : unlocked(id) ? "poor" : "locked";
+      html += '<div class="mon '+cls+'">';
+      if(owned(id)) html += '<span class="tag">✓</span>';
+      else if(!unlocked(id)) html += '<span class="tag">🔒</span>';
+      html += '<img loading="lazy" src="'+spriteUrl(id)+'" alt="">';
+      html += '<div class="nm">'+POKE[id-1]+'</div>';
+      html += '<div class="pr">'+(owned(id) ? "tuyo" : priceOf(id)+" 🪙")+'</div>';
+      if(canBuy(id)) html += '<button class="buybtn" onclick="buy('+id+')">COMPRAR</button>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  document.getElementById("shoplist").innerHTML = html ||
+    '<div class="empty">Todavía no puedes comprar ninguno. ¡Juega otra sesión y vuelve!</div>';
+  go("s-shop");
+}
+
+function buy(id){
+  if(!canBuy(id)) return;
+  state.coins -= priceOf(id);
+  state.dex.push(id);
+  save();
+
+  var img = document.getElementById("ov-sprite");
+  img.src = spriteUrl(id);
+  img.className = "revealed";
+  img.onerror = function(){ img.style.visibility = "hidden"; };
+  img.style.visibility = "visible";
+  document.getElementById("ov-name").textContent = "¡" + POKE[id-1] + " es tuyo!";
+  document.getElementById("ov-note").textContent =
+    "Te quedan " + state.coins + " monedas 🪙" +
+    (hasEvolution(id) ? " · ahora puedes ahorrar para su evolución" : "");
+  document.getElementById("overlay").classList.add("on");
+  playVictoryFanfare();
+  if(stageOf(id) >= 3 || LEGEND.indexOf(id) >= 0) startConfetti();
+}
+function closeOverlay(){
+  document.getElementById("overlay").classList.remove("on");
+  showShop();
+}
+
+/* =====================================================================
+   Colección
+   ===================================================================== */
+function showDex(){
+  document.getElementById("d-count").textContent = state.dex.length;
+  document.getElementById("d-coins").textContent = state.coins;
+  document.getElementById("d-hint").style.display = state.dex.length ? "none" : "block";
+  var ids = state.dex.slice().sort(function(a,b){ return a-b; });
+  document.getElementById("dexgrid").innerHTML = ids.map(function(id){
+    return '<div class="dexcell"><img loading="lazy" src="'+spriteUrl(id)+'" alt="">' +
+           '<div class="nm">'+POKE[id-1]+'</div></div>';
+  }).join("");
+  go("s-dex");
+}
+
+/* =====================================================================
+   Panel de papá
+   ===================================================================== */
+function showDad(){
+  var items = 0, fails = 0;
+  for(var h=0;h<state.history.length;h++){ items += state.history[h].items; fails += state.history[h].fails; }
+  var acc = items ? Math.round((1 - fails/items) * 100) : 0;
+
+  var sum = "";
+  sum += kv("Sesiones jugadas", state.history.length);
+  sum += kv("Racha actual", liveStreak() + " días" + (streakMult()>1 ? " (x1,5)" : ""));
+  sum += kv("Aciertos a la primera", items ? acc + "%" : "—");
+  sum += kv("Monedas", state.coins);
+  sum += kv("Pokémon comprados", state.dex.length + " / 151");
+  for(var k in LEN_LABEL){
+    var t = state.times[k];
+    if(t && t.n) sum += kv("⏱ " + LEN_LABEL[k], (Math.round(t.ms/t.n/100)/10) + "s por frase");
+  }
+  document.getElementById("dd-summary").innerHTML = sum;
+
+  var arr = [];
+  for(var w in state.fails) arr.push([w, state.fails[w]]);
+  arr.sort(function(a,b){ return b[1]-a[1]; });
+  document.getElementById("dd-fails").innerHTML = arr.length
+    ? arr.slice(0,12).map(function(p){ return '<span class="pill">'+p[0]+' <b>'+p[1]+'</b></span>'; }).join("")
+    : '<div class="empty">Todavía no ha fallado nada.</div>';
+
+  document.getElementById("dd-hist").innerHTML = state.history.length
+    ? state.history.slice(0,10).map(function(s){
+        return kv(s.d + " · " + LEN_LABEL[s.len] + (s.solo ? " 👦" : ""),
+                  s.items + " frases · " + s.fails + " fallos · +" + s.coins + " 🪙");
+      }).join("")
+    : '<div class="empty">Aún no hay sesiones.</div>';
+
+  mark("data-len",   state.settings.len);
+  mark("data-case",  state.settings.case);
+  mark("data-items", String(state.settings.items));
+  document.getElementById("tog-solo").classList.toggle("on", !!state.settings.solo);
+  go("s-dad");
+}
+function kv(k,v){ return '<div class="kv"><span>'+k+'</span><b>'+v+'</b></div>'; }
+function mark(attr, val){
+  var els = document.querySelectorAll("[" + attr + "]");
+  for(var i=0;i<els.length;i++) els[i].classList.toggle("on", els[i].getAttribute(attr) === val);
+}
+function setLen(v){  state.settings.len = v;   save(); showDad(); }
+function setCase(v){ state.settings.case = v;  save(); showDad(); }
+function setItems(n){state.settings.items = n; save(); showDad(); }
+function toggleSolo(){ state.settings.solo = !state.settings.solo; save(); showDad(); }
+
+/* =====================================================================
+   Copia de seguridad
+   ===================================================================== */
+function exportData(){
+  var blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "letras-nil-" + isoDay(new Date()) + ".json";
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function importData(input){
+  var f = input.files[0];
+  if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var d = JSON.parse(r.result);
+      if(!d || typeof d !== "object" || d.dex === undefined) throw new Error("formato");
+      for(var k in state) if(d[k] !== undefined) state[k] = d[k];
+      save(); showDad();
+      alert("Progreso importado correctamente.");
+    }catch(e){ alert("Ese fichero no vale. Debe ser un JSON exportado desde esta app."); }
+    input.value = "";
+  };
+  r.readAsText(f);
+}
+function resetAll(){
+  if(!confirm("Se borra TODO: monedas, racha y todos los Pokémon. ¿Seguro?")) return;
+  if(!confirm("De verdad, ¿seguro? Esto no se puede deshacer.")) return;
+  localStorage.removeItem(KEY);
+  location.reload();
+}
+
+/* =====================================================================
+   Efectos
+   ===================================================================== */
+function playVictoryFanfare(){
+  try{
+    var ac = new (window.AudioContext || window.webkitAudioContext)();
+    var now = ac.currentTime;
+    var seq = [{f:523.25,t:0.00,d:0.12,v:0.30},{f:523.25,t:0.16,d:0.12,v:0.30},
+               {f:523.25,t:0.32,d:0.12,v:0.30},{f:783.99,t:0.48,d:0.45,v:0.40},
+               {f:659.26,t:0.96,d:0.12,v:0.30},{f:783.99,t:1.12,d:0.12,v:0.30},
+               {f:1046.5,t:1.28,d:1.20,v:0.48}];
+    seq.forEach(function(n){
+      ["sawtooth","triangle"].forEach(function(type,i){
+        var osc = ac.createOscillator(), gain = ac.createGain();
+        osc.connect(gain); gain.connect(ac.destination);
+        osc.type = type;
+        osc.frequency.value = i === 1 ? n.f*0.5 : n.f;
+        var vol = i === 1 ? n.v*0.4 : n.v;
+        gain.gain.setValueAtTime(0, now+n.t);
+        gain.gain.linearRampToValueAtTime(vol, now+n.t+0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now+n.t+n.d);
+        osc.start(now+n.t); osc.stop(now+n.t+n.d+0.05);
+      });
+    });
+  }catch(e){}
+}
+function startConfetti(){
+  var colors = ["#E03B2F","#E8A317","#2E9E5B","#3B72D9","#FFFFFF"];
+  for(var i=0;i<70;i++){
+    (function(i){
+      setTimeout(function(){
+        var c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random()*100 + "vw";
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.animation = "fall " + (2.2 + Math.random()*1.8) + "s linear forwards";
+        document.body.appendChild(c);
+        setTimeout(function(){ c.remove(); }, 4200);
+      }, i*28);
+    })(i);
+  }
+}
+
+/* =====================================================================
+   Arranque
+   ===================================================================== */
+load();
+renderHome();
+</script>
+</body>
+</html>
