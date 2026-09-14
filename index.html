@@ -178,6 +178,84 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 
 .confetti{position:fixed;top:-14px;width:10px;height:16px;z-index:70;pointer-events:none;border-radius:2px}
 @keyframes fall{to{transform:translateY(108vh) rotate(760deg)}}
+#ov-sprite.zoom{width:min(92vw,560px);height:min(92vw,560px)}
+
+/* ---------- botones de tarea ---------- */
+.taskbtn{display:flex;align-items:center;gap:14px;width:100%;padding:15px 17px;border-radius:18px;
+  background:var(--card);border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);
+  margin-bottom:14px;text-align:left;transition:transform .06s,box-shadow .06s}
+.taskbtn:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+.taskbtn .ic{font-size:31px;line-height:1;flex:0 0 auto}
+.taskbtn .tx{flex:1;min-width:0}
+.taskbtn .tt{font-family:'Fredoka';font-weight:700;font-size:21px;line-height:1.1}
+.taskbtn .ts{font-size:13px;color:var(--muted);line-height:1.3;margin-top:2px}
+.taskbtn .tc{font-family:'Fredoka';font-weight:700;font-size:16px;color:#9A6B06;flex:0 0 auto;
+  text-align:center;line-height:1.1;background:#FFF6DF;border:2px solid #F0DCA8;border-radius:13px;padding:7px 10px}
+.taskbtn .tc small{display:block;font-weight:500;font-size:10px;color:var(--muted)}
+.taskbtn.read{border-color:var(--blue);box-shadow:0 4px 0 var(--blue)}
+.taskbtn.read:active{box-shadow:0 0 0 var(--blue)}
+.taskbtn.write{border-color:var(--red-dk);box-shadow:0 4px 0 var(--red-dk)}
+.taskbtn.write:active{box-shadow:0 0 0 var(--red-dk)}
+.taskbtn.math{border-color:var(--green-dk);box-shadow:0 4px 0 var(--green-dk)}
+.taskbtn.math:active{box-shadow:0 0 0 var(--green-dk)}
+
+/* ---------- mates ---------- */
+#m-op{font-family:'Fredoka';font-weight:700;font-variant-numeric:tabular-nums;
+  font-size:clamp(34px,10vw,72px);line-height:1.1;word-break:break-word}
+.streakbadge{font-family:'Fredoka';font-weight:700;color:var(--gold);font-size:18px;
+  min-height:26px;margin-top:14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:16px 20px;
+  padding-bottom:max(20px,env(safe-area-inset-bottom))}
+.opt{padding:20px 6px;border-radius:20px;font-family:'Fredoka';font-weight:700;
+  font-size:clamp(20px,5.5vw,30px);font-variant-numeric:tabular-nums;background:var(--card);
+  border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);min-height:82px;transition:transform .06s,box-shadow .06s}
+.opt:active{transform:translateY(5px);box-shadow:0 0 0 var(--ink)}
+.opt.good{background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 5px 0 var(--green-dk)}
+.opt.bad{background:#fff;color:var(--red-dk);border-color:var(--red);box-shadow:0 5px 0 var(--red)}
+.opt.dim{opacity:.35}
+.opts.locked .opt{pointer-events:none}
+
+/* ---------- ficha de la pokedex ---------- */
+.ficha{text-align:center}
+.fimg{width:min(64vw,300px);height:min(64vw,300px);object-fit:contain;display:block;margin:0 auto;
+  background:radial-gradient(circle at 50% 56%,#fff 0 56%,rgba(255,255,255,0) 74%);border-radius:50%}
+.ficha h2{font-size:clamp(28px,7.5vw,42px);margin:4px 0 2px}
+.ficha .gen{color:var(--muted);margin:0;font-size:15px;min-height:22px}
+.types{display:flex;gap:8px;justify-content:center;margin:12px 0 4px;flex-wrap:wrap}
+.ty{padding:6px 17px;border-radius:999px;color:#fff;font-family:'Fredoka';font-weight:600;
+  font-size:15px;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.flav{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:15px 17px;
+  font-size:17px;line-height:1.5;margin-bottom:14px}
+.evoline{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;
+  background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px;margin-bottom:14px}
+.evoline .ev{text-align:center;padding:2px 4px}
+.evoline .ev img{width:56px;height:56px;object-fit:contain;display:block}
+.evoline .ev span{font-size:11px;font-family:'Fredoka';font-weight:600;line-height:1.1;display:block}
+.evoline .ev.no img{filter:grayscale(1) opacity(.3)}
+.evoline .ev.no span{color:var(--muted)}
+.evoline .sep{color:var(--line);font-size:19px}
+.fnav{display:flex;gap:12px}
+.fnav .btn{margin-bottom:14px}
+.fnav .btn[disabled]{opacity:.35;pointer-events:none}
+.dexcell{cursor:pointer}
+.mon.owned{cursor:pointer}
+
+/* ---------- tabla de tarifas ---------- */
+.tarif{width:100%;border-collapse:collapse;font-size:14px}
+.tarif th,.tarif td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:right;
+  font-variant-numeric:tabular-nums}
+.tarif th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.tarif td:first-child,.tarif th:first-child{text-align:left}
+.tarif tr.cur{background:#FFFBEF}
+.tarif tr.head td{border-bottom:none;padding-top:14px;font-family:'Fredoka';font-weight:700;font-size:15px}
+.tarif b{font-family:'Fredoka';font-weight:700}
+.tarif .un{color:var(--muted);font-size:12px;font-weight:400;font-family:'Andika'}
+.tarif .nx{display:block;color:var(--green-dk);font-size:11px;font-family:'Andika'}
+.note{color:var(--muted);font-size:13px;line-height:1.4;margin-top:12px}
+.tabsel{display:flex;flex-wrap:wrap;gap:7px}
+.tabsel button{width:46px;height:46px;border-radius:13px;border:2px solid var(--line);
+  background:var(--bg);font-family:'Fredoka';font-weight:600;font-size:15px}
+.tabsel button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -188,7 +266,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
     <div class="home-hero">
       <div class="pokeball"></div>
       <h1>LETRAS DE NIL</h1>
-      <p>Lee la frase, escríbela en el papel y gana monedas</p>
+      <p>Lee, escribe y calcula. Gana monedas y compra Pokémon</p>
     </div>
     <div class="counters">
       <div class="chip">🪙 <b id="h-coins">0</b></div>
@@ -197,7 +275,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
     </div>
     <div class="team" id="h-team"></div>
     <div class="todaybar" id="h-today"></div>
-    <button class="btn primary" onclick="startSession()">JUGAR</button>
+    <div id="h-tasks"></div>
     <button class="btn" onclick="showShop()">🛒 TIENDA POKÉMON</button>
     <button class="btn ghost" onclick="showDex()">📕 Mi colección</button>
     <button class="btn ghost" onclick="showDad()">⚙️ Panel de papá</button>
@@ -235,12 +313,70 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div class="statrow">
         <div class="stat"><b id="r-ok">0</b><span>a la primera</span></div>
         <div class="stat"><b id="r-fail">0</b><span>a repasar</span></div>
-        <div class="stat"><b id="r-time">0s</b><span>por frase</span></div>
+        <div class="stat"><b id="r-time">0s</b><span id="r-unit">por frase</span></div>
       </div>
     </div>
     <button class="btn primary" onclick="showShop()">IR A LA TIENDA 🛒</button>
-    <button class="btn ghost" onclick="startSession()">Jugar otra vez</button>
+    <button class="btn ghost" onclick="go('s-home')">Jugar otra cosa</button>
     <button class="btn ghost" onclick="go('s-home')">Inicio</button>
+  </div>
+</div>
+
+<!-- ============ MENÚ DE MATES ============ -->
+<div class="screen" id="s-mathmenu">
+  <div class="wrap">
+    <div class="top">
+      <button class="iconbtn" onclick="go('s-home')">←</button>
+      <h2>MATES</h2>
+      <div style="width:44px"></div>
+    </div>
+    <div class="counters">
+      <div class="chip">🪙 <b id="mm-coins">0</b></div>
+      <div class="chip" id="mm-lvl"></div>
+    </div>
+    <div id="mm-list"></div>
+  </div>
+</div>
+
+<!-- ============ SESIÓN DE MATES ============ -->
+<div class="screen" id="s-math">
+  <div class="play-top">
+    <button class="iconbtn" onclick="quitMath()">✕</button>
+    <div class="pcount" id="m-count">1/10</div>
+    <div class="ptimer" id="m-timer">0:00</div>
+    <div class="pcoin">🪙 <span id="m-coin">0</span></div>
+  </div>
+  <div class="bar"><i id="m-bar"></i></div>
+  <div class="stage">
+    <div id="m-op"></div>
+    <div class="hintline" id="m-hint">Hazla en el papel y toca el resultado</div>
+    <div class="streakbadge" id="m-run"></div>
+  </div>
+  <div class="opts" id="m-opts"></div>
+</div>
+
+<!-- ============ FICHA POKÉDEX ============ -->
+<div class="screen" id="s-ficha">
+  <div class="wrap">
+    <div class="top">
+      <button class="iconbtn" onclick="showDex()">←</button>
+      <h2 id="f-num"></h2>
+      <div style="width:44px"></div>
+    </div>
+    <div class="ficha">
+      <img class="fimg" id="f-img" alt="" onclick="zoomPoke()">
+      <h2 id="f-name"></h2>
+      <div class="gen" id="f-genus"></div>
+      <div class="types" id="f-types"></div>
+    </div>
+    <div class="statrow" id="f-stats"></div>
+    <div class="flav" id="f-flav"></div>
+    <div class="evoline" id="f-evo"></div>
+    <div class="fnav">
+      <button class="btn ghost" id="f-prev" onclick="fichaStep(-1)">← Anterior</button>
+      <button class="btn ghost" id="f-next" onclick="fichaStep(1)">Siguiente →</button>
+    </div>
+    <button class="btn ghost" onclick="showDex()">Volver a la colección</button>
   </div>
 </div>
 
@@ -278,6 +414,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div class="chip">🪙 <b id="d-coins">0</b></div>
     </div>
     <div class="empty" id="d-hint" style="display:none">Todavía no tienes ninguno. Juega, gana monedas y cómpralos en la tienda.</div>
+    <div class="note" id="d-tip" style="text-align:center;margin-bottom:14px">Toca cualquiera para ver su ficha, su foto grande y sus curiosidades.</div>
     <div class="dexgrid" id="dexgrid"></div>
   </div>
 </div>
@@ -291,32 +428,19 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div style="width:44px"></div>
     </div>
 
+    <div id="dd-levels"></div>
+
     <div class="sect">
-      <h3>Dificultad de hoy</h3>
-      <div class="optrow">
-        <div class="lab">Longitud de la frase</div>
-        <div class="segs">
-          <button class="seg" data-len="corta" onclick="setLen('corta')">Corta<small>3-4 palabras</small></button>
-          <button class="seg" data-len="media" onclick="setLen('media')">Media<small>5-7 palabras</small></button>
-          <button class="seg" data-len="larga" onclick="setLen('larga')">Larga<small>8-11 palabras</small></button>
-        </div>
-      </div>
-      <div class="optrow">
-        <div class="lab">Tipo de letra</div>
-        <div class="segs">
-          <button class="seg" data-case="may" onclick="setCase('may')">MAYÚSCULA<small>EL BALÓN ES ROJO.</small></button>
-          <button class="seg" data-case="dos" onclick="setCase('dos')">LAS DOS<small>arriba MAY, abajo min</small></button>
-          <button class="seg" data-case="min" onclick="setCase('min')">Normal<small>El balón es rojo.</small></button>
-        </div>
-      </div>
-      <div class="optrow" style="margin-bottom:4px">
-        <div class="lab">Frases por sesión</div>
-        <div class="segs">
-          <button class="seg" data-items="5" onclick="setItems(5)">5</button>
-          <button class="seg" data-items="8" onclick="setItems(8)">8</button>
-          <button class="seg" data-items="12" onclick="setItems(12)">12</button>
-        </div>
-      </div>
+      <h3>Monedas por nivel</h3>
+      <div id="dd-tarif"></div>
+      <div class="note">La columna <b>sesión</b> supone que la clava entera: todo a la primera
+      más el bonus de 20 por sesión perfecta (y el x1,5 de racha si la tiene).
+      <b>Acabaría con</b> es el saldo después de esa sesión, y debajo el Pokémon más caro
+      que ese saldo le abriría en la tienda.<br><br>
+      A igual nivel, <b>escribir paga más que leer, y leer más que las mates</b>. Encima de eso:
+      las dos letras x1,2 y la minúscula x1,4; restar llevando x1,25 y multiplicar x1,4.
+      Si en un día acumula <b>12</b> operaciones más que frases, las mates pasan a pagar la
+      mitad, y a partir de 28, un cuarto. Se recupera en cuanto vuelve a leer o escribir.</div>
     </div>
 
     <div class="sect">
@@ -330,6 +454,11 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
     </div>
 
     <div class="sect">
+      <h3>Operaciones que más falla</h3>
+      <div id="dd-mfails"></div>
+    </div>
+
+    <div class="sect">
       <h3>Últimas sesiones</h3>
       <div id="dd-hist"></div>
     </div>
@@ -339,7 +468,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div class="switch">
         <div>
           <div style="font-size:15px">Modo solo</div>
-          <small>Nil juega sin ti y se corrige él. Esas sesiones se marcan aparte.</small>
+          <small>En leer y escribir, Nil juega sin ti y se corrige él. Esas sesiones se marcan aparte. Las mates siempre las hace solo.</small>
         </div>
         <button class="tog" id="tog-solo" onclick="toggleSolo()"><i></i></button>
       </div>
@@ -446,9 +575,67 @@ larga:[
 };
 
 var LEN_LABEL  = {corta:"frases cortas", media:"frases medias", larga:"frases largas"};
+var LEN_SHORT  = {corta:"Corta", media:"Media", larga:"Larga"};
+var LEN_HINT   = {corta:"3-4 palabras", media:"5-7 palabras", larga:"8-11 palabras"};
 var CASE_LABEL = {may:"MAYÚSCULAS", dos:"las dos letras", min:"letra normal"};
-/* monedas por frase acertada a la primera, según longitud */
-var COIN_PER   = {corta:5, media:8, larga:12};
+var TASK_LABEL = {leer:"Leer", escribir:"Escribir", mates:"Mates"};
+var TASK_ICON  = {leer:"📖", escribir:"✏️", mates:"➕"};
+var MLVL_LABEL = {facil:"fácil", medio:"medio", dificil:"difícil"};
+var MLVL_HINT  = {facil:"2 cifras, llevando", medio:"3-4 cifras, llevando", dificil:"5 cifras, llevando"};
+var OP_LABEL   = {sum:"Sumas", res:"Restas", mul:"Multiplicaciones"};
+var OP_ICON    = {sum:"➕", res:"➖", mul:"✖️"};
+var OP_SIGN    = {sum:"+", res:"−", mul:"×"};
+
+/* Monedas por acierto a la primera, antes de modificadores.
+   A igual nivel: escribir > leer > mates. Las letras son el objetivo del curso,
+   las mates son el complemento, y así queda en las monedas. */
+var COIN = {
+  leer:     {corta:4, media:5, larga:7},
+  escribir: {corta:5, media:8, larga:12},
+  mates:    {facil:2, medio:3, dificil:4}
+};
+/* Leer y escribir en minúscula cuesta muchísimo más que en mayúsculas: se paga. */
+var CASE_MULT = {may:1, dos:1.2, min:1.4};
+/* Restar llevando y multiplicar son más duras que sumar: se pagan. */
+var OP_MULT   = {sum:1, res:1.25, mul:1.4};
+var COIN_PERFECT = 20;                       /* bonus por sesión sin fallos */
+
+/* Tope diario blando de las mates. Si en un día hace muchas más operaciones que
+   frases, las mates dejan de pagar igual: no puede saltarse la lectura a base de
+   sumas. Se recupera en cuanto vuelve a leer o escribir. */
+var MATH_FREE = 12;                          /* margen antes de que baje el incentivo */
+var MATH_HARD = 28;                          /* a partir de aquí, un cuarto */
+
+function dayCounts(){
+  var t = isoDay(new Date());
+  if(!state.day || state.day.d !== t) state.day = {d:t, leer:0, escribir:0, mates:0};
+  return state.day;
+}
+function mathDamp(){
+  var d = dayCounts(), letras = d.leer + d.escribir;
+  if(d.mates < letras + MATH_FREE) return 1;
+  if(d.mates < letras + MATH_HARD) return 0.5;
+  return 0.25;
+}
+function dampLabel(){
+  var m = mathDamp();
+  return m === 1 ? "" : m === 0.5 ? "a mitad de precio hoy" : "a un cuarto de precio hoy";
+}
+
+function levelsOf(task){ return task === "mates" ? ["facil","medio","dificil"] : ["corta","media","larga"]; }
+function levelLabel(task, l){ return task === "mates" ? MLVL_LABEL[l] : LEN_LABEL[l]; }
+function levelShort(task, l){ return task === "mates" ? MLVL_LABEL[l].toUpperCase() : LEN_SHORT[l]; }
+function levelHint(task, l){ return task === "mates" ? MLVL_HINT[l] : LEN_HINT[l]; }
+/* extra = tipo de letra en leer/escribir, operación en mates */
+function coinOf(task, l, extra){
+  if(task === "mates")
+    return Math.max(1, Math.round(COIN.mates[l] * (OP_MULT[extra] || 1) * mathDamp()));
+  return Math.max(1, Math.round(COIN[task][l] * (CASE_MULT[extra] || 1)));
+}
+function cfg(task){ return state.settings[task]; }
+function curLevel(task){ return task === "mates" ? cfg(task).lvl : cfg(task).len; }
+/* unidad de trabajo, para no llamar "frase" a una resta */
+function unitOf(task, n){ return task === "mates" ? (n === 1 ? "operación" : "operaciones") : (n === 1 ? "frase" : "frases"); }
 
 /* ---- Pokémon 1ª generación ---- */
 var POKE = ["Bulbasaur","Ivysaur","Venusaur","Charmander","Charmeleon","Charizard",
@@ -527,30 +714,68 @@ var CHAINS = (function(){
 /* =====================================================================
    Estado y persistencia
    ===================================================================== */
-var KEY = "letras_nil_v2";
+var KEY     = "letras_nil_v3";
+var KEY_OLD = "letras_nil_v2";
 
 var state = {
-  v:2,
+  v:3,
   coins:0,
   dex:[],                                   /* ids comprados, en orden de compra */
   streak:{count:0, last:""},                /* días seguidos jugando */
-  settings:{len:"corta", case:"may", items:8, solo:false},
+  settings:{
+    leer:     {len:"corta", case:"may", items:8},
+    escribir: {len:"corta", case:"may", items:8},
+    mates:    {lvl:"facil", items:10, tablas:[1,2,3,4,5,6,7,8,9,10]},
+    solo:false
+  },
   history:[],
+  day:{d:"", leer:0, escribir:0, mates:0},   /* items de hoy por tarea, para el tope de mates */
   fails:{},                                 /* frase -> veces fallada */
-  times:{}                                  /* longitud -> {n, ms} */
+  mfails:{},                                /* operación -> veces fallada */
+  times:{}                                  /* "tarea:nivel" -> {n, ms} */
 };
+
+/* v2 guardaba una sola dificultad para todo; v3 la separa por tarea.
+   Si solo existe la clave vieja, se convierte y se conserva el progreso. */
+function migrate(d){
+  var old = d.settings || {};
+  var len = old.len || "corta", cs = old.case || "may", it = old.items || 8;
+  d.settings = {
+    leer:     {len:len, case:cs, items:it},
+    escribir: {len:len, case:cs, items:it},
+    mates:    {lvl:"facil", items:10, tablas:[1,2,3,4,5,6,7,8,9,10]},
+    solo:!!old.solo
+  };
+  var t = {};
+  for(var k in (d.times || {})) t["escribir:" + k] = d.times[k];
+  d.times = t;
+  for(var i=0;i<(d.history||[]).length;i++) if(!d.history[i].task) d.history[i].task = "escribir";
+  d.v = 3;
+  return d;
+}
 
 function load(){
   try{
-    var raw = localStorage.getItem(KEY);
-    if(!raw) return;
+    var raw = localStorage.getItem(KEY), migrated = false;
+    if(!raw){
+      raw = localStorage.getItem(KEY_OLD);
+      if(!raw) return;
+      migrated = true;
+    }
     var d = JSON.parse(raw);
+    if(migrated || !d.v || d.v < 3) d = migrate(d);
     for(var k in state) if(d[k] !== undefined) state[k] = d[k];
-    var s = state.settings;
-    if(!s.len) s.len = "corta";
-    if(!s.case) s.case = "may";
-    if(!s.items) s.items = 8;
+
+    /* red de seguridad: cualquier ajuste que falte vuelve a su valor por defecto */
+    var st = state.settings || (state.settings = {});
+    if(!st.leer)     st.leer     = {len:"corta", case:"may", items:8};
+    if(!st.escribir) st.escribir = {len:"corta", case:"may", items:8};
+    if(!st.mates)    st.mates    = {lvl:"facil", items:10, tablas:[1,2,3,4,5,6,7,8,9,10]};
+    if(!st.mates.tablas || !st.mates.tablas.length) st.mates.tablas = [1,2,3,4,5,6,7,8,9,10];
+    if(!state.mfails) state.mfails = {};
+    if(!state.day || !state.day.d) state.day = {d:"", leer:0, escribir:0, mates:0};
     if(!state.streak || state.streak.count === undefined) state.streak = {count:0, last:""};
+    if(migrated) save();
   }catch(e){ console.warn("No se pudo leer el progreso", e); }
 }
 function save(){
@@ -615,10 +840,38 @@ function renderHome(){
     return '<img src="'+spriteUrl(id)+'" alt="'+POKE[id-1]+'" title="'+POKE[id-1]+'">';
   }).join("");
 
-  var st = state.settings;
-  document.getElementById("h-today").innerHTML =
-    "Hoy toca: <b>" + LEN_LABEL[st.len] + "</b> en <b>" + CASE_LABEL[st.case] + "</b>" +
-    (streakMult() > 1 ? ' · <b style="color:var(--gold)">monedas x1,5 🔥</b>' : "");
+  document.getElementById("h-today").innerHTML = streakMult() > 1
+    ? 'Racha de <b>' + state.streak.count + ' días</b> · <b style="color:var(--gold)">todas las monedas x1,5 🔥</b>'
+    : 'Te ' + (3 - liveStreak() === 1 ? 'falta <b>1</b> día' : 'faltan <b>' + (3 - liveStreak()) + '</b> días')
+      + ' para las monedas x1,5 🔥';
+
+  document.getElementById("h-tasks").innerHTML =
+    taskButton("leer",     "startSession('leer')") +
+    taskButton("escribir", "startSession('escribir')") +
+    taskButton("mates",    "showMathMenu()");
+}
+
+/* Cada botón dice ya cuánto paga: Nil ve la diferencia entre leer y escribir sin preguntar. */
+function taskButton(task, action){
+  var cls = task === "leer" ? "read" : task === "escribir" ? "write" : "math";
+  var L = curLevel(task), c = cfg(task), sub, per;
+  if(task === "mates"){
+    var lo = coinOf("mates", L, "sum"), hi = coinOf("mates", L, "mul");
+    per = lo === hi ? String(lo) : lo + "-" + hi;
+    sub = "Nivel " + MLVL_LABEL[L] + " · " + c.items + " operaciones";
+    var dl = dampLabel();
+    if(dl) sub += ' · <b style="color:var(--red)">' + dl + "</b>";
+  }else{
+    per = String(coinOf(task, L, c.case));
+    sub = LEN_LABEL[L] + " en " + CASE_LABEL[c.case] + " · " + c.items + " frases";
+    if(c.case === "min") sub += ' · <b style="color:var(--green-dk)">x1,4 por minúscula</b>';
+  }
+  return '<button class="taskbtn ' + cls + '" onclick="' + action + '">' +
+    '<span class="ic">' + TASK_ICON[task] + '</span>' +
+    '<span class="tx"><span class="tt">' + TASK_LABEL[task].toUpperCase() + '</span>' +
+    '<span class="ts">' + sub + '</span></span>' +
+    '<span class="tc">' + per + ' 🪙<small>cada ' + (task === "mates" ? "una" : "frase") + '</small></span>' +
+    '</button>';
 }
 
 /* =====================================================================
@@ -626,8 +879,8 @@ function renderHome(){
    ===================================================================== */
 var S = null;
 
-function startSession(){
-  var st = state.settings;
+function startSession(task){
+  var st = cfg(task);
   var pool = BANK[st.len];
   var n = Math.min(st.items, pool.length);
 
@@ -642,16 +895,17 @@ function startSession(){
   queue = shuffle(queue);
 
   S = {
-    len: st.len, mode: st.case,
+    task: task, len: st.len, mode: st.case,
     queue: queue.map(function(t){ return {text:t, retry:false}; }),
     total: queue.length,
     idx:0, ok:0, fail:0, coins:0,
     t0: Date.now(), itemT0:0, itemMs:[], timer:null
   };
 
-  document.getElementById("p-hint").textContent = st.solo
-    ? "Escríbela en el papel y mira si está igual"
-    : "Léela en voz alta y escríbela en el papel";
+  document.getElementById("p-hint").textContent =
+    task === "leer"            ? "Léela en voz alta, sin escribirla"
+    : state.settings.solo      ? "Escríbela en el papel y mira si está igual"
+    :                            "Léela en voz alta y escríbela en el papel";
   S.timer = setInterval(function(){
     document.getElementById("p-timer").textContent = fmtTime(Date.now() - S.t0);
   }, 500);
@@ -685,7 +939,7 @@ function judge(ok){
 
   if(ok){
     S.ok++;
-    var full = COIN_PER[S.len];
+    var full = coinOf(S.task, S.len, S.mode);
     S.coins += it.retry ? Math.round(full/2) : full;
   }else{
     S.fail++;
@@ -705,40 +959,52 @@ function quitSession(){
 
 function endSession(){
   clearInterval(S.timer);
-  var totalMs = Date.now() - S.t0;
-  var perfect = S.fail === 0;
+  finishRun({
+    task:S.task, level:S.len, mode:S.mode, items:S.total, ok:S.ok, fail:S.fail,
+    raw:S.coins, itemMs:S.itemMs, totalMs:Date.now() - S.t0
+  });
+  S = null;
+}
 
-  var base = S.coins + (perfect ? 20 : 0);
+/* Cierre común de leer, escribir y mates: bonus, racha, guardado y pantalla de resultado. */
+function finishRun(r){
+  var perfect = r.fail === 0;
+  var base = r.raw + (perfect ? COIN_PERFECT : 0);
   touchStreak();
   var mult = streakMult();
   var earned = Math.round(base * mult);
   state.coins += earned;
 
-  var t = state.times[S.len] || {n:0, ms:0};
-  t.n += S.itemMs.length;
-  for(var i=0;i<S.itemMs.length;i++) t.ms += S.itemMs[i];
-  state.times[S.len] = t;
+  dayCounts()[r.task] += r.items;            /* alimenta el tope diario de las mates */
+
+  var tk = r.task + ":" + r.level;
+  var t = state.times[tk] || {n:0, ms:0};
+  t.n += r.itemMs.length;
+  for(var i=0;i<r.itemMs.length;i++) t.ms += r.itemMs[i];
+  state.times[tk] = t;
 
   state.history.unshift({
-    d: isoDay(new Date()), len:S.len, mode:S.mode, items:S.total,
-    fails:S.fail, ms:totalMs, coins:earned, solo:!!state.settings.solo
+    d: isoDay(new Date()), task:r.task, len:r.level, mode:r.mode || "", sub:r.sub || "",
+    items:r.items, fails:r.fail, ms:r.totalMs, coins:earned,
+    solo: r.task === "mates" ? true : !!state.settings.solo
   });
   state.history = state.history.slice(0, 40);
   save();
 
-  var avg = S.itemMs.length
-    ? Math.round(S.itemMs.reduce(function(a,b){return a+b;},0)/S.itemMs.length/1000) : 0;
+  var avg = r.itemMs.length
+    ? Math.round(r.itemMs.reduce(function(a,b){return a+b;},0)/r.itemMs.length/1000) : 0;
 
-  document.getElementById("r-emoji").textContent = perfect ? "🏆" : S.fail <= 2 ? "🎉" : "💪";
+  document.getElementById("r-emoji").textContent = perfect ? "🏆" : r.fail <= 2 ? "🎉" : "💪";
   document.getElementById("r-title").textContent = perfect ? "¡PERFECTO!" : "¡MUY BIEN!";
   document.getElementById("r-coins").textContent = "+" + earned + " 🪙";
   document.getElementById("r-sub").innerHTML =
-    (perfect ? "Ni un fallo: +20 de regalo. " : "") +
+    (perfect ? "Ni un fallo: +" + COIN_PERFECT + " de regalo. " : "") +
     (mult > 1 ? "Racha de " + state.streak.count + " días 🔥 x1,5. " : "") +
     "Tienes <b>" + state.coins + "</b> monedas.";
-  document.getElementById("r-ok").textContent   = S.ok;
-  document.getElementById("r-fail").textContent = S.fail;
+  document.getElementById("r-ok").textContent   = r.ok;
+  document.getElementById("r-fail").textContent = r.fail;
   document.getElementById("r-time").textContent = avg + "s";
+  document.getElementById("r-unit").textContent = "por " + unitOf(r.task, 1);
 
   go("s-result");
   if(perfect){ playVictoryFanfare(); startConfetti(); }
@@ -785,6 +1051,7 @@ function showShop(){
       html += '<div class="nm">'+POKE[id-1]+'</div>';
       html += '<div class="pr">'+(owned(id) ? "tuyo" : priceOf(id)+" 🪙")+'</div>';
       if(canBuy(id)) html += '<button class="buybtn" onclick="buy('+id+')">COMPRAR</button>';
+      if(owned(id))  html += '<button class="buybtn" style="background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 3px 0 var(--green-dk)" onclick="showFicha('+id+')">VER FICHA</button>';
       html += '</div>';
     }
     html += '</div>';
@@ -803,6 +1070,7 @@ function buy(id){
   var img = document.getElementById("ov-sprite");
   img.src = spriteUrl(id);
   img.className = "revealed";
+  ovBack = "s-shop";
   img.onerror = function(){ img.style.visibility = "hidden"; };
   img.style.visibility = "visible";
   document.getElementById("ov-name").textContent = "¡" + POKE[id-1] + " es tuyo!";
@@ -813,9 +1081,10 @@ function buy(id){
   playVictoryFanfare();
   if(stageOf(id) >= 3 || LEGEND.indexOf(id) >= 0) startConfetti();
 }
+var ovBack = "s-shop";
 function closeOverlay(){
   document.getElementById("overlay").classList.remove("on");
-  showShop();
+  if(ovBack === "s-ficha") showFicha(fichaId); else showShop();
 }
 
 /* =====================================================================
@@ -825,9 +1094,11 @@ function showDex(){
   document.getElementById("d-count").textContent = state.dex.length;
   document.getElementById("d-coins").textContent = state.coins;
   document.getElementById("d-hint").style.display = state.dex.length ? "none" : "block";
+  document.getElementById("d-tip").style.display  = state.dex.length ? "block" : "none";
   var ids = state.dex.slice().sort(function(a,b){ return a-b; });
   document.getElementById("dexgrid").innerHTML = ids.map(function(id){
-    return '<div class="dexcell"><img loading="lazy" src="'+spriteUrl(id)+'" alt="">' +
+    return '<div class="dexcell" onclick="showFicha('+id+')">' +
+           '<img loading="lazy" src="'+spriteUrl(id)+'" alt="">' +
            '<div class="nm">'+POKE[id-1]+'</div></div>';
   }).join("");
   go("s-dex");
@@ -837,50 +1108,198 @@ function showDex(){
    Panel de papá
    ===================================================================== */
 function showDad(){
+  renderLevels();
+  document.getElementById("dd-tarif").innerHTML = tarifTable();
+
   var items = 0, fails = 0;
   for(var h=0;h<state.history.length;h++){ items += state.history[h].items; fails += state.history[h].fails; }
   var acc = items ? Math.round((1 - fails/items) * 100) : 0;
 
   var sum = "";
   sum += kv("Sesiones jugadas", state.history.length);
-  sum += kv("Racha actual", liveStreak() + " días" + (streakMult()>1 ? " (x1,5)" : ""));
+  var rd = liveStreak();
+  sum += kv("Racha actual", rd + (rd === 1 ? " día" : " días") + (streakMult()>1 ? " (x1,5)" : ""));
   sum += kv("Aciertos a la primera", items ? acc + "%" : "—");
   sum += kv("Monedas", state.coins);
   sum += kv("Pokémon comprados", state.dex.length + " / 151");
-  for(var k in LEN_LABEL){
-    var t = state.times[k];
-    if(t && t.n) sum += kv("⏱ " + LEN_LABEL[k], (Math.round(t.ms/t.n/100)/10) + "s por frase");
+  var tasks = ["leer","escribir","mates"];
+  for(var i=0;i<tasks.length;i++){
+    var lv = levelsOf(tasks[i]);
+    for(var j=0;j<lv.length;j++){
+      var t = state.times[tasks[i] + ":" + lv[j]];
+      if(t && t.n) sum += kv("⏱ " + TASK_LABEL[tasks[i]] + " " + levelLabel(tasks[i], lv[j]),
+                             (Math.round(t.ms/t.n/100)/10) + "s por " + unitOf(tasks[i], 1));
+    }
   }
   document.getElementById("dd-summary").innerHTML = sum;
 
-  var arr = [];
-  for(var w in state.fails) arr.push([w, state.fails[w]]);
-  arr.sort(function(a,b){ return b[1]-a[1]; });
-  document.getElementById("dd-fails").innerHTML = arr.length
-    ? arr.slice(0,12).map(function(p){ return '<span class="pill">'+p[0]+' <b>'+p[1]+'</b></span>'; }).join("")
-    : '<div class="empty">Todavía no ha fallado nada.</div>';
+  document.getElementById("dd-fails").innerHTML = topFails(state.fails, 12,
+    "Todavía no ha fallado ninguna frase.");
+  document.getElementById("dd-mfails").innerHTML = topFails(state.mfails, 16,
+    "Todavía no ha fallado ninguna operación.");
 
   document.getElementById("dd-hist").innerHTML = state.history.length
-    ? state.history.slice(0,10).map(function(s){
-        return kv(s.d + " · " + LEN_LABEL[s.len] + (s.solo ? " 👦" : ""),
-                  s.items + " frases · " + s.fails + " fallos · +" + s.coins + " 🪙");
+    ? state.history.slice(0,12).map(function(h){
+        var lbl = TASK_LABEL[h.task || "escribir"];
+        if(h.task === "mates") lbl += " · " + (OP_LABEL[h.sub] || "") + " " + MLVL_LABEL[h.len];
+        else lbl += " · " + LEN_LABEL[h.len] + (h.solo ? " 👦" : "");
+        return kv(h.d + " · " + lbl,
+                  h.items + " " + unitOf(h.task || "escribir", h.items) +
+                  " · " + h.fails + " fallos · +" + h.coins + " 🪙");
       }).join("")
     : '<div class="empty">Aún no hay sesiones.</div>';
 
-  mark("data-len",   state.settings.len);
-  mark("data-case",  state.settings.case);
-  mark("data-items", String(state.settings.items));
   document.getElementById("tog-solo").classList.toggle("on", !!state.settings.solo);
   go("s-dad");
 }
-function kv(k,v){ return '<div class="kv"><span>'+k+'</span><b>'+v+'</b></div>'; }
-function mark(attr, val){
-  var els = document.querySelectorAll("[" + attr + "]");
-  for(var i=0;i<els.length;i++) els[i].classList.toggle("on", els[i].getAttribute(attr) === val);
+
+function topFails(dict, n, emptyMsg){
+  var arr = [];
+  for(var w in dict) arr.push([w, dict[w]]);
+  arr.sort(function(a,b){ return b[1]-a[1]; });
+  return arr.length
+    ? arr.slice(0,n).map(function(p){ return '<span class="pill">'+p[0]+' <b>'+p[1]+'</b></span>'; }).join("")
+    : '<div class="empty">' + emptyMsg + '</div>';
 }
-function setLen(v){  state.settings.len = v;   save(); showDad(); }
-function setCase(v){ state.settings.case = v;  save(); showDad(); }
-function setItems(n){state.settings.items = n; save(); showDad(); }
+
+/* Los selectores de dificultad se generan por tarea: leer y escribir llevan
+   vidas distintas, y así no hay que tocar HTML cada vez que cambia un nivel. */
+function renderLevels(){
+  var html = "";
+  var tasks = ["leer","escribir","mates"];
+  for(var i=0;i<tasks.length;i++){
+    var task = tasks[i], c = cfg(task), lv = levelsOf(task);
+    html += '<div class="sect"><h3>' + TASK_ICON[task] + " " + TASK_LABEL[task] + '</h3>';
+
+    html += '<div class="optrow"><div class="lab">' +
+      (task === "mates" ? "Nivel de los números" : "Longitud de la frase") + '</div><div class="segs">';
+    for(var j=0;j<lv.length;j++){
+      html += '<button class="seg' + (curLevel(task) === lv[j] ? " on" : "") +
+        '" onclick="setLevel(\'' + task + '\',\'' + lv[j] + '\')">' +
+        levelShort(task, lv[j]) + '<small>' + levelHint(task, lv[j]) +
+        ' · ' + levelPay(task, lv[j]) + ' 🪙</small></button>';
+    }
+    html += '</div></div>';
+
+    if(task !== "mates"){
+      var CS = [["may","MAYÚSCULA","EL BALÓN ES ROJO."],
+                ["dos","LAS DOS","arriba MAY, abajo min"],
+                ["min","Normal","El balón es rojo."]];
+      html += '<div class="optrow"><div class="lab">Tipo de letra</div><div class="segs">';
+      for(var k=0;k<CS.length;k++){
+        html += '<button class="seg' + (c.case === CS[k][0] ? " on" : "") +
+          '" onclick="setCase(\'' + task + '\',\'' + CS[k][0] + '\')">' +
+          CS[k][1] + '<small>' + CS[k][2] + '</small></button>';
+      }
+      html += '</div></div>';
+    }
+
+    var NS = task === "mates" ? [6,10,15] : [5,8,12];
+    html += '<div class="optrow"' + (task === "mates" ? '' : ' style="margin-bottom:4px"') +
+      '><div class="lab">' + (task === "mates" ? "Operaciones" : "Frases") + ' por sesión</div><div class="segs">';
+    for(var n=0;n<NS.length;n++){
+      html += '<button class="seg' + (c.items === NS[n] ? " on" : "") +
+        '" onclick="setItems(\'' + task + '\',' + NS[n] + ')">' + NS[n] + '</button>';
+    }
+    html += '</div></div>';
+
+    if(task === "mates"){
+      html += '<div class="optrow" style="margin-bottom:4px"><div class="lab">Tablas que entran en las multiplicaciones' +
+        '<small>Solo se usan en el nivel fácil. En medio y difícil multiplica números grandes por una cifra.</small>' +
+        '</div><div class="tabsel">';
+      for(var t2=1;t2<=10;t2++){
+        html += '<button class="' + (c.tablas.indexOf(t2) >= 0 ? "on" : "") +
+          '" onclick="toggleTable(' + t2 + ')">' + t2 + '</button>';
+      }
+      html += '</div></div>';
+    }
+    html += '</div>';
+  }
+  document.getElementById("dd-levels").innerHTML = html;
+}
+
+/* Cuánto paga cada nivel de cada tarea y a cuánto saldo llegaría Nil después
+   de una sesión clavada, cruzado con lo que ese saldo le abre en la tienda.
+   Las mates llevan una fila por operación porque la tarifa cambia con ella. */
+function levelPay(task, l){
+  if(task !== "mates") return coinOf(task, l, cfg(task).case);
+  var lo = coinOf("mates", l, "sum"), hi = coinOf("mates", l, "mul");
+  return lo === hi ? String(lo) : lo + "-" + hi;
+}
+
+function tarifTable(){
+  var mult = streakMult();
+
+  var lastHint = "";                          /* para no repetir el mismo Pokémon fila tras fila */
+  function row(label, cur, per, items){
+    var ses = Math.round((per * items + COIN_PERFECT) * mult);
+    var end = state.coins + ses;
+    var nx  = unlockHint(end);
+    if(nx === lastHint) nx = ""; else lastHint = nx;
+    return '<tr' + (cur ? ' class="cur"' : '') + '>' +
+      '<td>' + (cur ? "▸ " : "") + label + '</td>' +
+      '<td>' + per + '</td><td>+' + ses + '</td>' +
+      '<td><b>' + end + '</b>' + (nx ? '<span class="nx">' + nx + '</span>' : '') + '</td></tr>';
+  }
+
+  function rowsFor(task){
+    var c = cfg(task), lv = levelsOf(task), out = "", j, L;
+    var note = task === "mates"
+      ? (dampLabel() ? '<span class="un" style="color:var(--red)"> · ' + dampLabel() + '</span>' : "")
+      : '<span class="un"> · en ' + CASE_LABEL[c.case] +
+        " (x" + String(CASE_MULT[c.case]).replace(".", ",") + ')</span>';
+    lastHint = "";                            /* cada tarea vuelve a mostrarlo una vez */
+    out += '<tr class="head"><td colspan="4">' + TASK_ICON[task] + " " + TASK_LABEL[task] +
+           ' <span class="un">' + c.items + " " + unitOf(task, c.items) + '</span>' + note + '</td></tr>';
+
+    if(task !== "mates"){
+      for(j=0;j<lv.length;j++){
+        L = lv[j];
+        out += row(levelLabel(task, L), curLevel(task) === L, coinOf(task, L, c.case), c.items);
+      }
+    }else{
+      var ops = ["sum","res","mul"];
+      for(j=0;j<lv.length;j++){
+        L = lv[j];
+        for(var k=0;k<ops.length;k++){
+          out += row(MLVL_LABEL[L] + " · " + OP_LABEL[ops[k]].toLowerCase(),
+                     curLevel(task) === L, coinOf(task, L, ops[k]), c.items);
+        }
+      }
+    }
+    return out;
+  }
+
+  return '<table class="tarif"><thead><tr><th>Nivel</th><th>cada uno</th><th>sesión</th>' +
+         '<th>acabaría con</th></tr></thead><tbody>' +
+         rowsFor("leer") + rowsFor("escribir") + rowsFor("mates") +
+         '</tbody></table>';
+}
+
+/* el Pokémon más caro que ese saldo le abriría y hoy todavía no puede pagar */
+function unlockHint(saldo){
+  var best = 0;
+  for(var id=1; id<=151; id++){
+    if(owned(id) || !unlocked(id)) continue;
+    var p = priceOf(id);
+    if(p <= saldo && p > state.coins && (!best || p > priceOf(best))) best = id;
+  }
+  return best ? "→ " + POKE[best-1] + " (" + priceOf(best) + ")" : "";
+}
+
+function kv(k,v){ return '<div class="kv"><span>'+k+'</span><b>'+v+'</b></div>'; }
+function setLevel(task, v){
+  if(task === "mates") cfg(task).lvl = v; else cfg(task).len = v;
+  save(); showDad();
+}
+function setCase(task, v){ cfg(task).case = v; save(); showDad(); }
+function setItems(task, n){ cfg(task).items = n; save(); showDad(); }
+function toggleTable(n){
+  var t = cfg("mates").tablas, i = t.indexOf(n);
+  if(i >= 0){ if(t.length > 1) t.splice(i,1); }else t.push(n);
+  t.sort(function(a,b){ return a-b; });
+  save(); showDad();
+}
 function toggleSolo(){ state.settings.solo = !state.settings.solo; save(); showDad(); }
 
 /* =====================================================================
@@ -902,9 +1321,16 @@ function importData(input){
     try{
       var d = JSON.parse(r.result);
       if(!d || typeof d !== "object" || d.dex === undefined) throw new Error("formato");
+      var old = !d.v || d.v < 3;
+      if(old) d = migrate(d);                 /* copia hecha antes de separar las tareas */
       for(var k in state) if(d[k] !== undefined) state[k] = d[k];
+      if(!state.mfails) state.mfails = {};
+      if(!state.day || !state.day.d) state.day = {d:"", leer:0, escribir:0, mates:0};
       save(); showDad();
-      alert("Progreso importado correctamente.");
+      alert("Progreso importado correctamente." + (old
+        ? "\n\nEra una copia de la versión anterior: monedas, Pokémon y racha se conservan, " +
+          "y las sesiones antiguas cuentan como ESCRIBIR."
+        : ""));
     }catch(e){ alert("Ese fichero no vale. Debe ser un JSON exportado desde esta app."); }
     input.value = "";
   };
@@ -915,6 +1341,333 @@ function resetAll(){
   if(!confirm("De verdad, ¿seguro? Esto no se puede deshacer.")) return;
   localStorage.removeItem(KEY);
   location.reload();
+}
+
+/* =====================================================================
+   Mates
+   El lápiz sigue en el papel: la app plantea la operación, Nil la resuelve
+   en el cuaderno y toca el resultado. Los distractores no son números al azar,
+   son los fallos típicos de llevada (±1, ±10, ±100...), para que no se acierte
+   por descarte mirando el orden de magnitud.
+   ===================================================================== */
+var MRANGE = {facil:[10,99], medio:[100,9999], dificil:[10000,99999]};
+
+function randInt(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
+
+/* ¿hay alguna llevada al sumar? */
+function hasCarry(a,b){
+  var carry = 0;
+  while(a > 0 || b > 0){
+    var d = (a%10) + (b%10) + carry;
+    if(d >= 10) return true;
+    carry = 0; a = Math.floor(a/10); b = Math.floor(b/10);
+  }
+  return false;
+}
+/* ¿hay que pedir prestado al restar? */
+function hasBorrow(a,b){
+  while(b > 0){
+    if((a%10) < (b%10)) return true;
+    a = Math.floor(a/10); b = Math.floor(b/10);
+  }
+  return false;
+}
+
+function makeMath(op, lvl){
+  var r = MRANGE[lvl], a, b, tries = 0;
+  if(op === "sum"){
+    /* siempre con alguna llevada: sumar sin llevar ya lo tiene dominado */
+    do{ a = randInt(r[0], r[1]); b = randInt(r[0], r[1]); tries++; }
+    while(!hasCarry(a,b) && tries < 60);
+  }else if(op === "res"){
+    /* siempre pidiendo prestado, y nunca resultado negativo */
+    do{
+      a = randInt(r[0], r[1]);
+      b = randInt(r[0], Math.max(r[0], a));
+      tries++;
+    }while((a === b || !hasBorrow(a,b)) && tries < 60);
+  }else{
+    var tab = cfg("mates").tablas;
+    if(lvl === "facil"){ a = tab[randInt(0, tab.length-1)]; b = randInt(1,10); }   /* la tabla entera, del 1 al 10 */
+    else if(lvl === "medio"){ a = randInt(11,99);  b = randInt(2,9); }
+    else { a = randInt(101,999); b = randInt(2,9); }
+  }
+  var res = op === "sum" ? a+b : op === "res" ? a-b : a*b;
+  return {op:op, a:a, b:b, res:res, text: a + " " + OP_SIGN[op] + " " + b, retry:false};
+}
+
+function distractors(q){
+  var res = q.res, seen = {}, out = [], cands;
+  if(q.op === "mul"){
+    cands = [q.a*(q.b+1), q.a*(q.b-1), res+q.a, res-q.a, res+10, res-10, res+q.b, res-q.b];
+  }else{
+    /* solo perturbaciones del tamaño del resultado: un 107 frente a un 7 se
+       descarta de un vistazo y la pregunta deja de medir nada */
+    cands = [res+10, res-10, res+1, res-1, res+9, res-9, res+11, res-11];
+    if(res >= 100)   cands.push(res+100, res-100);
+    if(res >= 1000)  cands.push(res+1000, res-1000);
+    if(res >= 10000) cands.push(res+10000, res-10000);
+  }
+  var digits = String(res).length;
+  cands = shuffle(cands);
+  /* primero los que tienen las mismas cifras que el resultado */
+  cands.sort(function(a,b){
+    return (String(a).length === digits ? 0 : 1) - (String(b).length === digits ? 0 : 1);
+  });
+  seen[res] = 1;
+  for(var i=0;i<cands.length && out.length<3;i++){
+    var c = cands[i];
+    if(c < 0 || seen[c]) continue;
+    seen[c] = 1; out.push(c);
+  }
+  while(out.length < 3){                        /* red de seguridad para resultados diminutos */
+    var d = res + randInt(-9, 9);
+    if(d >= 0 && !seen[d]){ seen[d] = 1; out.push(d); }
+  }
+  return out;
+}
+
+function showMathMenu(){
+  var c = cfg("mates");
+  document.getElementById("mm-coins").textContent = state.coins;
+  document.getElementById("mm-lvl").innerHTML = "Nivel <b>" + MLVL_LABEL[c.lvl] + "</b>";
+
+  var ops = ["sum","res","mul"], html = "";
+  var dl = dampLabel();
+  if(dl){
+    html += '<div class="sect" style="border-color:var(--red);background:#FFF3F1">' +
+      'Hoy has hecho muchas más mates que frases, así que las mates están <b>' + dl +
+      '</b>. Vuelven a valer lo normal en cuanto leas o escribas un rato.</div>';
+  }
+  for(var i=0;i<ops.length;i++){
+    var op = ops[i];
+    var sub = op === "mul"
+      ? (c.lvl === "facil" ? (c.tablas.length === 10 ? "Todas las tablas, del 1 al 10"
+                                                     : "Tablas del " + c.tablas.join(", "))
+                           : MLVL_HINT[c.lvl].split(",")[0] + " × 1 cifra")
+      : MLVL_HINT[c.lvl];
+    html += '<button class="taskbtn math" onclick="startMath(\'' + op + '\')">' +
+      '<span class="ic">' + OP_ICON[op] + '</span>' +
+      '<span class="tx"><span class="tt">' + OP_LABEL[op].toUpperCase() + '</span>' +
+      '<span class="ts">' + sub + ' · ' + c.items + ' operaciones</span></span>' +
+      '<span class="tc">' + coinOf("mates", c.lvl, op) + ' 🪙<small>cada una</small></span>' +
+      '</button>';
+  }
+  document.getElementById("mm-list").innerHTML = html;
+  go("s-mathmenu");
+}
+
+var M = null;
+
+function startMath(op){
+  var c = cfg("mates");
+  var qs = [], seen = {};
+  for(var i=0;i<c.items;i++){
+    var q, tries = 0;
+    do{ q = makeMath(op, c.lvl); tries++; }while(seen[q.text] && tries < 40);
+    seen[q.text] = 1;
+    qs.push(q);
+  }
+  /* se fija al empezar: si el tope diario salta a media sesión, no cambia el trato */
+  M = {op:op, lvl:c.lvl, rate:coinOf("mates", c.lvl, op), queue:qs, total:c.items,
+       idx:0, ok:0, fail:0, coins:0, run:0, t0:Date.now(), itemT0:0, itemMs:[], timer:null};
+  M.timer = setInterval(function(){
+    document.getElementById("m-timer").textContent = fmtTime(Date.now() - M.t0);
+  }, 500);
+  document.getElementById("m-hint").textContent =
+    "Hazla en el papel y toca el resultado · " + M.rate + " 🪙 cada una";
+  renderMath();
+  go("s-math");
+}
+
+function renderMath(){
+  var q = M.queue[M.idx];
+  q.opts = shuffle([q.res].concat(distractors(q)));
+  document.getElementById("m-op").textContent    = q.text;
+  document.getElementById("m-count").textContent = (M.idx+1) + "/" + M.queue.length;
+  document.getElementById("m-coin").textContent  = M.coins;
+  document.getElementById("m-bar").style.width   = (M.idx / M.queue.length * 100) + "%";
+  document.getElementById("m-run").textContent   = M.run >= 3 ? "🔥 ¡" + M.run + " seguidas!" : "";
+
+  var box = document.getElementById("m-opts");
+  box.className = "opts";
+  box.innerHTML = q.opts.map(function(v){
+    return '<button class="opt" onclick="answer(this,' + v + ')">' + v + '</button>';
+  }).join("");
+  M.itemT0 = Date.now();
+}
+
+function answer(btn, v){
+  var q = M.queue[M.idx];
+  var box = document.getElementById("m-opts");
+  box.className = "opts locked";                /* nada de doble toque mientras se resuelve */
+  M.itemMs.push(Date.now() - M.itemT0);
+
+  var good = v === q.res;
+  if(good){
+    M.ok++; M.run++;
+    M.coins += q.retry ? Math.max(1, Math.round(M.rate/2)) : M.rate;
+    btn.className = "opt good";
+  }else{
+    M.fail++; M.run = 0;
+    state.mfails[q.text] = (state.mfails[q.text] || 0) + 1;
+    if(!q.retry) M.queue.push({op:q.op, a:q.a, b:q.b, res:q.res, text:q.text, retry:true});
+    btn.className = "opt bad";
+    var all = box.querySelectorAll(".opt");
+    for(var i=0;i<all.length;i++){
+      if(+all[i].textContent === q.res) all[i].className = "opt good";
+      else if(all[i] !== btn) all[i].className = "opt dim";
+    }
+  }
+  document.getElementById("m-coin").textContent = M.coins;
+
+  setTimeout(function(){
+    M.idx++;
+    if(M.idx >= M.queue.length) endMath(); else renderMath();
+  }, good ? 650 : 1600);                        /* si falla, tiempo para ver el resultado bueno */
+}
+
+function quitMath(){
+  if(!confirm("¿Salir de las mates? No se guardará.")) return;
+  clearInterval(M.timer); M = null;
+  go("s-home");
+}
+
+function endMath(){
+  clearInterval(M.timer);
+  finishRun({
+    task:"mates", level:M.lvl, sub:M.op, items:M.total, ok:M.ok, fail:M.fail,
+    raw:M.coins, itemMs:M.itemMs, totalMs:Date.now() - M.t0
+  });
+  M = null;
+}
+
+/* =====================================================================
+   Ficha de la Pokédex
+   Datos oficiales de PokeAPI en español, cacheados en su propia clave de
+   localStorage: la primera vez hace falta red, después no. La caché va
+   aparte del estado para no engordar la copia de seguridad.
+   ===================================================================== */
+var PCKEY = "letras_nil_pokecache";
+var pcache = {};
+try{ pcache = JSON.parse(localStorage.getItem(PCKEY) || "{}"); }catch(e){ pcache = {}; }
+function pcacheSave(){ try{ localStorage.setItem(PCKEY, JSON.stringify(pcache)); }catch(e){} }
+
+var TYPE_ES = {
+  normal:["Normal","#9A9A78"], fire:["Fuego","#E07C28"], water:["Agua","#5480E8"],
+  electric:["Eléctrico","#C79A06"], grass:["Planta","#5FA83A"], ice:["Hielo","#4FADAC"],
+  fighting:["Lucha","#BE2E28"], poison:["Veneno","#953A93"], ground:["Tierra","#A88B2E"],
+  flying:["Volador","#7B6AD6"], psychic:["Psíquico","#E0447A"], bug:["Bicho","#77880F"],
+  rock:["Roca","#9E8A2B"], ghost:["Fantasma","#66508A"], dragon:["Dragón","#5B2AE0"],
+  dark:["Siniestro","#5F4A3B"], steel:["Acero","#77778A"], fairy:["Hada","#C46C95"]
+};
+
+function fetchPoke(id, cb){
+  if(pcache[id]){ cb(pcache[id]); return; }
+  if(!window.fetch){ cb(null); return; }
+  var api = "https://pokeapi.co/api/v2/", got = {}, done = 0, bad = false;
+  function step(){
+    if(++done < 2) return;
+    if(bad){ cb(null); return; }
+    pcache[id] = got; pcacheSave(); cb(got);
+  }
+  fetch(api + "pokemon/" + id).then(function(r){ return r.json(); }).then(function(d){
+    got.types = d.types.map(function(t){ return t.type.name; });
+    got.h = d.height / 10; got.w = d.weight / 10;
+    step();
+  }).catch(function(){ bad = true; step(); });
+
+  fetch(api + "pokemon-species/" + id).then(function(r){ return r.json(); }).then(function(d){
+    got.name  = pick(d.names, "name")  || POKE[id-1];
+    got.genus = pick(d.genera, "genus") || "";
+    var f = d.flavor_text_entries.filter(function(x){ return x.language.name === "es"; });
+    /* la última entrada en español es la de los juegos más recientes: mejor redactada */
+    got.flavor = f.length
+      ? f[f.length-1].flavor_text.replace(/[\n\f\r\u00ad]/g, " ").replace(/\s+/g, " ").trim()
+      : "";
+    step();
+  }).catch(function(){ bad = true; step(); });
+}
+function pick(arr, field){
+  for(var i=0;i<arr.length;i++) if(arr[i].language.name === "es") return arr[i][field];
+  return "";
+}
+
+var fichaId = 0;
+function fichaList(){ return state.dex.slice().sort(function(a,b){ return a-b; }); }
+
+function showFicha(id){
+  fichaId = id;
+  var list = fichaList(), i = list.indexOf(id);
+  document.getElementById("f-num").textContent  = "Nº " + ("00" + id).slice(-3);
+  document.getElementById("f-img").src          = spriteUrl(id);
+  document.getElementById("f-name").textContent = POKE[id-1];
+  document.getElementById("f-genus").textContent = "";
+  document.getElementById("f-types").innerHTML  = "";
+  document.getElementById("f-flav").innerHTML   = '<div class="empty">Cargando su ficha…</div>';
+  document.getElementById("f-stats").innerHTML  =
+    '<div class="stat"><b>' + (stageOf(id) === 1 ? "—" : stageOf(id)) + '</b><span>evolución</span></div>' +
+    '<div class="stat"><b>' + priceOf(id) + '</b><span>monedas que costó</span></div>' +
+    '<div class="stat"><b>' + (state.dex.indexOf(id) + 1) + 'º</b><span>que compraste</span></div>';
+  document.getElementById("f-evo").innerHTML    = evoStrip(id);
+  document.getElementById("f-prev").disabled    = i <= 0;
+  document.getElementById("f-next").disabled    = i >= list.length - 1;
+  go("s-ficha");
+
+  fetchPoke(id, function(d){
+    if(fichaId !== id) return;                  /* ya se ha movido a otra ficha */
+    if(!d){
+      document.getElementById("f-flav").innerHTML =
+        '<div class="empty">No he podido bajar su ficha. Conéctate a internet y vuelve a entrar.</div>';
+      return;
+    }
+    document.getElementById("f-name").textContent  = d.name || POKE[id-1];
+    document.getElementById("f-genus").textContent = d.genus || "";
+    document.getElementById("f-types").innerHTML   = (d.types || []).map(function(t){
+      var e = TYPE_ES[t] || [t, "#8A7C6A"];
+      return '<span class="ty" style="background:' + e[1] + '">' + e[0] + '</span>';
+    }).join("");
+    document.getElementById("f-flav").textContent  = d.flavor || "";
+    document.getElementById("f-stats").innerHTML =
+      '<div class="stat"><b>' + (d.h ? d.h.toFixed(1).replace(".", ",") + " m" : "?") + '</b><span>mide</span></div>' +
+      '<div class="stat"><b>' + (d.w ? Math.round(d.w) + " kg" : "?") + '</b><span>pesa</span></div>' +
+      '<div class="stat"><b>' + priceOf(id) + '</b><span>monedas que costó</span></div>';
+  });
+}
+
+/* la cadena entera, con los que aún no tiene en gris: le enseña qué le falta */
+function evoStrip(id){
+  var chain = null;
+  for(var c=0;c<CHAINS.length;c++) if(CHAINS[c].indexOf(id) >= 0){ chain = CHAINS[c]; break; }
+  if(!chain || chain.length < 2) return '<div class="empty">Este no evoluciona.</div>';
+  var out = "";
+  for(var i=0;i<chain.length;i++){
+    var e = chain[i];
+    if(i > 0) out += '<span class="sep">' + (PREV[e] === chain[i-1] ? "→" : "·") + '</span>';
+    out += '<span class="ev' + (owned(e) ? "" : " no") + '"' +
+      (owned(e) ? ' onclick="showFicha(' + e + ')"' : '') + '>' +
+      '<img loading="lazy" src="' + spriteUrl(e) + '" alt="">' +
+      '<span>' + POKE[e-1] + '</span></span>';
+  }
+  return out;
+}
+
+function fichaStep(d){
+  var list = fichaList(), i = list.indexOf(fichaId) + d;
+  if(i >= 0 && i < list.length) showFicha(list[i]);
+}
+
+/* el sprite a pantalla completa, que es lo que quiere ver de verdad */
+function zoomPoke(){
+  var img = document.getElementById("ov-sprite");
+  img.src = spriteUrl(fichaId);
+  img.className = "revealed zoom";
+  img.style.visibility = "visible";
+  document.getElementById("ov-name").textContent =
+    (pcache[fichaId] && pcache[fichaId].name) || POKE[fichaId-1];
+  document.getElementById("ov-note").textContent = "";
+  ovBack = "s-ficha";
+  document.getElementById("overlay").classList.add("on");
 }
 
 /* =====================================================================

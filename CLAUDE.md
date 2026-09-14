@@ -9,10 +9,11 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
 
 1. **El lápiz está en el papel, no en la pantalla.** La app nunca intenta reconocer trazo,
    ni pide escribir con el dedo, ni añade teclado. El iPad es consigna y recompensa.
+   En mates la cuenta también se hace en el cuaderno: la pantalla solo recoge la respuesta.
 2. **Sin audio ni TTS.** Decisión explícita de Ger. Nada de Web Speech API.
 3. **Siempre frases, nunca palabras sueltas.**
-4. **Sin fases ni niveles bloqueados.** La dificultad son dos selectores independientes
-   (longitud × tipo de letra) que **fija papá** en su panel. Nil solo pulsa JUGAR.
+4. **Sin fases ni niveles bloqueados.** La dificultad la **fija papá** en su panel, y va
+   **por tarea**: leer, escribir y mates tienen selectores propios. Nil solo elige tarea.
 5. **La recompensa es una tienda, no un gacha.** Monedas → comprar el Pokémon que él elija,
    por cadenas de evolución: no se puede comprar una evolución sin tener la anterior, y cada
    etapa cuesta mucho más. Eso es lo que le hace ahorrar. No convertirlo en cajas sorpresa.
@@ -21,6 +22,17 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
 7. **Fichero único `index.html`.** No modularizar, no meter build system, no añadir framework.
 8. **Fuente Andika para las frases.** Es criterio pedagógico (`a` de un solo piso, como la
    escribe a mano), no estético. No sustituir por Inter/Arial/system-ui.
+9. **Tres tareas: leer, escribir y mates.** Las mates se responden en pantalla con 4
+   opciones (decisión explícita de Ger). Sumas y restas **siempre llevando**, hasta 5 cifras,
+   nunca resultado negativo. Tablas de multiplicar del 1 al 10.
+10. **Jerarquía de premio innegociable:** a igual nivel, **escribir > leer > mates**, aun
+   comparando el mejor modificador de mates contra el peor de las letras. Las letras son el
+   objetivo del curso. Si tocas `COIN`, `CASE_MULT` u `OP_MULT`, vuelve a comprobarlo.
+11. **Leer y escribir en minúscula se premian** (`CASE_MULT`: may x1, dos x1,2, min x1,4), y
+   **restar llevando y multiplicar** más que sumar (`OP_MULT`: x1, x1,25, x1,4).
+12. **Tope diario de mates.** Si en un día acumula 12 operaciones más que frases, las mates
+   pagan la mitad; desde 28, un cuarto. Se recupera leyendo o escribiendo. No quitarlo: es
+   lo que impide que se salte la lectura a base de sumas.
 
 ## Al añadir frases al banco
 
@@ -35,5 +47,17 @@ Temas: familia, casa, cole y fútbol/deportes.
 `file://` está bloqueado en Playwright: servir con `python3 -m http.server 8777` y abrir
 `http://localhost:8777/index.html`.
 
-Si cambia la forma del estado guardado, **subir la versión de la key** (`letras_nil_v2` →
-`v3`) o escribir migración en `load()`. Nil pierde monedas y Pokémon si se rompe.
+Si cambia la forma del estado guardado, **subir la versión de la key** (`letras_nil_v3` →
+`v4`) **y** escribir la migración en `migrate()`. Nil pierde monedas y Pokémon si se rompe.
+`migrate()` corre en dos sitios: al cargar (si solo existe la key vieja) y al **importar un
+JSON** exportado por una versión anterior. Los dos caminos tienen que pasar por ella.
+
+La caché de PokeAPI vive aparte, en `letras_nil_pokecache`. Es regenerable y no entra en el
+export: borrarla no pierde nada.
+
+## Al cambiar la economía
+
+La tabla del panel de papá (`tarifTable`) es la única fuente de verdad que ve Ger para
+decidir el nivel del día: monedas por acierto, total de una sesión clavada y el saldo al que
+llegaría, cruzado con lo que ese saldo le abre en la tienda. Si añades una tarea o un
+modificador, tiene que aparecer ahí.
