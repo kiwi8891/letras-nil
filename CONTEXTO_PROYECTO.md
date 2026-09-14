@@ -20,7 +20,9 @@ El iPad es consigna, cronómetro y recompensa. La app **nunca** intenta reconoce
 La app muestra una frase → Nil la lee en voz alta → la escribe en papel → papá pulsa ✓/✗ → monedas
 ```
 
-**GitHub:** pendiente (`kiwi8891/letras-nil`, GitHub Pages)
+**Live:** https://kiwi8891.github.io/letras-nil/
+**GitHub:** `kiwi8891/letras-nil` (público, Pages desde `main`)
+**Reglas cortas para editar:** `CLAUDE.md` del proyecto.
 
 ---
 
@@ -160,3 +162,34 @@ Respaldo adicional: exportar/importar JSON desde el panel de papá.
 - Si se añaden frases, respetar tildes, mayúscula inicial y punto final.
 - Al probar con Playwright en local: servir con `python3 -m http.server` (el protocolo `file:` está bloqueado).
 - Precedente y patrones: `15_PROYECTOS/JUEGO_TABLAS/index.html` (mismo niño, misma arquitectura).
+
+---
+
+## Estado
+
+| Fecha | Qué |
+|---|---|
+| 2026-09-14 | v1 publicada. Verificado en el dominio real: Andika carga, sprites de PokeAPI cargan, `localStorage` disponible, 120 frases servidas. |
+
+**Pendiente:** probarlo con Nil delante y añadirlo a la pantalla de inicio de su iPad.
+
+---
+
+## Bitácora de uso con Nil
+
+Aquí se anota lo que Ger reporte después de cada sesión real: qué le cuesta, qué le aburre,
+si la economía de monedas está bien calibrada, si las frases se le quedan cortas o largas.
+**Es la fuente de verdad para decidir cambios** — por encima de cualquier intuición de diseño.
+
+| Fecha | Observación | Qué se cambió |
+|---|---|---|
+| _(pendiente de la primera sesión con Nil)_ | | |
+
+### Palancas de ajuste, por orden de preferencia
+
+1. **Dificultad** (panel de papá): longitud y tipo de letra. Primera respuesta a casi todo.
+2. **Nº de frases por sesión** (5 / 8 / 12): si se cansa o se queda con ganas.
+3. **Banco de frases**: añadir más, o de otros temas que le tiren.
+4. **Monedas por frase** (`COIN_PER`): solo si la motivación se cae de verdad. Subir la
+   dificultad paga más por sí solo (5 → 8 → 12), así que tocar precios suele ser innecesario.
+5. **Precios** (`priceOf`): lo último. Bajarlos devalúa lo que ya tiene comprado.
