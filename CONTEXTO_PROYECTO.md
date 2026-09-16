@@ -61,13 +61,15 @@ Cada tarea lleva sus propios selectores en el panel. Nil solo elige tarea.
 | `media` | 5-8 palabras (40 frases) |
 | `larga` | 8-11 palabras (35 frases) |
 
-| Tipo de letra | Qué se ve en pantalla |
-|---|---|
-| `may` | `EL BALÓN ES ROJO.` |
-| `dos` | `EL BALÓN ES ROJO.` arriba en gris + `El balón es rojo.` abajo en negro |
-| `min` | `El balón es rojo.` |
+| Tipo de letra | Qué se ve en pantalla | Nivel |
+|---|---|---|
+| `may` | `EL BALÓN ES ROJO.` | fácil |
+| `min` | `El balón es rojo.` | difícil |
 
-El modo `dos` es el puente pedagógico: ve las dos formas a la vez y escribe la de abajo.
+**Solo dos niveles** (2026-09-16). El antiguo modo puente `dos` (las dos formas a la vez)
+está eliminado: `normalizeCase()` reescribe a `min` cualquier progreso guardado con él,
+tanto al cargar como al importar un JSON. `CASE_MULT` y `CASE_LABEL` conservan la clave
+`dos` únicamente para no reventar al pintar historiales antiguos.
 
 **Las frases se guardan ya bien escritas** (tildes, mayúscula inicial, punto final).
 `may` se deriva con `toUpperCase()`, que en JS conserva las tildes. Si se añaden frases
@@ -104,7 +106,7 @@ Monedas por acierto **a la primera**, antes de modificadores (`COIN`):
 Modificadores multiplicativos, redondeando:
 
 ```
-tipo de letra (leer y escribir)   may x1   ·  dos x1,2  ·  min x1,4
+tipo de letra (leer y escribir)   may x1   ·  min x1,4
 operación (mates)                 sum x1   ·  res x1,25 ·  mul x1,4
 acierto en el repaso              la mitad
 sesión sin ningún fallo           +20
@@ -238,10 +240,16 @@ Respaldo adicional: exportar/importar JSON desde el panel de papá.
 
 - Paleta cálida: `--bg:#FDF6E9` crema · `--ink:#2A2119` marrón · `--red:#E03B2F` Poké Ball ·
   `--green:#2E9E5B` · `--gold:#E8A317`. Ni blanco ni negro puros.
-- **Fuente Andika** para las frases: diseñada para alfabetización, con la `a` **de un solo piso**
-  (la que el niño escribe a mano) y la `l` distinguible de la `I`. **Decisión pedagógica,
-  no estética**: no sustituir por una fuente con `a` de doble piso. Fallback: Lexend.
-- Fredoka para títulos y UI.
+- **Fuente `Edu AU VIC WA NT Pre`** para las frases (Google Fonts): escolar australiana de
+  trazo manuscrito, `a` **de un solo piso**, la que el niño escribe a mano. **Decisión
+  pedagógica, no estética.** Sustituyó a Andika el 2026-09-16 a petición de Ger.
+- **Fredoka** para todo lo demás (títulos, botones, panel, cifras). Andika ya no se carga.
+- **Trampa de glifos, verificada en navegador:** `Edu NSW ACT Foundation` y las
+  `Edu … Beginner` declaran `unicode-range: U+0000-00FF` pero **el fichero no trae las
+  acentuadas ni la ñ**. El navegador cae al fallback carácter a carácter y la palabra cambia
+  de fuente a mitad. Solo `Edu AU VIC WA NT Pre` y `Edu AU VIC WA NT Hand` tienen el español
+  completo. Comprobar siempre con `measureText` (con la fuente vs sin ella) **y un carácter
+  de control que falte seguro** (`Ж`): comparar píxeles de canvas da falsos negativos.
 
 ---
 
@@ -259,6 +267,7 @@ Respaldo adicional: exportar/importar JSON desde el panel de papá.
 | Fecha | Qué |
 |---|---|
 | 2026-09-14 | v1 publicada. Verificado en el dominio real: Andika carga, sprites de PokeAPI cargan, `localStorage` disponible, 120 frases servidas. |
+| 2026-09-16 | Tipo de letra reducido a dos niveles (fácil MAYÚSCULA / difícil minúscula), fuera el modo puente `dos`. Fuente de las frases: Andika → `Edu AU VIC WA NT Pre`; la interfaz pasa a Fredoka. La clave `letras_nil_v3` no cambia: el progreso guardado sigue valiendo, solo se normaliza `case`. |
 | 2026-09-14 | v2: tareas separadas (leer / escribir / mates), tarifa por tarea con modificadores, tope diario de mates, módulo de mates con 4 opciones, ficha de Pokédex con PokeAPI, tabla de tarifas y proyección de saldo en el panel de papá. Estado a `letras_nil_v3` con migración. |
 
 **Pendiente:** probarlo con Nil delante y añadirlo a la pantalla de inicio de su iPad.

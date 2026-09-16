@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#E03B2F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#FDF6E9; --card:#FFFFFF; --ink:#2A2119; --muted:#8A7C6A; --line:#E8DAC2;
@@ -24,8 +24,13 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:'Andika',-apple-system,system-ui,sans-serif;
+body{background:var(--bg);color:var(--ink);font-family:'Fredoka',-apple-system,system-ui,sans-serif;
   font-size:17px;line-height:1.45;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+/* Las frases van en la escolar de trazo manuscrito; el resto de la interfaz, en Fredoka.
+   'a' de un solo piso, como la que Nil escribe a mano: es criterio pedagógico.
+   Ojo: las Edu "Beginner"/"Foundation" NO traen tildes ni ñ aunque digan cubrir Latin-1.
+   Esta (AU VIC WA NT Pre) sí, verificado glifo a glifo en navegador. */
+#item-main{font-family:'Edu AU VIC WA NT Pre',-apple-system,cursive}
 h1,h2,h3{font-family:'Fredoka',-apple-system,system-ui,sans-serif;font-weight:600;letter-spacing:.01em}
 button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:none;background:none}
 
@@ -82,9 +87,6 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 .bar i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
 .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:22px;text-align:center;min-height:0}
-#item-up{color:var(--muted);font-weight:700;line-height:1.12;margin-bottom:10px;display:none}
-#item-up.word{font-size:clamp(26px,7vw,48px)}
-#item-up.sent{font-size:clamp(19px,3.8vw,34px);max-width:27ch}
 #item-main{font-weight:700;line-height:1.14;word-break:break-word}
 #item-main.word{font-size:clamp(52px,15vw,130px)}
 #item-main.sent{font-size:clamp(28px,5.6vw,62px);max-width:15ch}
@@ -249,8 +251,8 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 .tarif tr.cur{background:#FFFBEF}
 .tarif tr.head td{border-bottom:none;padding-top:14px;font-family:'Fredoka';font-weight:700;font-size:15px}
 .tarif b{font-family:'Fredoka';font-weight:700}
-.tarif .un{color:var(--muted);font-size:12px;font-weight:400;font-family:'Andika'}
-.tarif .nx{display:block;color:var(--green-dk);font-size:11px;font-family:'Andika'}
+.tarif .un{color:var(--muted);font-size:12px;font-weight:400}
+.tarif .nx{display:block;color:var(--green-dk);font-size:11px;font-weight:400}
 .note{color:var(--muted);font-size:13px;line-height:1.4;margin-top:12px}
 .tabsel{display:flex;flex-wrap:wrap;gap:7px}
 .tabsel button{width:46px;height:46px;border-radius:13px;border:2px solid var(--line);
@@ -292,7 +294,6 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   </div>
   <div class="bar"><i id="p-bar"></i></div>
   <div class="stage">
-    <div id="item-up"></div>
     <div id="item-main" class="sent"></div>
     <div class="hintline" id="p-hint">Léela en voz alta y escríbela en el papel</div>
   </div>
@@ -577,7 +578,7 @@ larga:[
 var LEN_LABEL  = {corta:"frases cortas", media:"frases medias", larga:"frases largas"};
 var LEN_SHORT  = {corta:"Corta", media:"Media", larga:"Larga"};
 var LEN_HINT   = {corta:"3-4 palabras", media:"5-7 palabras", larga:"8-11 palabras"};
-var CASE_LABEL = {may:"MAYÚSCULAS", dos:"las dos letras", min:"letra normal"};
+var CASE_LABEL = {may:"MAYÚSCULAS", dos:"minúscula", min:"minúscula"};
 var TASK_LABEL = {leer:"Leer", escribir:"Escribir", mates:"Mates"};
 var TASK_ICON  = {leer:"📖", escribir:"✏️", mates:"➕"};
 var MLVL_LABEL = {facil:"fácil", medio:"medio", dificil:"difícil"};
@@ -594,8 +595,10 @@ var COIN = {
   escribir: {corta:5, media:8, larga:12},
   mates:    {facil:2, medio:3, dificil:4}
 };
-/* Leer y escribir en minúscula cuesta muchísimo más que en mayúsculas: se paga. */
-var CASE_MULT = {may:1, dos:1.2, min:1.4};
+/* Dos niveles de letra y nada más: fácil MAYÚSCULA, difícil minúscula.
+   La minúscula cuesta muchísimo más que la mayúscula, así que se paga.
+   "dos" (el viejo modo puente) se conserva solo para no romper historiales antiguos. */
+var CASE_MULT = {may:1, dos:1.4, min:1.4};
 /* Restar llevando y multiplicar son más duras que sumar: se pagan. */
 var OP_MULT   = {sum:1, res:1.25, mul:1.4};
 var COIN_PERFECT = 20;                       /* bonus por sesión sin fallos */
@@ -739,7 +742,8 @@ var state = {
    Si solo existe la clave vieja, se convierte y se conserva el progreso. */
 function migrate(d){
   var old = d.settings || {};
-  var len = old.len || "corta", cs = old.case || "may", it = old.items || 8;
+  var len = old.len || "corta", it = old.items || 8;
+  var cs = old.case === "may" ? "may" : "min";   /* el modo puente "dos" ya no existe */
   d.settings = {
     leer:     {len:len, case:cs, items:it},
     escribir: {len:len, case:cs, items:it},
@@ -772,12 +776,24 @@ function load(){
     if(!st.escribir) st.escribir = {len:"corta", case:"may", items:8};
     if(!st.mates)    st.mates    = {lvl:"facil", items:10, tablas:[1,2,3,4,5,6,7,8,9,10]};
     if(!st.mates.tablas || !st.mates.tablas.length) st.mates.tablas = [1,2,3,4,5,6,7,8,9,10];
+    normalizeCase();
     if(!state.mfails) state.mfails = {};
     if(!state.day || !state.day.d) state.day = {d:"", leer:0, escribir:0, mates:0};
     if(!state.streak || state.streak.count === undefined) state.streak = {count:0, last:""};
     if(migrated) save();
   }catch(e){ console.warn("No se pudo leer el progreso", e); }
 }
+/* El modo "las dos letras" ya no existe. Un progreso guardado con él pasa a minúscula,
+   que es la línea que Nil ya copiaba en ese modo. No hace falta subir la versión de la
+   clave: la forma del estado no cambia, solo se estrecha el conjunto de valores válidos. */
+function normalizeCase(){
+  var t = ["leer","escribir"];
+  for(var i=0;i<t.length;i++){
+    var c = state.settings[t[i]];
+    if(c && c.case !== "may" && c.case !== "min") c.case = "min";
+  }
+}
+
 function save(){
   try{ localStorage.setItem(KEY, JSON.stringify(state)); }
   catch(e){ console.warn("No se pudo guardar", e); }
@@ -916,16 +932,12 @@ function startSession(task){
 
 function renderItem(){
   var it = S.queue[S.idx];
-  var up = document.getElementById("item-up");
   var main = document.getElementById("item-main");
   var isSent = it.text.indexOf(" ") >= 0;
-  var cls = isSent ? "sent" : "word";
 
-  up.style.display = "none"; up.textContent = ""; up.className = cls;
-  if(S.mode === "may")       main.textContent = it.text.toUpperCase();
-  else if(S.mode === "min")  main.textContent = it.text;
-  else { up.textContent = it.text.toUpperCase(); up.style.display = "block"; main.textContent = it.text; }
-  main.className = cls;
+  /* solo dos modos: fácil en MAYÚSCULA, difícil en minúscula */
+  main.textContent = S.mode === "may" ? it.text.toUpperCase() : it.text;
+  main.className = isSent ? "sent" : "word";
 
   document.getElementById("p-count").textContent = (S.idx+1) + "/" + S.queue.length;
   document.getElementById("p-coin").textContent  = S.coins;
@@ -1182,9 +1194,8 @@ function renderLevels(){
     html += '</div></div>';
 
     if(task !== "mates"){
-      var CS = [["may","MAYÚSCULA","EL BALÓN ES ROJO."],
-                ["dos","LAS DOS","arriba MAY, abajo min"],
-                ["min","Normal","El balón es rojo."]];
+      var CS = [["may","FÁCIL","EL BALÓN ES ROJO."],
+                ["min","DIFÍCIL","El balón es rojo."]];
       html += '<div class="optrow"><div class="lab">Tipo de letra</div><div class="segs">';
       for(var k=0;k<CS.length;k++){
         html += '<button class="seg' + (c.case === CS[k][0] ? " on" : "") +
@@ -1326,6 +1337,7 @@ function importData(input){
       for(var k in state) if(d[k] !== undefined) state[k] = d[k];
       if(!state.mfails) state.mfails = {};
       if(!state.day || !state.day.d) state.day = {d:"", leer:0, escribir:0, mates:0};
+      normalizeCase();
       save(); showDad();
       alert("Progreso importado correctamente." + (old
         ? "\n\nEra una copia de la versión anterior: monedas, Pokémon y racha se conservan, " +

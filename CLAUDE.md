@@ -20,17 +20,26 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
 6. **Gamificación: solo la racha de días.** Ger descartó equipo de 6, récord de velocidad y
    otros añadidos. No reintroducirlos sin que los pida.
 7. **Fichero único `index.html`.** No modularizar, no meter build system, no añadir framework.
-8. **Fuente Andika para las frases.** Es criterio pedagógico (`a` de un solo piso, como la
-   escribe a mano), no estético. No sustituir por Inter/Arial/system-ui.
-9. **Tres tareas: leer, escribir y mates.** Las mates se responden en pantalla con 4
+8. **Fuente `Edu AU VIC WA NT Pre` para las frases** (escolar australiana, trazo manuscrito).
+   Criterio pedagógico: `a` de un solo piso, como la escribe a mano. La interfaz va en Fredoka.
+   **Antes de cambiar de fuente, verificar los glifos del español uno a uno en navegador.**
+   `Edu NSW ACT Foundation` y las `Edu SA/QLD/VIC WA NT Beginner` declaran cubrir Latin-1 y
+   **no traen tildes ni ñ**: Safari cambia de fuente a mitad de palabra sin avisar. Método:
+   medir `measureText` del glifo con la fuente y sin ella; si coinciden, falta. Control
+   obligatorio con un carácter que falte seguro (`Ж`), o el test da falsos negativos.
+9. **Solo dos niveles de letra: fácil MAYÚSCULA, difícil minúscula.** El viejo modo puente
+   "las dos" está eliminado (2026-09-16). `CASE_MULT` y `CASE_LABEL` conservan la clave `dos`
+   solo para no romper historiales antiguos, y `normalizeCase()` reescribe a `min` cualquier
+   ajuste guardado con ella. No reintroducir el modo sin que Ger lo pida.
+10. **Tres tareas: leer, escribir y mates.** Las mates se responden en pantalla con 4
    opciones (decisión explícita de Ger). Sumas y restas **siempre llevando**, hasta 5 cifras,
    nunca resultado negativo. Tablas de multiplicar del 1 al 10.
-10. **Jerarquía de premio innegociable:** a igual nivel, **escribir > leer > mates**, aun
+11. **Jerarquía de premio innegociable:** a igual nivel, **escribir > leer > mates**, aun
    comparando el mejor modificador de mates contra el peor de las letras. Las letras son el
    objetivo del curso. Si tocas `COIN`, `CASE_MULT` u `OP_MULT`, vuelve a comprobarlo.
-11. **Leer y escribir en minúscula se premian** (`CASE_MULT`: may x1, dos x1,2, min x1,4), y
+12. **Leer y escribir en minúscula se premian** (`CASE_MULT`: may x1, min x1,4), y
    **restar llevando y multiplicar** más que sumar (`OP_MULT`: x1, x1,25, x1,4).
-12. **Tope diario de mates.** Si en un día acumula 12 operaciones más que frases, las mates
+13. **Tope diario de mates.** Si en un día acumula 12 operaciones más que frases, las mates
    pagan la mitad; desde 28, un cuarto. Se recupera leyendo o escribiendo. No quitarlo: es
    lo que impide que se salte la lectura a base de sumas.
 
