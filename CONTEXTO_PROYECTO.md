@@ -75,6 +75,15 @@ tanto al cargar como al importar un JSON. `CASE_MULT` y `CASE_LABEL` conservan l
 `may` se deriva con `toUpperCase()`, que en JS conserva las tildes. Si se añaden frases
 nuevas, escribirlas con ortografía correcta o Nil copiará la falta.
 
+**Las tablas, en orden (`s-tablas`).** Pantalla de consulta, no de examen: la tabla elegida
+sale entera, escrita y resuelta (`7 × 1 = 7` … `7 × 10 = 70`). Las que ya ha fallado salen en
+rojo con el número de veces, leído de `state.mfails` (clave `"7 × 3"`, el mismo formato que
+genera `makeMath`). Desde ahí, **practicar esa tabla en orden**: `startMath("mul", n)` monta
+la cola 1..10 sin barajar. **Paga la mitad** (`tablaRate()`) porque yendo en orden el
+resultado se adivina por la secuencia: es el sitio donde empieza, no donde se queda.
+El distintivo de fallos dice "2 fallos", no "✗2": en una pantalla de multiplicaciones un
+aspa con un número se lee como "por 2".
+
 **Mates:** nivel × operaciones por sesión (6/10/15) × qué tablas entran.
 
 | Nivel | Sumas y restas | Multiplicaciones |
@@ -168,8 +177,8 @@ URL determinista, sin llamadas a la API. Requiere internet la primera vez que se
 
 ## Pantallas
 
-`s-home` · `s-play` · `s-mathmenu` · `s-math` · `s-result` · `s-shop` · `s-dex` ·
-`s-ficha` · `s-dad` + `#overlay` (compra y zoom de sprite).
+`s-home` · `s-play` · `s-mathmenu` · `s-tablas` · `s-math` · `s-result` · `s-shop` ·
+`s-dex` · `s-ficha` · `s-dad` + `#overlay` (compra y zoom de sprite).
 Cambio con `go(id)`: quita `.active` de todas y la pone en una.
 
 `s-home` ya no tiene un botón JUGAR: tiene tres botones de tarea que **dicen lo que paga
@@ -199,6 +208,8 @@ y **muy separados** (`gap:26px`) para que papá no falle al pulsar y Nil no le d
 | `makeMath(op,lvl)` / `distractors(q)` | Generan la operación (siempre llevando) y los fallos plausibles |
 | `answer(btn,v)` | Corrige, pinta verde/rojo, reencola el fallo y avanza solo |
 | `mathDamp()` | Tope diario de las mates: 1 / 0,5 / 0,25 |
+| `showTablas(n)` | Las tablas del 1 al 10 escritas y resueltas, con las falladas marcadas |
+| `tablaRate()` | Lo que paga practicar una tabla en orden: la mitad del modo normal |
 | `showFicha(id)` | Ficha de la Pokédex; `fetchPoke` trae los datos de PokeAPI y los cachea |
 | `tarifTable()` | Tabla de monedas por nivel y proyección de saldo |
 | `touchStreak()` / `liveStreak()` | Racha: sube una vez al día; se rompe si salta un día |
@@ -240,10 +251,16 @@ Respaldo adicional: exportar/importar JSON desde el panel de papá.
 
 - Paleta cálida: `--bg:#FDF6E9` crema · `--ink:#2A2119` marrón · `--red:#E03B2F` Poké Ball ·
   `--green:#2E9E5B` · `--gold:#E8A317`. Ni blanco ni negro puros.
-- **Fuente `Edu AU VIC WA NT Pre`** para las frases (Google Fonts): escolar australiana de
-  trazo manuscrito, `a` **de un solo piso**, la que el niño escribe a mano. **Decisión
-  pedagógica, no estética.** Sustituyó a Andika el 2026-09-16 a petición de Ger.
-- **Fredoka** para todo lo demás (títulos, botones, panel, cifras). Andika ya no se carga.
+- **Fuente `Comic Neue`** para las frases y las tablas (Google Fonts). Criterios, por orden:
+  `a` **de un solo piso** (la que el niño escribe a mano), **`I` con travesaños** para que no
+  se confunda con la `l` ni con el `1`, y **peso 700 real**. **Decisión pedagógica.**
+- **Fredoka** para todo lo demás (títulos, botones, panel, cifras).
+- **Historial de descartes, para no repetirlos:** Andika (Ger: no le gusta),
+  `Edu AU VIC WA NT Pre` (Ger: sale inclinada y con las letras pegadas), Quicksand y Nunito
+  (`l` e `I` idénticas), Delius (solo pesa 400, el negrita saldría sintético), Schoolbell
+  (demasiado irregular), Patrick Hand (`l` con cola, se confunde).
+- **Antes de proponer una fuente: mirarla renderizada.** Página de comparación con frases
+  reales del banco + screenshot. Dos elecciones seguidas fallaron por juzgar de memoria.
 - **Trampa de glifos, verificada en navegador:** `Edu NSW ACT Foundation` y las
   `Edu … Beginner` declaran `unicode-range: U+0000-00FF` pero **el fichero no trae las
   acentuadas ni la ñ**. El navegador cae al fallback carácter a carácter y la palabra cambia
@@ -267,6 +284,7 @@ Respaldo adicional: exportar/importar JSON desde el panel de papá.
 | Fecha | Qué |
 |---|---|
 | 2026-09-14 | v1 publicada. Verificado en el dominio real: Andika carga, sprites de PokeAPI cargan, `localStorage` disponible, 120 frases servidas. |
+| 2026-09-16 | Fuente de las frases: `Edu AU VIC WA NT Pre` → **`Comic Neue`** (la anterior salía inclinada y pegada). Nueva pantalla `s-tablas`: las tablas del 1 al 10 en orden, con las falladas marcadas y práctica en orden a mitad de precio. |
 | 2026-09-16 | Tipo de letra reducido a dos niveles (fácil MAYÚSCULA / difícil minúscula), fuera el modo puente `dos`. Fuente de las frases: Andika → `Edu AU VIC WA NT Pre`; la interfaz pasa a Fredoka. La clave `letras_nil_v3` no cambia: el progreso guardado sigue valiendo, solo se normaliza `case`. |
 | 2026-09-14 | v2: tareas separadas (leer / escribir / mates), tarifa por tarea con modificadores, tope diario de mates, módulo de mates con 4 opciones, ficha de Pokédex con PokeAPI, tabla de tarifas y proyección de saldo en el panel de papá. Estado a `letras_nil_v3` con migración. |
 

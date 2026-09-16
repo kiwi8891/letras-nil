@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#E03B2F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#FDF6E9; --card:#FFFFFF; --ink:#2A2119; --muted:#8A7C6A; --line:#E8DAC2;
@@ -26,11 +26,14 @@
 html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:'Fredoka',-apple-system,system-ui,sans-serif;
   font-size:17px;line-height:1.45;-webkit-text-size-adjust:100%;overscroll-behavior:none}
-/* Las frases van en la escolar de trazo manuscrito; el resto de la interfaz, en Fredoka.
-   'a' de un solo piso, como la que Nil escribe a mano: es criterio pedagógico.
-   Ojo: las Edu "Beginner"/"Foundation" NO traen tildes ni ñ aunque digan cubrir Latin-1.
-   Esta (AU VIC WA NT Pre) sí, verificado glifo a glifo en navegador. */
-#item-main{font-family:'Edu AU VIC WA NT Pre',-apple-system,cursive}
+/* Las frases y las tablas van en Comic Neue; el resto de la interfaz, en Fredoka.
+   Criterios, por orden: 'a' de un solo piso (la que Nil escribe a mano), 'I' con travesaños
+   para que no se confunda con la 'l' ni con el '1', y peso 700 real (Delius solo tiene 400
+   y el negrita saldría sintético). Descartadas: Andika y Edu AU VIC WA NT Pre (esta sale
+   inclinada y con las letras pegadas, ilegible para quien empieza).
+   Ojo al cambiar: las Edu "Beginner"/"Foundation" NO traen tildes ni ñ pese a declarar
+   cubrir Latin-1. Verificar glifo a glifo antes de tocar esto. */
+#item-main,.tline{font-family:'Comic Neue',-apple-system,sans-serif}
 h1,h2,h3{font-family:'Fredoka',-apple-system,system-ui,sans-serif;font-weight:600;letter-spacing:.01em}
 button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:none;background:none}
 
@@ -254,6 +257,19 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 .tarif .un{color:var(--muted);font-size:12px;font-weight:400}
 .tarif .nx{display:block;color:var(--green-dk);font-size:11px;font-weight:400}
 .note{color:var(--muted);font-size:13px;line-height:1.4;margin-top:12px}
+/* ---------- las tablas, en orden ---------- */
+.tline{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--card);
+  border:2px solid var(--line);border-radius:14px;padding:10px 64px;margin-bottom:8px;
+  font-weight:700;font-size:clamp(20px,5.4vw,27px);font-variant-numeric:tabular-nums;
+  position:relative}
+.tline .eq{color:var(--muted);font-weight:400}
+.tline .r{color:var(--green-dk)}
+.tline.weak{border-color:var(--red);background:#FFF3F1}
+.tline.weak .r{color:var(--red-dk)}
+/* anclado, para que la operación siga centrada como en las filas sin marcar */
+.tline .warn{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:'Fredoka';font-weight:700;font-size:13px;color:#fff;background:var(--red);
+  border-radius:999px;padding:3px 9px;line-height:1.3}
 .tabsel{display:flex;flex-wrap:wrap;gap:7px}
 .tabsel button{width:46px;height:46px;border-radius:13px;border:2px solid var(--line);
   background:var(--bg);font-family:'Fredoka';font-weight:600;font-size:15px}
@@ -336,6 +352,21 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div class="chip" id="mm-lvl"></div>
     </div>
     <div id="mm-list"></div>
+  </div>
+</div>
+
+<!-- ============ LAS TABLAS, EN ORDEN ============ -->
+<div class="screen" id="s-tablas">
+  <div class="wrap">
+    <div class="top">
+      <button class="iconbtn" onclick="showMathMenu()">←</button>
+      <h2>LAS TABLAS</h2>
+      <div style="width:44px"></div>
+    </div>
+    <div class="tabsel" id="tb-sel" style="margin-bottom:18px;justify-content:center"></div>
+    <div id="tb-list"></div>
+    <button class="btn primary" id="tb-play"></button>
+    <div class="note" id="tb-note"></div>
   </div>
 </div>
 
@@ -1451,6 +1482,13 @@ function showMathMenu(){
       'Hoy has hecho muchas más mates que frases, así que las mates están <b>' + dl +
       '</b>. Vuelven a valer lo normal en cuanto leas o escribas un rato.</div>';
   }
+  html += '<button class="taskbtn math" onclick="showTablas()">' +
+    '<span class="ic">📋</span>' +
+    '<span class="tx"><span class="tt">VER LAS TABLAS</span>' +
+    '<span class="ts">Del 1 al 10, en orden. Para estudiarlas y practicar una a una.</span></span>' +
+    '<span class="tc">' + tablaRate() + ' 🪙<small>practicando</small></span>' +
+    '</button>';
+
   for(var i=0;i<ops.length;i++){
     var op = ops[i];
     var sub = op === "mul"
@@ -1471,23 +1509,37 @@ function showMathMenu(){
 
 var M = null;
 
-function startMath(op){
+/* Practicar una tabla en orden es mucho más fácil que el modo normal: el resultado
+   se adivina por la secuencia. Paga la mitad, para que sea el sitio donde empieza
+   y no el sitio donde se queda. */
+function tablaRate(){ return Math.max(1, Math.round(coinOf("mates", "facil", "mul") / 2)); }
+
+function startMath(op, tabla){
   var c = cfg("mates");
-  var qs = [], seen = {};
-  for(var i=0;i<c.items;i++){
-    var q, tries = 0;
-    do{ q = makeMath(op, c.lvl); tries++; }while(seen[q.text] && tries < 40);
-    seen[q.text] = 1;
-    qs.push(q);
+  var qs = [], seen = {}, i;
+
+  if(tabla){
+    for(i=1;i<=10;i++)
+      qs.push({op:"mul", a:tabla, b:i, res:tabla*i, text:tabla + " " + OP_SIGN.mul + " " + i, retry:false});
+  }else{
+    for(i=0;i<c.items;i++){
+      var q, tries = 0;
+      do{ q = makeMath(op, c.lvl); tries++; }while(seen[q.text] && tries < 40);
+      seen[q.text] = 1;
+      qs.push(q);
+    }
   }
   /* se fija al empezar: si el tope diario salta a media sesión, no cambia el trato */
-  M = {op:op, lvl:c.lvl, rate:coinOf("mates", c.lvl, op), queue:qs, total:c.items,
+  M = {op:op, lvl: tabla ? "facil" : c.lvl, tabla: tabla || 0,
+       rate: tabla ? tablaRate() : coinOf("mates", c.lvl, op),
+       queue:qs, total:qs.length,
        idx:0, ok:0, fail:0, coins:0, run:0, t0:Date.now(), itemT0:0, itemMs:[], timer:null};
   M.timer = setInterval(function(){
     document.getElementById("m-timer").textContent = fmtTime(Date.now() - M.t0);
   }, 500);
-  document.getElementById("m-hint").textContent =
-    "Hazla en el papel y toca el resultado · " + M.rate + " 🪙 cada una";
+  document.getElementById("m-hint").textContent = M.tabla
+    ? "La tabla del " + M.tabla + " en orden · " + M.rate + " 🪙 cada una"
+    : "Hazla en el papel y toca el resultado · " + M.rate + " 🪙 cada una";
   renderMath();
   go("s-math");
 }
@@ -1541,8 +1593,9 @@ function answer(btn, v){
 
 function quitMath(){
   if(!confirm("¿Salir de las mates? No se guardará.")) return;
+  var t = M.tabla;
   clearInterval(M.timer); M = null;
-  go("s-home");
+  if(t) showTablas(t); else go("s-home");
 }
 
 function endMath(){
@@ -1552,6 +1605,47 @@ function endMath(){
     raw:M.coins, itemMs:M.itemMs, totalMs:Date.now() - M.t0
   });
   M = null;
+}
+
+/* =====================================================================
+   Las tablas, en orden
+   Pantalla de consulta, no de examen: están todas escritas y resueltas.
+   Las que ya ha fallado alguna vez salen marcadas, que es donde tiene que mirar.
+   ===================================================================== */
+var tablaSel = 2;
+
+function showTablas(n){
+  if(n) tablaSel = n;
+  var i, html = "";
+
+  for(i=1;i<=10;i++)
+    html += '<button class="' + (i === tablaSel ? "on" : "") +
+            '" onclick="showTablas(' + i + ')">' + i + '</button>';
+  document.getElementById("tb-sel").innerHTML = html;
+
+  html = "";
+  var fallos = 0;
+  for(i=1;i<=10;i++){
+    var falla = state.mfails[tablaSel + " " + OP_SIGN.mul + " " + i] || 0;
+    if(falla) fallos++;
+    html += '<div class="tline' + (falla ? " weak" : "") + '">' +
+      '<span>' + tablaSel + ' ' + OP_SIGN.mul + ' ' + i + '</span>' +
+      '<span class="eq">=</span><span class="r">' + (tablaSel * i) + '</span>' +
+      (falla ? '<span class="warn">' + falla + (falla === 1 ? " fallo" : " fallos") + '</span>' : '') +
+      '</div>';
+  }
+  document.getElementById("tb-list").innerHTML = html;
+
+  var btn = document.getElementById("tb-play");
+  btn.textContent = "PRACTICAR LA DEL " + tablaSel;
+  btn.onclick = function(){ startMath("mul", tablaSel); };
+
+  document.getElementById("tb-note").innerHTML =
+    (fallos ? "En rojo, las <b>" + fallos + "</b> que ya has fallado alguna vez, con el número " +
+              "de veces. Son las que hay que mirar. " : "") +
+    "Practicar la tabla en orden paga <b>" + tablaRate() + "</b> 🪙 por operación, la mitad que " +
+    "en el modo normal: yendo en orden el resultado casi se adivina.";
+  go("s-tablas");
 }
 
 /* =====================================================================

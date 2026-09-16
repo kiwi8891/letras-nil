@@ -20,13 +20,20 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
 6. **Gamificación: solo la racha de días.** Ger descartó equipo de 6, récord de velocidad y
    otros añadidos. No reintroducirlos sin que los pida.
 7. **Fichero único `index.html`.** No modularizar, no meter build system, no añadir framework.
-8. **Fuente `Edu AU VIC WA NT Pre` para las frases** (escolar australiana, trazo manuscrito).
-   Criterio pedagógico: `a` de un solo piso, como la escribe a mano. La interfaz va en Fredoka.
-   **Antes de cambiar de fuente, verificar los glifos del español uno a uno en navegador.**
-   `Edu NSW ACT Foundation` y las `Edu SA/QLD/VIC WA NT Beginner` declaran cubrir Latin-1 y
-   **no traen tildes ni ñ**: Safari cambia de fuente a mitad de palabra sin avisar. Método:
-   medir `measureText` del glifo con la fuente y sin ella; si coinciden, falta. Control
-   obligatorio con un carácter que falte seguro (`Ж`), o el test da falsos negativos.
+8. **Fuente `Comic Neue` para las frases y las tablas.** La interfaz va en Fredoka.
+   Tres criterios, por orden: `a` **de un solo piso** (la que escribe a mano), **`I` con
+   travesaños** para que no se confunda con la `l` ni con el `1`, y **peso 700 real**.
+   Ya descartadas por Ger: **Andika** y **Edu AU VIC WA NT Pre** (esta sale inclinada y con
+   las letras pegadas). Descartadas por criterio: Quicksand y Nunito (`l` e `I` idénticas),
+   Delius (solo pesa 400, el negrita saldría sintético), Schoolbell (demasiado irregular).
+   **Al cambiar de fuente, comprobar dos cosas antes de nada:**
+   a) **Glifos del español uno a uno en navegador.** `Edu NSW ACT Foundation` y las
+      `Edu … Beginner` declaran cubrir Latin-1 y **no traen tildes ni ñ**; Safari cambia de
+      fuente a mitad de palabra sin avisar. Método: `measureText` del glifo con la fuente y
+      sin ella; si coinciden, falta. **Control obligatorio con un carácter que falte seguro**
+      (`Ж`), o el test da falsos negativos. Comparar píxeles de canvas NO sirve.
+   b) **Mirarla renderizada**, no fiarse del nombre ni de la descripción. Montar una página
+      con frases reales del banco y hacer screenshot.
 9. **Solo dos niveles de letra: fácil MAYÚSCULA, difícil minúscula.** El viejo modo puente
    "las dos" está eliminado (2026-09-16). `CASE_MULT` y `CASE_LABEL` conservan la clave `dos`
    solo para no romper historiales antiguos, y `normalizeCase()` reescribe a `min` cualquier
