@@ -314,3 +314,25 @@ si la economía de monedas está bien calibrada, si las frases se le quedan cort
 4b. **Tope diario de mates** (`MATH_FREE` 12 / `MATH_HARD` 28): subirlo si castiga de más,
    bajarlo si sigue esquivando la lectura.
 5. **Precios** (`priceOf`): lo último. Bajarlos devalúa lo que ya tiene comprado.
+
+
+---
+
+## Cartas Pokémon (2026-09-24)
+
+La colección pasa de ilustraciones de PokeAPI a **cartas oficiales del JCC en inglés**.
+Decisiones de Ger: set **Scarlet & Violet "151"** (2023) y estética de carta en **toda** la app.
+
+- **Fuente:** `images.pokemontcg.io/sv3pt5/{n}.png` y `{n}_hires.png`, sin clave. Verificado
+  con la API de pokemontcg.io: 207 cartas, cubre los 151, y la de número más bajo de cada
+  Pokémon tiene **número = Pokédex**. Por eso `cardUrl(id)` no necesita tabla.
+- **El estado no cambia** (`dex` sigue siendo la lista de ids): no hubo migración ni cambio de key.
+- **Pantallas:** inicio con la mano en abanico de las 5 últimas cartas (reversos si no hay);
+  tienda con las cadenas como tiras de cartas (en gris las que no puede pagar o están bloqueadas);
+  **álbum** con 151 fundas, las vacías con su número; ficha con la carta arriba.
+- **Overlay** (`openCard`): al comprar, la carta sale boca abajo y se da la vuelta con un barrido
+  de luz. `loadCard()` pone primero la pequeña (ya en caché) y cambia a la grande al bajar.
+  Gestos (`Z`, Pointer Events): toque = x2,5 en el punto tocado / otro toque aleja;
+  pellizco 1-4x; arrastrar con zoom mueve, sin zoom inclina la carta con brillo holográfico.
+  Tocar fuera de la carta cierra. Las cartas no compradas se ven en grande en gris.
+- La ficha sigue sacando nombre, tipo y curiosidades **en español** de PokeAPI; la carta va en inglés.

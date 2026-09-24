@@ -50,6 +50,17 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
    pagan la mitad; desde 28, un cuarto. Se recupera leyendo o escribiendo. No quitarlo: es
    lo que impide que se salte la lectura a base de sumas.
 
+14. **La colección son cartas oficiales del JCC en inglés** (2026-09-24), del set
+   **Scarlet & Violet "151"** (`sv3pt5`), el único que tiene los 151 con estilo uniforme.
+   En ese set **nº de carta = nº de Pokédex**: `cardUrl(id, big)` →
+   `images.pokemontcg.io/sv3pt5/{id}.png` (245 px) o `{id}_hires.png` (734 px). Los 3, 6 y 9
+   son las cartas `ex` (es lo que trae el set con ese número). No mezclar sets.
+   Toda la estética es de carta: mesa azul del reverso, bloques con marco amarillo, tareas con
+   su energía (leer Agua, escribir Fuego, mates Planta). La frase y la operación van sobre una
+   carta grande de cara crema: **fondo claro y quieto para leer**, sin brillos detrás.
+   Zoom propio en el overlay (el viewport lleva `user-scalable=no`): tocar = x2,5 donde toca,
+   pellizcar hasta x4, arrastrar mueve con zoom o inclina con brillo holo sin zoom.
+
 ## Al añadir frases al banco
 
 Escribirlas **ya bien escritas**: tilde, mayúscula inicial y punto final. El modo

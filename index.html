@@ -11,21 +11,33 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Letras de Nil">
-<meta name="theme-color" content="#E03B2F">
+<meta name="theme-color" content="#0E2463">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
 <style>
+/* Estética de carta Pokémon (JCC). La mesa es el reverso azul de la carta; cada bloque de
+   la interfaz es una carta: marco amarillo, cara crema y sombra de carta apoyada.
+   Las tareas llevan su tipo de energía: leer = Agua, escribir = Fuego, mates = Planta. */
 :root{
-  --bg:#FDF6E9; --card:#FFFFFF; --ink:#2A2119; --muted:#8A7C6A; --line:#E8DAC2;
+  --table:#1C3F94; --table-dk:#0E2463; --table-lt:#2F63CC;
+  --yellow:#FFCB05; --yellow-dk:#C99700; --yellow-in:#E9B800;
+  --face:#FBF6E4; --card:#FFFDF6; --ink:#22190F; --muted:#7A6D58; --line:#E6D9B5;
+  --on:#FFFFFF; --on-mut:#BFD0F5;
   --red:#E03B2F; --red-dk:#A9271E; --green:#2E9E5B; --green-dk:#1F7040;
   --gold:#E8A317; --blue:#3B72D9;
-  --shadow:0 3px 0 rgba(42,33,25,.18);
+  --shadow:0 4px 0 rgba(6,16,48,.45);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:'Fredoka',-apple-system,system-ui,sans-serif;
+body{background:var(--table-dk);color:var(--on);font-family:'Fredoka',-apple-system,system-ui,sans-serif;
   font-size:17px;line-height:1.45;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+/* el remolino del reverso de las cartas, fijo detrás de todo (background-attachment:fixed
+   no funciona en Safari de iPad) */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    repeating-conic-gradient(from 8deg at 50% 38%,rgba(255,255,255,.045) 0 7deg,rgba(255,255,255,0) 7deg 20deg),
+    radial-gradient(ellipse at 50% 38%,var(--table-lt) 0,var(--table) 42%,var(--table-dk) 100%)}
 /* Las frases y las tablas van en Comic Neue; el resto de la interfaz, en Fredoka.
    Criterios, por orden: 'a' de un solo piso (la que Nil escribe a mano), 'I' con travesaños
    para que no se confunda con la 'l' ni con el '1', y peso 700 real (Delius solo tiene 400
@@ -37,129 +49,168 @@ body{background:var(--bg);color:var(--ink);font-family:'Fredoka',-apple-system,s
 h1,h2,h3{font-family:'Fredoka',-apple-system,system-ui,sans-serif;font-weight:600;letter-spacing:.01em}
 button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:none;background:none}
 
+/* el marco de carta: lo comparten todos los bloques con fondo */
+.chip,.sect,.stat,.flav,.evoline,.chain,.tline,.btn,.taskbtn,.opt,.iconbtn{
+  background:var(--face);color:var(--ink);border:4px solid var(--yellow);
+  box-shadow:inset 0 0 0 2px var(--yellow-in),var(--shadow)}
+
 .screen{display:none;min-height:100vh;min-height:100dvh}
 .screen.active{display:block}
 .wrap{max-width:660px;margin:0 auto;padding:20px 20px 44px;padding-top:max(20px,env(safe-area-inset-top))}
 .wide{max-width:980px}
 
 .top{display:flex;align-items:center;gap:10px;margin-bottom:18px;min-height:44px}
-.top h2{margin:0;font-size:20px;flex:1;text-align:center}
-.iconbtn{width:44px;height:44px;border-radius:14px;background:var(--card);border:2px solid var(--line);
-  display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto;box-shadow:var(--shadow)}
-.iconbtn:active{transform:translateY(2px);box-shadow:none}
+.top h2{margin:0;font-size:22px;flex:1;text-align:center;color:var(--yellow);
+  text-shadow:0 2px 0 var(--table-dk),0 0 12px rgba(14,36,99,.6);letter-spacing:.04em}
+.iconbtn{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:19px;font-weight:700;flex:0 0 auto}
+.iconbtn:active{transform:translateY(3px);box-shadow:inset 0 0 0 2px var(--yellow-in)}
 
 .counters{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
-.chip{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:7px 15px;
-  font-family:'Fredoka';font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow)}
+.chip{border-radius:999px;padding:6px 15px;border-width:3px;
+  font-family:'Fredoka';font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px}
 .chip b{font-size:17px}
-.chip.hot{border-color:var(--gold);background:#FFFBEF}
+.chip.hot{background:#FFF1C2;border-color:var(--gold)}
 
-.btn{display:block;width:100%;padding:18px;border-radius:18px;font-family:'Fredoka';font-weight:600;
-  font-size:21px;text-align:center;background:var(--card);border:3px solid var(--ink);
-  box-shadow:0 4px 0 var(--ink);margin-bottom:14px;transition:transform .06s,box-shadow .06s}
-.btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
-.btn.primary{background:var(--red);color:#fff;border-color:var(--red-dk);box-shadow:0 4px 0 var(--red-dk)}
-.btn.primary:active{box-shadow:0 0 0 var(--red-dk)}
-.btn.ghost{background:transparent;border-width:2px;border-color:var(--line);box-shadow:none;font-size:17px;padding:13px}
-.btn.ghost:active{transform:translateY(2px)}
+.btn{display:block;width:100%;padding:17px;border-radius:14px;font-family:'Fredoka';font-weight:700;
+  font-size:21px;text-align:center;margin-bottom:14px;letter-spacing:.02em;transition:transform .06s,box-shadow .06s}
+.btn:active{transform:translateY(4px);box-shadow:inset 0 0 0 2px var(--yellow-in)}
+.btn.primary{background:var(--red);color:#fff;text-shadow:0 2px 0 var(--red-dk)}
+.btn.ghost{background:rgba(255,255,255,.08);color:var(--on);border:2px solid rgba(255,255,255,.35);
+  box-shadow:none;font-size:17px;font-weight:600;padding:13px}
+.btn.ghost:active{transform:translateY(2px);background:rgba(255,255,255,.16)}
+
+/* ---------- cartas ---------- */
+/* las imágenes de pokemontcg.io ya traen su marco y sus esquinas redondas en transparente */
+.tcg{display:block;width:100%;aspect-ratio:245/342;object-fit:contain;
+  filter:drop-shadow(0 4px 5px rgba(4,12,40,.5))}
+/* el reverso: azul con remolino y la Poké Ball en el centro */
+.cback{width:100%;aspect-ratio:245/342;border-radius:4.5%/3.2%;position:relative;overflow:hidden;
+  background:
+    repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.07) 0 9deg,rgba(255,255,255,0) 9deg 24deg),
+    radial-gradient(ellipse at 50% 50%,#3F7BE0 0,#1F4AA8 45%,#10286A 100%);
+  border:max(4px,3.2cqw) solid #2A57B8;box-shadow:inset 0 0 0 2px #0E2463,0 4px 6px rgba(4,12,40,.5);
+  container-type:inline-size}
+.cback i{position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:linear-gradient(180deg,var(--red) 0 46%,#141008 46% 54%,#F4F1EA 54% 100%);
+  border:max(3px,2.6cqw) solid #141008;box-shadow:0 0 0 max(3px,2.2cqw) rgba(255,203,5,.35)}
+.cback i::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:32%;height:32%;border-radius:50%;background:#F4F1EA;border:max(3px,2.4cqw) solid #141008}
 
 /* ---------- inicio ---------- */
 #s-home .wrap{min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
-.home-hero{text-align:center;padding:10px 0 4px}
-.home-hero h1{font-size:clamp(34px,10vw,52px);margin:14px 0 4px;line-height:1}
-.home-hero p{color:var(--muted);margin:0 0 18px;font-size:16px}
-.pokeball{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative;
-  background:linear-gradient(180deg,var(--red) 0 47%,#231C16 47% 55%,#fff 55% 100%);
-  border:5px solid #231C16;box-shadow:0 6px 0 rgba(42,33,25,.2)}
-.pokeball::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:30px;height:30px;border-radius:50%;background:#fff;border:5px solid #231C16}
-.todaybar{text-align:center;color:var(--muted);font-size:15px;margin:0 0 18px}
-.todaybar b{color:var(--ink);font-family:'Fredoka';font-weight:600}
-.team{display:flex;gap:6px;justify-content:center;margin-bottom:18px;min-height:56px;flex-wrap:wrap}
-.team img{width:56px;height:56px;object-fit:contain}
+.home-hero{text-align:center;padding:4px 0 4px}
+/* rótulo a lo logo de Pokémon: amarillo con perfil azul */
+.home-hero h1{font-size:clamp(38px,11vw,60px);margin:6px 0 4px;line-height:1;font-weight:700;
+  color:var(--yellow);letter-spacing:.04em;
+  text-shadow:3px 0 0 #2A75BB,-3px 0 0 #2A75BB,0 3px 0 #2A75BB,0 -3px 0 #2A75BB,
+    2px 2px 0 #2A75BB,-2px 2px 0 #2A75BB,2px -2px 0 #2A75BB,-2px -2px 0 #2A75BB,0 8px 0 var(--table-dk)}
+.home-hero p{color:var(--on-mut);margin:0 0 18px;font-size:16px}
+/* la mano: las últimas cartas compradas, en abanico */
+.hand{position:relative;height:clamp(150px,34vw,210px);margin:4px auto 10px;width:100%}
+.hand > *{position:absolute;left:50%;bottom:0;width:clamp(96px,22vw,138px);
+  transform-origin:50% 120%;transition:transform .2s}
+.hand img{cursor:pointer}
+.todaybar{text-align:center;color:var(--on-mut);font-size:15px;margin:0 0 18px}
+.todaybar b{color:var(--on);font-family:'Fredoka';font-weight:600}
 
 /* ---------- sesión ---------- */
-#s-play{display:none;flex-direction:column;height:100vh;height:100dvh}
-#s-play.active{display:flex}
+#s-play,#s-math{flex-direction:column;height:100vh;height:100dvh}
+#s-play{display:none}
+#s-play.active,#s-math.active{display:flex}
 .play-top{display:flex;align-items:center;gap:12px;padding:14px 18px;
-  padding-top:max(14px,env(safe-area-inset-top));border-bottom:2px solid var(--line)}
-.play-top .pcount{font-family:'Fredoka';font-weight:700;font-size:19px}
-.play-top .ptimer{font-family:'Fredoka';font-weight:500;font-size:16px;color:var(--muted);flex:1;text-align:center}
-.play-top .pcoin{font-family:'Fredoka';font-weight:600;font-size:16px}
-.bar{height:7px;background:var(--line)}
-.bar i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+  padding-top:max(14px,env(safe-area-inset-top))}
+.play-top .pcount{font-family:'Fredoka';font-weight:700;font-size:20px;color:var(--yellow)}
+.play-top .ptimer{font-family:'Fredoka';font-weight:500;font-size:16px;color:var(--on-mut);flex:1;text-align:center}
+.play-top .pcoin{font-family:'Fredoka';font-weight:700;font-size:17px}
+.bar{height:9px;background:rgba(255,255,255,.14);margin:0 18px;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--yellow);width:0;transition:width .3s;border-radius:99px}
+/* la frase va sobre una carta grande: fondo claro y quieto para leer */
 .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:22px;text-align:center;min-height:0}
+  padding:22px;text-align:center;min-height:0;margin:14px 18px 0;border-radius:22px;
+  background:var(--face);color:var(--ink);border:7px solid var(--yellow);
+  box-shadow:inset 0 0 0 3px var(--yellow-in),0 6px 0 rgba(6,16,48,.45)}
 #item-main{font-weight:700;line-height:1.14;word-break:break-word}
 #item-main.word{font-size:clamp(52px,15vw,130px)}
 #item-main.sent{font-size:clamp(28px,5.6vw,62px);max-width:15ch}
 .stage .hintline{color:var(--muted);font-size:15px;margin-top:26px}
 .judge{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:18px 22px;
   padding-bottom:max(22px,env(safe-area-inset-bottom))}
-.jbtn{padding:26px 10px;border-radius:22px;font-family:'Fredoka';font-weight:700;font-size:23px;
-  border:3px solid;min-height:104px}
+.jbtn{padding:24px 10px;border-radius:20px;font-family:'Fredoka';font-weight:700;font-size:23px;
+  border:4px solid;min-height:104px}
 .jbtn:active{transform:translateY(5px)}
-.jok{background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 5px 0 var(--green-dk)}
+.jok{background:var(--green);color:#fff;border-color:#7CE0A4;box-shadow:0 5px 0 var(--green-dk)}
 .jok:active{box-shadow:0 0 0 var(--green-dk)}
-.jno{background:#fff;color:var(--red-dk);border-color:var(--red);box-shadow:0 5px 0 var(--red)}
-.jno:active{box-shadow:0 0 0 var(--red)}
+.jno{background:var(--face);color:var(--red-dk);border-color:var(--red);box-shadow:0 5px 0 var(--red-dk)}
+.jno:active{box-shadow:0 0 0 var(--red-dk)}
 .jbtn .em{display:block;font-size:30px;line-height:1;margin-bottom:6px}
 
 /* ---------- resultado ---------- */
 .res{text-align:center;padding-top:20px}
-.res h2{font-size:30px;margin:0 0 6px}
-.res .sub{color:var(--muted);margin-bottom:22px}
+.res h2{font-size:32px;margin:0 0 6px;color:var(--yellow);text-shadow:0 3px 0 var(--table-dk)}
+.res .sub{color:var(--on-mut);margin-bottom:22px}
 .coinbig{font-family:'Fredoka';font-weight:700;font-size:clamp(44px,12vw,68px);line-height:1;margin:10px 0 2px}
 .statrow{display:flex;gap:12px;margin:22px 0 26px}
-.stat{flex:1;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 8px}
+.stat{flex:1;border-radius:14px;padding:12px 8px;text-align:center}
 .stat b{display:block;font-family:'Fredoka';font-size:24px;font-weight:700}
 .stat span{font-size:13px;color:var(--muted)}
 
 /* ---------- tienda ---------- */
 .filters{display:flex;gap:8px;margin-bottom:16px}
-.filters .seg{flex:1;padding:11px;border-radius:13px;border:2px solid var(--line);background:var(--card);
-  font-family:'Fredoka';font-weight:600;text-align:center;font-size:15px}
-.filters .seg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.chain{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:12px;
+.filters .seg{flex:1;padding:11px;border-radius:13px;border:2px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.08);color:var(--on);font-family:'Fredoka';font-weight:600;text-align:center;font-size:15px}
+.filters .seg.on{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+/* cada cadena de evolución es un "sobre" abierto: una tira de cartas */
+.chain{border-radius:18px;padding:14px 12px;margin-bottom:14px;background:rgba(14,36,99,.55);
+  border:3px solid rgba(255,203,5,.55);box-shadow:none;color:var(--on);
   display:flex;align-items:stretch;gap:8px;overflow-x:auto}
-.mon{flex:1 1 0;min-width:104px;text-align:center;padding:8px 4px;border-radius:14px;border:2px solid transparent;position:relative}
-.mon img{width:100%;max-width:88px;aspect-ratio:1;object-fit:contain;display:block;margin:0 auto}
-.mon .nm{font-family:'Fredoka';font-weight:600;font-size:13px;line-height:1.2;margin-top:2px;word-break:break-word}
-.mon .pr{font-family:'Fredoka';font-weight:700;font-size:15px;margin-top:3px}
-.mon.owned{background:#F1FAF4;border-color:var(--green)}
-.mon.owned .pr{color:var(--green-dk)}
-.mon.buy{background:#FFFBEF;border-color:var(--gold)}
-.mon.poor img,.mon.locked img{filter:grayscale(1) opacity(.4)}
-.mon.poor .pr,.mon.locked .pr{color:var(--muted)}
-.mon.locked .nm{color:var(--muted)}
-.arrow{display:flex;align-items:center;color:var(--line);font-size:20px;flex:0 0 auto}
-.buybtn{display:block;width:100%;margin-top:6px;padding:8px;border-radius:11px;background:var(--gold);
-  color:#3A2A05;font-family:'Fredoka';font-weight:700;font-size:14px;border:2px solid #B37C0C;box-shadow:0 3px 0 #B37C0C}
-.buybtn:active{transform:translateY(3px);box-shadow:0 0 0 #B37C0C}
-.tag{position:absolute;top:2px;right:4px;font-size:15px}
+.mon{flex:1 1 0;min-width:118px;max-width:190px;text-align:center;padding:4px 2px;position:relative}
+.mon .tcg{cursor:zoom-in}
+.mon .pr{font-family:'Fredoka';font-weight:700;font-size:16px;margin-top:6px}
+.mon.owned .pr{color:#8BF0B4}
+.mon.poor .tcg,.mon.locked .tcg{filter:grayscale(1) brightness(.75) opacity(.55)}
+.mon.poor .pr,.mon.locked .pr{color:var(--on-mut)}
+.arrow{display:flex;align-items:center;color:var(--yellow);font-size:22px;flex:0 0 auto;font-weight:700}
+.buybtn{display:block;width:100%;margin-top:6px;padding:9px 4px;border-radius:11px;background:var(--yellow);
+  color:#3A2A05;font-family:'Fredoka';font-weight:700;font-size:14px;border:2px solid var(--yellow-dk);box-shadow:0 3px 0 var(--yellow-dk)}
+.buybtn:active{transform:translateY(3px);box-shadow:0 0 0 var(--yellow-dk)}
+.buybtn.see{background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 3px 0 var(--green-dk)}
+.tag{position:absolute;top:-6px;right:-4px;z-index:2;width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+  background:var(--face);color:var(--ink);border:3px solid var(--yellow);box-shadow:var(--shadow)}
+.tag.ok{background:var(--green);color:#fff}
 
-/* ---------- colección ---------- */
-.dexgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:9px}
-.dexcell{background:var(--card);border:2px solid var(--gold);border-radius:14px;padding:5px 3px 7px;text-align:center;background:#FFFBEF}
-.dexcell img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
-.dexcell .nm{font-size:11px;line-height:1.15;margin-top:2px;word-break:break-word;font-family:'Fredoka';font-weight:600}
+/* ---------- colección: el álbum de fundas ---------- */
+.binder{background:rgba(8,20,58,.6);border:3px solid rgba(255,255,255,.14);border-radius:20px;padding:12px}
+.dexgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.pocket{position:relative;aspect-ratio:245/342;border-radius:9px;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 45%,rgba(255,255,255,.08));
+  border:2px solid rgba(255,255,255,.16)}
+.pocket.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  color:rgba(255,255,255,.35);font-family:'Fredoka';font-weight:600;font-size:13px}
+.pocket.empty::before{content:"";width:34%;aspect-ratio:1;border-radius:50%;
+  border:3px solid rgba(255,255,255,.18);
+  background:linear-gradient(180deg,rgba(255,255,255,.1) 0 45%,rgba(255,255,255,.18) 45% 55%,transparent 55%)}
+.pocket.has{background:none;border-color:transparent;cursor:pointer}
+.pocket.has .tcg{height:100%}
 
 /* ---------- panel de papá ---------- */
-.sect{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
-.sect h3{margin:0 0 12px;font-size:16px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.sect{border-radius:16px;padding:16px;margin-bottom:16px}
+.sect h3{margin:0 0 12px;font-size:15px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink);
+  background:var(--yellow);display:inline-block;padding:3px 12px;border-radius:8px}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
 .kv:last-child{border-bottom:none}
 .kv b{font-family:'Fredoka';font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
-.pill{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:999px;
+.pill{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;
   padding:5px 12px;margin:0 6px 6px 0;font-size:15px}
 .pill b{color:var(--red);font-family:'Fredoka'}
 .optrow{margin-bottom:18px}
 .optrow .lab{font-size:15px;margin-bottom:8px}
 .optrow .lab small{color:var(--muted);display:block;font-size:13px;line-height:1.35}
 .segs{display:flex;gap:8px}
-.seg{flex:1;padding:12px 6px;border-radius:13px;border:2px solid var(--line);background:var(--bg);
+.seg{flex:1;padding:12px 6px;border-radius:13px;border:2px solid var(--line);background:#fff;
   font-family:'Fredoka';font-weight:600;text-align:center;font-size:15px;line-height:1.2}
-.seg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg.on{background:var(--table);color:#fff;border-color:var(--table)}
 .seg small{display:block;font-weight:500;font-size:11px;opacity:.75;margin-top:2px}
 .switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0}
 .switch small{display:block;color:var(--muted);font-size:13px;line-height:1.35}
@@ -168,41 +219,78 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
 .tog.on{background:var(--green)}
 .tog.on i{left:28px}
-.empty{color:var(--muted);font-size:15px;text-align:center;padding:10px 0}
+.empty{color:var(--on-mut);font-size:15px;text-align:center;padding:10px 0}
+.sect .empty,.flav .empty,.evoline .empty{color:var(--muted)}
+.sect .btn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
 
-/* ---------- overlay de compra ---------- */
-#overlay{position:fixed;inset:0;background:rgba(253,246,233,.97);z-index:60;display:none;
-  flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+/* ---------- overlay: la carta en grande, con zoom ---------- */
+#overlay{position:fixed;inset:0;z-index:60;display:none;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 42%,rgba(47,99,204,.97) 0,rgba(10,26,72,.98) 70%);
+  flex-direction:column;align-items:center;justify-content:center;padding:18px;
+  padding-top:max(18px,env(safe-area-inset-top));padding-bottom:max(18px,env(safe-area-inset-bottom));
+  text-align:center;touch-action:none;-webkit-user-select:none;user-select:none}
 #overlay.on{display:flex}
-@keyframes pop{0%{transform:scale(.2);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
-.revealed{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
-#ov-sprite{width:min(62vw,300px);height:min(62vw,300px);object-fit:contain}
-#ov-name{font-family:'Fredoka';font-weight:700;font-size:clamp(28px,8vw,44px);margin:6px 0 2px}
-#ov-note{color:var(--muted);margin-bottom:22px}
-#ov-tap{color:var(--muted);font-size:15px}
+.ovx{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;z-index:5}
+#ov-view{flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;
+  perspective:1200px}
+/* el tamaño lo fija el alto disponible: la carta cabe entera sin scroll */
+#ov-zoom{height:100%;max-height:min(78vh,640px);aspect-ratio:245/342;max-width:88vw;
+  transform-style:preserve-3d;transform-origin:50% 50%;will-change:transform}
+#ov-zoom.ease{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+#ov-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.3,1.25,.4,1)}
+#ov-flip.shown{transform:rotateY(180deg)}
+#ov-flip.instant{transition:none}
+#ov-flip .face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+#ov-flip .front{transform:rotateY(180deg)}
+#ov-card{width:100%;height:100%;object-fit:contain;display:block;
+  filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+/* brillo holográfico: sigue al dedo al inclinar la carta */
+.glare{position:absolute;inset:1.5%;border-radius:4%/3%;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:
+    radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.6) 0,rgba(255,255,255,0) 42%),
+    linear-gradient(115deg,rgba(255,0,128,0) 20%,rgba(255,80,160,.25) 35%,rgba(80,200,255,.25) 50%,rgba(120,255,140,.25) 62%,rgba(255,230,0,0) 78%);
+  background-size:100% 100%,250% 250%;background-position:0 0,var(--hx,50%) var(--hy,50%);
+  mix-blend-mode:overlay}
+.glare.on{opacity:1}
+/* un barrido de luz al darle la vuelta, como una holo recién sacada del sobre */
+@keyframes sweep{from{transform:translateX(-120%) skewX(-18deg)}to{transform:translateX(220%) skewX(-18deg)}}
+.front .shine{position:absolute;inset:0;overflow:hidden;border-radius:4.5%/3.2%;pointer-events:none}
+.front .shine::after{content:"";position:absolute;top:0;bottom:0;width:40%;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));
+  transform:translateX(-120%)}
+#ov-flip.shown.sweep .shine::after{animation:sweep 1s .75s ease-out both}
+#ov-info{flex:0 0 auto;transition:opacity .2s;padding-top:10px}
+#overlay.zoomed #ov-info{opacity:0;pointer-events:none}
+#ov-name{font-family:'Fredoka';font-weight:700;font-size:clamp(26px,7vw,40px);margin:4px 0 2px;
+  color:var(--yellow);text-shadow:0 3px 0 var(--table-dk)}
+#ov-note{color:var(--on-mut);margin-bottom:12px;min-height:1px}
+#ov-ok{max-width:340px;margin:0 auto 10px}
+#ov-tap{color:var(--on-mut);font-size:14px}
 
 .confetti{position:fixed;top:-14px;width:10px;height:16px;z-index:70;pointer-events:none;border-radius:2px}
 @keyframes fall{to{transform:translateY(108vh) rotate(760deg)}}
-#ov-sprite.zoom{width:min(92vw,560px);height:min(92vw,560px)}
 
-/* ---------- botones de tarea ---------- */
-.taskbtn{display:flex;align-items:center;gap:14px;width:100%;padding:15px 17px;border-radius:18px;
-  background:var(--card);border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);
+/* ---------- botones de tarea: cartas con su tipo de energía ---------- */
+.taskbtn{display:flex;align-items:center;gap:14px;width:100%;padding:13px 15px;border-radius:16px;
   margin-bottom:14px;text-align:left;transition:transform .06s,box-shadow .06s}
-.taskbtn:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
-.taskbtn .ic{font-size:31px;line-height:1;flex:0 0 auto}
+.taskbtn:active{transform:translateY(4px);box-shadow:inset 0 0 0 2px var(--yellow-in)}
+.taskbtn .ic{font-size:27px;line-height:1;flex:0 0 auto;width:54px;height:54px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;border:3px solid #fff;
+  box-shadow:0 0 0 2px rgba(0,0,0,.18),inset 0 -6px 10px rgba(0,0,0,.18);
+  background:radial-gradient(circle at 35% 30%,#fff 0,var(--en) 55%,var(--en-dk) 100%)}
 .taskbtn .tx{flex:1;min-width:0}
-.taskbtn .tt{font-family:'Fredoka';font-weight:700;font-size:21px;line-height:1.1}
+.taskbtn .tt,.taskbtn .ts{display:block}
+.taskbtn .tt{font-family:'Fredoka';font-weight:700;font-size:22px;line-height:1.1}
 .taskbtn .ts{font-size:13px;color:var(--muted);line-height:1.3;margin-top:2px}
-.taskbtn .tc{font-family:'Fredoka';font-weight:700;font-size:16px;color:#9A6B06;flex:0 0 auto;
-  text-align:center;line-height:1.1;background:#FFF6DF;border:2px solid #F0DCA8;border-radius:13px;padding:7px 10px}
-.taskbtn .tc small{display:block;font-weight:500;font-size:10px;color:var(--muted)}
-.taskbtn.read{border-color:var(--blue);box-shadow:0 4px 0 var(--blue)}
-.taskbtn.read:active{box-shadow:0 0 0 var(--blue)}
-.taskbtn.write{border-color:var(--red-dk);box-shadow:0 4px 0 var(--red-dk)}
-.taskbtn.write:active{box-shadow:0 0 0 var(--red-dk)}
-.taskbtn.math{border-color:var(--green-dk);box-shadow:0 4px 0 var(--green-dk)}
-.taskbtn.math:active{box-shadow:0 0 0 var(--green-dk)}
+/* las monedas, donde la carta pone los PS */
+.taskbtn .tc{font-family:'Fredoka';font-weight:700;font-size:21px;color:var(--red-dk);flex:0 0 auto;
+  text-align:right;line-height:1}
+.taskbtn .tc small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:3px}
+.taskbtn{--en:#9AA0A6;--en-dk:#5C6168}
+.taskbtn.read{--en:#4A9BF0;--en-dk:#1E5FB8}
+.taskbtn.write{--en:#F46A3A;--en-dk:#B8321A}
+.taskbtn.math{--en:#62C04A;--en-dk:#2F7A1F}
 
 /* ---------- mates ---------- */
 #m-op{font-family:'Fredoka';font-weight:700;font-variant-numeric:tabular-nums;
@@ -211,39 +299,35 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   min-height:26px;margin-top:14px}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:16px 20px;
   padding-bottom:max(20px,env(safe-area-inset-bottom))}
-.opt{padding:20px 6px;border-radius:20px;font-family:'Fredoka';font-weight:700;
-  font-size:clamp(20px,5.5vw,30px);font-variant-numeric:tabular-nums;background:var(--card);
-  border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);min-height:82px;transition:transform .06s,box-shadow .06s}
-.opt:active{transform:translateY(5px);box-shadow:0 0 0 var(--ink)}
-.opt.good{background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 5px 0 var(--green-dk)}
-.opt.bad{background:#fff;color:var(--red-dk);border-color:var(--red);box-shadow:0 5px 0 var(--red)}
+.opt{padding:20px 6px;border-radius:18px;font-family:'Fredoka';font-weight:700;
+  font-size:clamp(20px,5.5vw,30px);font-variant-numeric:tabular-nums;min-height:82px;transition:transform .06s,box-shadow .06s}
+.opt:active{transform:translateY(5px);box-shadow:inset 0 0 0 2px var(--yellow-in)}
+.opt.good{background:var(--green);color:#fff;border-color:#7CE0A4}
+.opt.bad{background:#FFE9E6;color:var(--red-dk);border-color:var(--red)}
 .opt.dim{opacity:.35}
 .opts.locked .opt{pointer-events:none}
 
 /* ---------- ficha de la pokedex ---------- */
 .ficha{text-align:center}
-.fimg{width:min(64vw,300px);height:min(64vw,300px);object-fit:contain;display:block;margin:0 auto;
-  background:radial-gradient(circle at 50% 56%,#fff 0 56%,rgba(255,255,255,0) 74%);border-radius:50%}
-.ficha h2{font-size:clamp(28px,7.5vw,42px);margin:4px 0 2px}
-.ficha .gen{color:var(--muted);margin:0;font-size:15px;min-height:22px}
+.fimg{width:min(70vw,330px);display:block;margin:0 auto 6px;cursor:zoom-in}
+.ficha .zhint{color:var(--on-mut);font-size:13px;margin-bottom:6px}
+.ficha h2{font-size:clamp(28px,7.5vw,42px);margin:4px 0 2px;color:var(--yellow);text-shadow:0 3px 0 var(--table-dk)}
+.ficha .gen{color:var(--on-mut);margin:0;font-size:15px;min-height:22px}
 .types{display:flex;gap:8px;justify-content:center;margin:12px 0 4px;flex-wrap:wrap}
 .ty{padding:6px 17px;border-radius:999px;color:#fff;font-family:'Fredoka';font-weight:600;
-  font-size:15px;text-shadow:0 1px 2px rgba(0,0,0,.3)}
-.flav{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:15px 17px;
-  font-size:17px;line-height:1.5;margin-bottom:14px}
-.evoline{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;
-  background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px;margin-bottom:14px}
-.evoline .ev{text-align:center;padding:2px 4px}
-.evoline .ev img{width:56px;height:56px;object-fit:contain;display:block}
-.evoline .ev span{font-size:11px;font-family:'Fredoka';font-weight:600;line-height:1.1;display:block}
-.evoline .ev.no img{filter:grayscale(1) opacity(.3)}
+  font-size:15px;text-shadow:0 1px 2px rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.7)}
+.flav{border-radius:14px;padding:15px 17px;font-size:17px;line-height:1.5;margin-bottom:14px}
+.evoline{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;
+  border-radius:16px;padding:12px;margin-bottom:14px}
+.evoline .ev{text-align:center;padding:2px 4px;width:78px}
+.evoline .ev .tcg{width:100%}
+.evoline .ev span{font-size:11px;font-family:'Fredoka';font-weight:600;line-height:1.1;display:block;margin-top:4px}
+.evoline .ev.no .tcg{filter:grayscale(1) opacity(.35)}
 .evoline .ev.no span{color:var(--muted)}
-.evoline .sep{color:var(--line);font-size:19px}
+.evoline .sep{color:var(--yellow-dk);font-size:20px;font-weight:700}
 .fnav{display:flex;gap:12px}
 .fnav .btn{margin-bottom:14px}
 .fnav .btn[disabled]{opacity:.35;pointer-events:none}
-.dexcell{cursor:pointer}
-.mon.owned{cursor:pointer}
 
 /* ---------- tabla de tarifas ---------- */
 .tarif{width:100%;border-collapse:collapse;font-size:14px}
@@ -251,15 +335,16 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   font-variant-numeric:tabular-nums}
 .tarif th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
 .tarif td:first-child,.tarif th:first-child{text-align:left}
-.tarif tr.cur{background:#FFFBEF}
+.tarif tr.cur{background:#FFF1C2}
 .tarif tr.head td{border-bottom:none;padding-top:14px;font-family:'Fredoka';font-weight:700;font-size:15px}
 .tarif b{font-family:'Fredoka';font-weight:700}
 .tarif .un{color:var(--muted);font-size:12px;font-weight:400}
 .tarif .nx{display:block;color:var(--green-dk);font-size:11px;font-weight:400}
-.note{color:var(--muted);font-size:13px;line-height:1.4;margin-top:12px}
+.note{color:var(--on-mut);font-size:13px;line-height:1.4;margin-top:12px}
+.sect .note{color:var(--muted)}
 /* ---------- las tablas, en orden ---------- */
-.tline{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--card);
-  border:2px solid var(--line);border-radius:14px;padding:10px 64px;margin-bottom:8px;
+.tline{display:flex;align-items:center;justify-content:center;gap:12px;border-width:3px;
+  border-radius:12px;padding:10px 64px;margin-bottom:8px;
   font-weight:700;font-size:clamp(20px,5.4vw,27px);font-variant-numeric:tabular-nums;
   position:relative}
 .tline .eq{color:var(--muted);font-weight:400}
@@ -271,9 +356,11 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   font-family:'Fredoka';font-weight:700;font-size:13px;color:#fff;background:var(--red);
   border-radius:999px;padding:3px 9px;line-height:1.3}
 .tabsel{display:flex;flex-wrap:wrap;gap:7px}
-.tabsel button{width:46px;height:46px;border-radius:13px;border:2px solid var(--line);
-  background:var(--bg);font-family:'Fredoka';font-weight:600;font-size:15px}
-.tabsel button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabsel button{width:46px;height:46px;border-radius:12px;border:2px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.08);color:var(--on);font-family:'Fredoka';font-weight:600;font-size:15px}
+.tabsel button.on{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.sect .tabsel button{background:#fff;color:var(--ink);border-color:var(--line)}
+.sect .tabsel button.on{background:var(--table);color:#fff;border-color:var(--table)}
 </style>
 </head>
 <body>
@@ -282,20 +369,19 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 <div class="screen active" id="s-home">
   <div class="wrap">
     <div class="home-hero">
-      <div class="pokeball"></div>
+      <div class="hand" id="h-hand"></div>
       <h1>LETRAS DE NIL</h1>
-      <p>Lee, escribe y calcula. Gana monedas y compra Pokémon</p>
+      <p>Lee, escribe y calcula. Gana monedas y consigue cartas Pokémon</p>
     </div>
     <div class="counters">
       <div class="chip">🪙 <b id="h-coins">0</b></div>
       <div class="chip" id="h-streakchip">🔥 <span><b id="h-streak">0</b> días</span></div>
-      <div class="chip">📕 <b id="h-dex">0</b></div>
+      <div class="chip">🃏 <b id="h-dex">0</b></div>
     </div>
-    <div class="team" id="h-team"></div>
     <div class="todaybar" id="h-today"></div>
     <div id="h-tasks"></div>
-    <button class="btn" onclick="showShop()">🛒 TIENDA POKÉMON</button>
-    <button class="btn ghost" onclick="showDex()">📕 Mi colección</button>
+    <button class="btn" onclick="showShop()">🛒 TIENDA DE CARTAS</button>
+    <button class="btn ghost" onclick="showDex()">🃏 Mi álbum de cartas</button>
     <button class="btn ghost" onclick="showDad()">⚙️ Panel de papá</button>
   </div>
 </div>
@@ -396,7 +482,8 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div style="width:44px"></div>
     </div>
     <div class="ficha">
-      <img class="fimg" id="f-img" alt="" onclick="zoomPoke()">
+      <img class="tcg fimg" id="f-img" alt="" onclick="zoomPoke()">
+      <div class="zhint">Toca la carta para verla en grande</div>
       <h2 id="f-name"></h2>
       <div class="gen" id="f-genus"></div>
       <div class="types" id="f-types"></div>
@@ -408,7 +495,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <button class="btn ghost" id="f-prev" onclick="fichaStep(-1)">← Anterior</button>
       <button class="btn ghost" id="f-next" onclick="fichaStep(1)">Siguiente →</button>
     </div>
-    <button class="btn ghost" onclick="showDex()">Volver a la colección</button>
+    <button class="btn ghost" onclick="showDex()">Volver al álbum</button>
   </div>
 </div>
 
@@ -417,12 +504,12 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   <div class="wrap wide">
     <div class="top">
       <button class="iconbtn" onclick="go('s-home')">←</button>
-      <h2>TIENDA POKÉMON</h2>
+      <h2>TIENDA DE CARTAS</h2>
       <div style="width:44px"></div>
     </div>
     <div class="counters">
       <div class="chip">🪙 <b id="sh-coins">0</b></div>
-      <div class="chip">📕 <span><b id="sh-dex">0</b>/151</span></div>
+      <div class="chip">🃏 <span><b id="sh-dex">0</b>/151</span></div>
     </div>
     <div class="filters">
       <button class="seg on" data-f="puedo" onclick="setFilter('puedo')">Puedo comprar</button>
@@ -438,16 +525,16 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
   <div class="wrap wide">
     <div class="top">
       <button class="iconbtn" onclick="go('s-home')">←</button>
-      <h2>MI COLECCIÓN</h2>
+      <h2>MI ÁLBUM</h2>
       <div style="width:44px"></div>
     </div>
     <div class="counters">
-      <div class="chip">📕 <span><b id="d-count">0</b>/151</span></div>
+      <div class="chip">🃏 <span><b id="d-count">0</b>/151</span></div>
       <div class="chip">🪙 <b id="d-coins">0</b></div>
     </div>
-    <div class="empty" id="d-hint" style="display:none">Todavía no tienes ninguno. Juega, gana monedas y cómpralos en la tienda.</div>
-    <div class="note" id="d-tip" style="text-align:center;margin-bottom:14px">Toca cualquiera para ver su ficha, su foto grande y sus curiosidades.</div>
-    <div class="dexgrid" id="dexgrid"></div>
+    <div class="empty" id="d-hint" style="display:none">Todavía no tienes ninguna carta. Juega, gana monedas y cómpralas en la tienda.</div>
+    <div class="note" id="d-tip" style="text-align:center;margin-bottom:14px">Toca una carta para ver su ficha, sus curiosidades y la carta en grande.</div>
+    <div class="binder"><div class="dexgrid" id="dexgrid"></div></div>
   </div>
 </div>
 
@@ -517,11 +604,22 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 </div>
 
 <!-- ============ OVERLAY DE COMPRA ============ -->
-<div id="overlay" onclick="closeOverlay()">
-  <img id="ov-sprite" alt="">
-  <div id="ov-name"></div>
-  <div id="ov-note"></div>
-  <div id="ov-tap">toca para seguir</div>
+<div id="overlay">
+  <button class="iconbtn ovx" onclick="closeOverlay()">✕</button>
+  <div id="ov-view">
+    <div id="ov-zoom">
+      <div id="ov-flip">
+        <div class="face back"><div class="cback"><i></i></div></div>
+        <div class="face front"><img id="ov-card" alt="" draggable="false"><div class="shine"></div><div class="glare"></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="ov-info">
+    <div id="ov-name"></div>
+    <div id="ov-note"></div>
+    <button class="btn primary" id="ov-ok" onclick="closeOverlay()">¡GENIAL!</button>
+    <div id="ov-tap">Toca la carta para acercarla. Pellizca para hacer más zoom.</div>
+  </div>
 </div>
 
 <script>
@@ -702,8 +800,16 @@ var PREV = {2:1,3:2,5:4,6:5,8:7,9:8,11:10,12:11,14:13,15:14,17:16,18:17,20:19,22
 
 var LEGEND = [144,145,146,150,151];
 
-function spriteUrl(id){
-  return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+id+".png";
+/* La carta oficial en inglés de cada uno: colección Scarlet & Violet "151" (2023), la única
+   que tiene los 151 y con el mismo estilo. En ese set el número de carta coincide con el de
+   la Pokédex, así que la URL sale directa del id. La pequeña (245 px, ~150 KB) para rejillas;
+   la grande (734 px, ~550 KB) para la ficha y el zoom. */
+function cardUrl(id, big){
+  return "https://images.pokemontcg.io/sv3pt5/" + id + (big ? "_hires" : "") + ".png";
+}
+function cardImg(id, extra){
+  return '<img class="tcg" loading="lazy" draggable="false" src="' + cardUrl(id) + '" alt="' + POKE[id-1] + '"' +
+    (extra || "") + '>';
 }
 
 /* etapa dentro de la cadena: 1 básico, 2 primera evolución, 3 segunda */
@@ -881,11 +987,15 @@ function renderHome(){
   document.getElementById("h-streak").textContent = s;
   document.getElementById("h-streakchip").classList.toggle("hot", s >= 3);
 
-  /* los 6 últimos Pokémon comprados */
-  var team = state.dex.slice(-6);
-  document.getElementById("h-team").innerHTML = team.map(function(id){
-    return '<img src="'+spriteUrl(id)+'" alt="'+POKE[id-1]+'" title="'+POKE[id-1]+'">';
-  }).join("");
+  /* la mano: las 5 últimas cartas compradas, en abanico. Sin cartas, tres reversos */
+  var hand = state.dex.slice(-5), n = hand.length || 3, out = "";
+  for(var h=0; h<n; h++){
+    var ang = n > 1 ? (h - (n-1)/2) * (n > 3 ? 11 : 13) : 0;
+    var tf = ' style="transform:translateX(-50%) rotate(' + ang + 'deg);z-index:' + h + '"';
+    out += hand.length ? cardImg(hand[h], tf + ' onclick="zoomCard(' + hand[h] + ')"')
+                       : '<div class="cback"' + tf + '><i></i></div>';
+  }
+  document.getElementById("h-hand").innerHTML = out;
 
   document.getElementById("h-today").innerHTML = streakMult() > 1
     ? 'Racha de <b>' + state.streak.count + ' días</b> · <b style="color:var(--gold)">todas las monedas x1,5 🔥</b>'
@@ -1088,19 +1198,18 @@ function showShop(){
       if(i2 > 0) html += '<div class="arrow">' + (PREV[id] === chain[i2-1] ? "→" : "·") + '</div>';
       var cls = owned(id) ? "owned" : canBuy(id) ? "buy" : unlocked(id) ? "poor" : "locked";
       html += '<div class="mon '+cls+'">';
-      if(owned(id)) html += '<span class="tag">✓</span>';
+      if(owned(id)) html += '<span class="tag ok">✓</span>';
       else if(!unlocked(id)) html += '<span class="tag">🔒</span>';
-      html += '<img loading="lazy" src="'+spriteUrl(id)+'" alt="">';
-      html += '<div class="nm">'+POKE[id-1]+'</div>';
-      html += '<div class="pr">'+(owned(id) ? "tuyo" : priceOf(id)+" 🪙")+'</div>';
+      html += cardImg(id, ' onclick="zoomCard(' + id + ')"');
+      html += '<div class="pr">'+(owned(id) ? "¡es tuya!" : priceOf(id)+" 🪙")+'</div>';
       if(canBuy(id)) html += '<button class="buybtn" onclick="buy('+id+')">COMPRAR</button>';
-      if(owned(id))  html += '<button class="buybtn" style="background:var(--green);color:#fff;border-color:var(--green-dk);box-shadow:0 3px 0 var(--green-dk)" onclick="showFicha('+id+')">VER FICHA</button>';
+      if(owned(id))  html += '<button class="buybtn see" onclick="showFicha('+id+')">VER FICHA</button>';
       html += '</div>';
     }
     html += '</div>';
   }
   document.getElementById("shoplist").innerHTML = html ||
-    '<div class="empty">Todavía no puedes comprar ninguno. ¡Juega otra sesión y vuelve!</div>';
+    '<div class="empty">Todavía no puedes comprar ninguna carta. ¡Juega otra sesión y vuelve!</div>';
   go("s-shop");
 }
 
@@ -1110,24 +1219,15 @@ function buy(id){
   state.dex.push(id);
   save();
 
-  var img = document.getElementById("ov-sprite");
-  img.src = spriteUrl(id);
-  img.className = "revealed";
-  ovBack = "s-shop";
-  img.onerror = function(){ img.style.visibility = "hidden"; };
-  img.style.visibility = "visible";
-  document.getElementById("ov-name").textContent = "¡" + POKE[id-1] + " es tuyo!";
-  document.getElementById("ov-note").textContent =
-    "Te quedan " + state.coins + " monedas 🪙" +
-    (hasEvolution(id) ? " · ahora puedes ahorrar para su evolución" : "");
-  document.getElementById("overlay").classList.add("on");
+  openCard(id, {
+    reveal: true,
+    name:   "¡La carta de " + POKE[id-1] + " es tuya!",
+    note:   "Te quedan " + state.coins + " monedas 🪙" +
+            (hasEvolution(id) ? " · ahora puedes ahorrar para su evolución" : ""),
+    after:  showShop
+  });
   playVictoryFanfare();
   if(stageOf(id) >= 3 || LEGEND.indexOf(id) >= 0) startConfetti();
-}
-var ovBack = "s-shop";
-function closeOverlay(){
-  document.getElementById("overlay").classList.remove("on");
-  if(ovBack === "s-ficha") showFicha(fichaId); else showShop();
 }
 
 /* =====================================================================
@@ -1138,12 +1238,14 @@ function showDex(){
   document.getElementById("d-coins").textContent = state.coins;
   document.getElementById("d-hint").style.display = state.dex.length ? "none" : "block";
   document.getElementById("d-tip").style.display  = state.dex.length ? "block" : "none";
-  var ids = state.dex.slice().sort(function(a,b){ return a-b; });
-  document.getElementById("dexgrid").innerHTML = ids.map(function(id){
-    return '<div class="dexcell" onclick="showFicha('+id+')">' +
-           '<img loading="lazy" src="'+spriteUrl(id)+'" alt="">' +
-           '<div class="nm">'+POKE[id-1]+'</div></div>';
-  }).join("");
+  /* el álbum entero, con una funda por Pokémon: las vacías le enseñan lo que le falta */
+  var html = "";
+  for(var id=1; id<=151; id++){
+    html += owned(id)
+      ? '<div class="pocket has" onclick="showFicha(' + id + ')">' + cardImg(id) + '</div>'
+      : '<div class="pocket empty">' + ("00" + id).slice(-3) + '</div>';
+  }
+  document.getElementById("dexgrid").innerHTML = html;
   go("s-dex");
 }
 
@@ -1164,7 +1266,7 @@ function showDad(){
   sum += kv("Racha actual", rd + (rd === 1 ? " día" : " días") + (streakMult()>1 ? " (x1,5)" : ""));
   sum += kv("Aciertos a la primera", items ? acc + "%" : "—");
   sum += kv("Monedas", state.coins);
-  sum += kv("Pokémon comprados", state.dex.length + " / 151");
+  sum += kv("Cartas en el álbum", state.dex.length + " / 151");
   var tasks = ["leer","escribir","mates"];
   for(var i=0;i<tasks.length;i++){
     var lv = levelsOf(tasks[i]);
@@ -1706,7 +1808,7 @@ function showFicha(id){
   fichaId = id;
   var list = fichaList(), i = list.indexOf(id);
   document.getElementById("f-num").textContent  = "Nº " + ("00" + id).slice(-3);
-  document.getElementById("f-img").src          = spriteUrl(id);
+  loadCard(document.getElementById("f-img"), id);
   document.getElementById("f-name").textContent = POKE[id-1];
   document.getElementById("f-genus").textContent = "";
   document.getElementById("f-types").innerHTML  = "";
@@ -1752,7 +1854,7 @@ function evoStrip(id){
     if(i > 0) out += '<span class="sep">' + (PREV[e] === chain[i-1] ? "→" : "·") + '</span>';
     out += '<span class="ev' + (owned(e) ? "" : " no") + '"' +
       (owned(e) ? ' onclick="showFicha(' + e + ')"' : '') + '>' +
-      '<img loading="lazy" src="' + spriteUrl(e) + '" alt="">' +
+      cardImg(e) +
       '<span>' + POKE[e-1] + '</span></span>';
   }
   return out;
@@ -1763,18 +1865,168 @@ function fichaStep(d){
   if(i >= 0 && i < list.length) showFicha(list[i]);
 }
 
-/* el sprite a pantalla completa, que es lo que quiere ver de verdad */
-function zoomPoke(){
-  var img = document.getElementById("ov-sprite");
-  img.src = spriteUrl(fichaId);
-  img.className = "revealed zoom";
-  img.style.visibility = "visible";
-  document.getElementById("ov-name").textContent =
-    (pcache[fichaId] && pcache[fichaId].name) || POKE[fichaId-1];
-  document.getElementById("ov-note").textContent = "";
-  ovBack = "s-ficha";
-  document.getElementById("overlay").classList.add("on");
+/* la carta a pantalla completa, que es lo que quiere ver de verdad */
+function zoomPoke(){ zoomCard(fichaId); }
+
+/* =====================================================================
+   La carta en grande
+   Primero la pequeña (ya está en caché de la rejilla) y, cuando baja, la
+   grande: así nunca sale un hueco en blanco mientras carga.
+   Gestos: tocar la carta acerca x2,5 justo donde ha tocado (y otra vez la
+   aleja); pellizcar llega hasta x4; con zoom, arrastrar mueve la carta;
+   sin zoom, arrastrar la inclina y el brillo holográfico sigue al dedo.
+   ===================================================================== */
+function loadCard(img, id){
+  img.src = cardUrl(id);
+  img.alt = POKE[id-1];
+  var big = new Image();
+  big.onload = function(){ if(img.alt === POKE[id-1]) img.src = big.src; };
+  big.src = cardUrl(id, true);
 }
+
+var ovAfter = null;
+function zoomCard(id){
+  openCard(id, {
+    name: (pcache[id] && pcache[id].name) || POKE[id-1],
+    note: owned(id) ? "" : "Todavía no es tuya: " + priceOf(id) + " 🪙 en la tienda",
+    gray: !owned(id)
+  });
+}
+function openCard(id, o){
+  var ov = document.getElementById("overlay"), flip = document.getElementById("ov-flip");
+  var card = document.getElementById("ov-card");
+  loadCard(card, id);
+  card.style.filter = o.gray ? "grayscale(1) brightness(.8)" : "";
+  document.getElementById("ov-name").textContent = o.name || "";
+  document.getElementById("ov-note").textContent = o.note || "";
+  document.getElementById("ov-ok").style.display = o.reveal ? "block" : "none";
+  ovAfter = o.after || null;
+  zReset(false);
+  /* al comprar sale boca abajo y se da la vuelta sola; si no, directamente de cara */
+  flip.className = o.reveal ? "instant" : "instant shown";
+  ov.classList.add("on");
+  if(o.reveal){
+    void flip.offsetWidth;                     /* fija el reverso antes de girar */
+    flip.className = "";
+    setTimeout(function(){ flip.className = "shown sweep"; }, 250);
+  }
+}
+function closeOverlay(){
+  document.getElementById("overlay").classList.remove("on");
+  document.getElementById("ov-flip").className = "instant";
+  var f = ovAfter; ovAfter = null;
+  if(f) f();
+}
+
+var Z = {s:1, x:0, y:0, rx:0, ry:0, pts:{}, n:0, start:null, pinch:null, moved:false};
+function zApply(ease){
+  var el = document.getElementById("ov-zoom");
+  el.classList.toggle("ease", !!ease);
+  el.style.transform = "translate(" + Z.x + "px," + Z.y + "px) scale(" + Z.s + ")" +
+    " rotateX(" + Z.rx + "deg) rotateY(" + Z.ry + "deg)";
+  document.getElementById("overlay").classList.toggle("zoomed", Z.s > 1.05);
+}
+function zReset(ease){
+  Z.s = 1; Z.x = 0; Z.y = 0; Z.rx = 0; Z.ry = 0;
+  document.querySelector("#ov-flip .glare").classList.remove("on");
+  zApply(ease);
+}
+/* que la carta no se escape de la pantalla al moverla con zoom */
+function zClamp(){
+  var el = document.getElementById("ov-zoom");
+  var mx = el.offsetWidth * (Z.s - 1) / 2 + 40, my = el.offsetHeight * (Z.s - 1) / 2 + 40;
+  Z.x = Math.max(-mx, Math.min(mx, Z.x));
+  Z.y = Math.max(-my, Math.min(my, Z.y));
+}
+function zDist(){
+  var k = Object.keys(Z.pts), a = Z.pts[k[0]], b = Z.pts[k[1]];
+  return Math.hypot(a.x - b.x, a.y - b.y) || 1;
+}
+(function(){
+  var view = document.getElementById("ov-view");
+  var glare = document.querySelector("#ov-flip .glare");
+  function onCard(e){ return !!(e.target.closest && e.target.closest("#ov-zoom")); }
+
+  view.addEventListener("pointerdown", function(e){
+    try{ view.setPointerCapture(e.pointerId); }catch(err){}
+    Z.pts[e.pointerId] = {x:e.clientX, y:e.clientY};
+    Z.n = Object.keys(Z.pts).length;
+    if(Z.n === 1){
+      Z.start = {x:e.clientX, y:e.clientY, ox:Z.x, oy:Z.y, t:Date.now(), card:onCard(e)};
+      Z.moved = false;
+    }else if(Z.n === 2){
+      Z.pinch = {d:zDist(), s:Z.s};
+      Z.moved = true;
+    }
+  });
+  view.addEventListener("pointermove", function(e){
+    if(!Z.pts[e.pointerId]) return;
+    Z.pts[e.pointerId] = {x:e.clientX, y:e.clientY};
+    if(Z.n >= 2 && Z.pinch){
+      Z.s = Math.max(1, Math.min(4, Z.pinch.s * zDist() / Z.pinch.d));
+      Z.rx = Z.ry = 0; glare.classList.remove("on");
+      zClamp(); zApply(false);
+      return;
+    }
+    if(!Z.start) return;
+    var dx = e.clientX - Z.start.x, dy = e.clientY - Z.start.y;
+    if(Math.abs(dx) + Math.abs(dy) > 8) Z.moved = true;
+    if(!Z.moved) return;
+    if(Z.s > 1.05){
+      Z.x = Z.start.ox + dx; Z.y = Z.start.oy + dy;
+      zClamp(); zApply(false);
+    }else{
+      /* inclinar: la posición del dedo sobre la carta, de -1 a 1 */
+      var r = document.getElementById("ov-zoom").getBoundingClientRect();
+      var px = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      var py = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+      Z.ry = (px - .5) * 28; Z.rx = (.5 - py) * 28;
+      glare.style.setProperty("--gx", (px * 100) + "%");
+      glare.style.setProperty("--gy", (py * 100) + "%");
+      glare.style.setProperty("--hx", (px * 100) + "%");
+      glare.style.setProperty("--hy", (py * 100) + "%");
+      glare.classList.add("on");
+      zApply(false);
+    }
+  });
+  function up(e){
+    if(!Z.pts[e.pointerId]) return;
+    delete Z.pts[e.pointerId];
+    Z.n = Object.keys(Z.pts).length;
+    if(Z.n === 1){                               /* de pellizco a un dedo: sigue moviendo */
+      var k = Object.keys(Z.pts)[0];
+      Z.start = {x:Z.pts[k].x, y:Z.pts[k].y, ox:Z.x, oy:Z.y, t:0, card:true};
+      Z.pinch = null;
+      return;
+    }
+    if(Z.n > 0) return;
+    Z.pinch = null;
+    var st = Z.start; Z.start = null;
+    if(Z.rx || Z.ry){                            /* suelta la carta: vuelve plana */
+      Z.rx = Z.ry = 0; glare.classList.remove("on"); zApply(true);
+    }
+    if(Z.s <= 1.05 && Z.s !== 1){ zReset(true); return; }
+    if(!st || Z.moved || Date.now() - st.t > 400) return;
+    /* un toque */
+    if(!st.card){ if(Z.s === 1) closeOverlay(); else zReset(true); return; }
+    if(Z.s > 1.05){ zReset(true); return; }
+    var r = document.getElementById("ov-zoom").getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    Z.s = 2.5;
+    Z.x = (cx - e.clientX) * (Z.s - 1);
+    Z.y = (cy - e.clientY) * (Z.s - 1);
+    zClamp(); zApply(true);
+  }
+  view.addEventListener("pointerup", up);
+  view.addEventListener("pointercancel", up);
+  /* tocar el fondo de debajo de la carta (no los botones) también la cierra */
+  document.getElementById("overlay").addEventListener("click", function(e){
+    if(e.target.closest("button") || e.target.closest("#ov-view")) return;
+    closeOverlay();
+  });
+  /* Safari de iPad dispara sus propios gestos de zoom encima de los nuestros */
+  document.getElementById("overlay").addEventListener("gesturestart", function(e){ e.preventDefault(); });
+})();
 
 /* =====================================================================
    Efectos
