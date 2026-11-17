@@ -17,8 +17,8 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
 5. **La recompensa es una tienda, no un gacha.** Monedas → comprar el Pokémon que él elija,
    por cadenas de evolución: no se puede comprar una evolución sin tener la anterior, y cada
    etapa cuesta mucho más. Eso es lo que le hace ahorrar. No convertirlo en cajas sorpresa.
-6. **Gamificación: solo la racha de días.** Ger descartó equipo de 6, récord de velocidad y
-   otros añadidos. No reintroducirlos sin que los pida.
+6. **Gamificación: la racha de días y la aventura (pedida por Ger 2026-11-17).** Ger descartó
+   equipo de 6, récord de velocidad y otros añadidos. No reintroducirlos sin que los pida.
 7. **Fichero único `index.html`.** No modularizar, no meter build system, no añadir framework.
 8. **Fuente `Comic Neue` para las frases y las tablas.** La interfaz va en Fredoka.
    Tres criterios, por orden: `a` **de un solo piso** (la que escribe a mano), **`I` con
@@ -60,6 +60,24 @@ bitácora de uso en **`CONTEXTO_PROYECTO.md`**: leerlo antes de tocar nada.
    carta grande de cara crema: **fondo claro y quieto para leer**, sin brillos detrás.
    Zoom propio en el overlay (el viewport lleva `user-scalable=no`): tocar = x2,5 donde toca,
    pellizcar hasta x4, arrastrar mueve con zoom o inclina con brillo holo sin zoom.
+
+## Aventura (2026-11-17, Mundo 1)
+
+Es la **pantalla de entrada** (`s-adv`); el menú clásico queda detrás del botón ☰ y paga igual.
+Mapa de casillas 20×80 en canvas (`ADV_MAP`), pixel art **original** de 8 bits en color, dibujado
+por código (`buildTiles`, `drawSprite` con contorno automático). No copiar mapas ni sprites de
+juegos existentes. Cruceta + botón A; chocar con un personaje también abre el diálogo.
+- 5 zonas: Pueblo Alba → Bosque Verde → Río Azul → Cueva Oscura → Montaña Nevada (gimnasio).
+- Cada zona: 3 personajes (leer, escribir, mates) que lanzan las sesiones de siempre.
+  `A.pending` marca que la sesión viene de la aventura; `advAfterRun(r)` (llamado desde
+  `finishRun`) suma **pasos**: escribir 3 > leer 2 > mates 1 por acierto. `ADV_GOAL` = 60 pasos
+  abre la zona siguiente (obstáculos `2`-`5` en el mapa).
+- **La aventura no da monedas ni premios al azar.** Solo pasos y una medalla por mundo
+  (Capitana Nieve: 3 retos leer/escribir/mates con ≤2 fallos cada uno).
+- Los diálogos son frases bien escritas y siguen el modo de letra de LEER (may/min).
+- Estado en `state.adv` (key `letras_nil_v4`; `migrate()` encadena v2 → v3 → v4).
+- Mundo 2: añadir filas al mapa y personajes en `NPCS`, subir zonas en `ZONES` y revisar
+  `zoneOfY()` (supone zonas de 16 filas, contando desde abajo).
 
 ## Al añadir frases al banco
 

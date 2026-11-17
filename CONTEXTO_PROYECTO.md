@@ -275,7 +275,7 @@ Respaldo adicional: exportar/importar JSON desde el panel de papá.
 - Todo en un scope global de JS, sin módulos ni clases. Estilo `var` + `function`, como JUEGO_TABLAS.
 - Si se añaden frases, respetar tildes, mayúscula inicial y punto final.
 - Al probar con Playwright en local: servir con `python3 -m http.server` (el protocolo `file:` está bloqueado).
-- Precedente y patrones: `15_PROYECTOS/JUEGO_TABLAS/index.html` (mismo niño, misma arquitectura).
+- Precedente y patrones: `15_PROYECTOS/6_HIJOS/JUEGO_TABLAS/index.html` (mismo niño, misma arquitectura).
 
 ---
 
@@ -302,6 +302,7 @@ si la economía de monedas está bien calibrada, si las frases se le quedan cort
 | Fecha | Observación | Qué se cambió |
 |---|---|---|
 | _(pendiente de la primera sesión con Nil)_ | | |
+| 2026-11-17 | Ger pide un modo aventura (mundos, estilo consola portátil en color) | Aventura Mundo 1: 5 zonas, personajes dan las tareas, pasos abren zonas, medalla de gimnasio. Ver CLAUDE.md |
 
 ### Palancas de ajuste, por orden de preferencia
 

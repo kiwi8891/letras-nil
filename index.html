@@ -361,12 +361,95 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
 .tabsel button.on{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
 .sect .tabsel button{background:#fff;color:var(--ink);border-color:var(--line)}
 .sect .tabsel button.on{background:var(--table);color:#fff;border-color:var(--table)}
+
+/* ---- Aventura: la pantalla es una consola portátil. Pixel art sin suavizar. ---- */
+#s-adv .wrap{padding-bottom:24px}
+.adv-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.adv-top .iconbtn{flex:none}
+.adv-info{flex:1;min-width:0}
+.adv-zone{font-weight:600;font-size:19px;color:var(--on);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adv-pbar{height:10px;border-radius:6px;background:rgba(255,255,255,.18);overflow:hidden;margin:4px 0 2px}
+.adv-pbar i{display:block;height:100%;background:var(--yellow);width:0;transition:width .4s}
+.adv-prog{font-size:13px;color:var(--on-mut)}
+.adv-fav{flex:none;width:46px;height:64px;position:relative}
+.adv-fav img,.adv-fav .cback{width:46px!important;height:64px!important;border-radius:4px;position:static!important;transform:none!important;display:block}
+.adv-chips{display:flex;gap:8px;margin-bottom:10px}
+.adv-chips .chip{padding:4px 12px;font-size:15px}
+.adv-screen{position:relative;background:#1A1420;border:6px solid #3A3550;border-radius:14px 14px 14px 34px;
+  padding:10px;box-shadow:var(--shadow)}
+#adv-cv{display:block;width:100%;aspect-ratio:10/9;image-rendering:pixelated;image-rendering:crisp-edges;
+  border-radius:4px;background:#000;touch-action:none}
+.adv-dlg{display:none;position:absolute;left:10px;right:10px;bottom:10px;background:#FFFDF6;color:var(--ink);
+  border:4px solid #1A1420;box-shadow:inset 0 0 0 3px #FFFDF6,inset 0 0 0 5px #3A3550;border-radius:8px;
+  padding:14px 16px 12px}
+.adv-dlg.on{display:block}
+.adv-name{display:inline-block;background:#1A1420;color:var(--yellow);font-weight:600;font-size:14px;
+  padding:1px 10px;border-radius:6px;margin-bottom:6px}
+#adv-text{font-family:'Comic Neue',-apple-system,sans-serif;font-weight:700;font-size:26px;line-height:1.3}
+#adv-text.small{font-family:'Fredoka',sans-serif;font-weight:500;font-size:16px;color:var(--muted)}
+#adv-more{position:absolute;right:14px;bottom:6px;font-size:14px;animation:advblink 1s steps(2) infinite}
+@keyframes advblink{50%{opacity:0}}
+#adv-choice{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#adv-choice .btn{flex:1;margin:0;min-width:140px;padding:12px}
+.adv-note{width:100%;font-size:13px;color:var(--muted);text-align:center}
+.adv-pad{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding:0 6px;
+  user-select:none;-webkit-user-select:none;touch-action:none}
+.dpad{position:relative;width:186px;height:186px;flex:none}
+.dpad button{position:absolute;width:64px;height:64px;background:#2A2638;border:3px solid #0E0A16;
+  box-shadow:0 4px 0 #0E0A16;color:#CFC8E8;font-size:24px;border-radius:10px;touch-action:none}
+.dpad button.on{transform:translateY(3px);box-shadow:0 1px 0 #0E0A16;background:#3A3550}
+.dpad [data-d=up]{left:61px;top:0}.dpad [data-d=down]{left:61px;bottom:0}
+.dpad [data-d=left]{left:0;top:61px}.dpad [data-d=right]{right:0;top:61px}
+.dpad .mid{position:absolute;left:61px;top:61px;width:64px;height:64px;background:#2A2638;border-radius:6px}
+.abtn{width:104px;height:104px;border-radius:50%;background:var(--red);border:4px solid var(--red-dk);
+  box-shadow:0 6px 0 var(--red-dk);color:#fff;font-size:38px;font-weight:700;flex:none;touch-action:none}
+.abtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--red-dk)}
+.adv-help{text-align:center;font-size:13px;color:var(--on-mut);margin-top:12px}
 </style>
 </head>
 <body>
 
+<!-- ============ AVENTURA ============ -->
+<div class="screen" id="s-adv">
+  <div class="wrap">
+    <div class="adv-top">
+      <button class="iconbtn" onclick="go('s-home')" aria-label="Menú">☰</button>
+      <div class="adv-info">
+        <div class="adv-zone" id="adv-zone"></div>
+        <div class="adv-pbar"><i id="adv-bar"></i></div>
+        <div class="adv-prog" id="adv-prog"></div>
+      </div>
+      <div class="adv-fav" id="adv-fav"></div>
+    </div>
+    <div class="adv-chips">
+      <div class="chip">🪙 <b id="adv-coins">0</b></div>
+      <div class="chip" id="adv-medal" style="display:none">🏅 Montaña</div>
+    </div>
+    <div class="adv-screen">
+      <canvas id="adv-cv"></canvas>
+      <div class="adv-dlg" id="adv-dlg">
+        <div class="adv-name" id="adv-name"></div>
+        <div id="adv-text"></div>
+        <div id="adv-choice"></div>
+        <div id="adv-more">▼</div>
+      </div>
+    </div>
+    <div class="adv-pad" id="adv-pad">
+      <div class="dpad">
+        <div class="mid"></div>
+        <button data-d="up" aria-label="Arriba">▲</button>
+        <button data-d="down" aria-label="Abajo">▼</button>
+        <button data-d="left" aria-label="Izquierda">◀</button>
+        <button data-d="right" aria-label="Derecha">▶</button>
+      </div>
+      <button class="abtn" id="adv-a" aria-label="Hablar">A</button>
+    </div>
+    <div class="adv-help">Camina hasta la gente y toca A para hablar</div>
+  </div>
+</div>
+
 <!-- ============ INICIO ============ -->
-<div class="screen active" id="s-home">
+<div class="screen" id="s-home">
   <div class="wrap">
     <div class="home-hero">
       <div class="hand" id="h-hand"></div>
@@ -379,6 +462,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
       <div class="chip">🃏 <b id="h-dex">0</b></div>
     </div>
     <div class="todaybar" id="h-today"></div>
+    <button class="btn primary" onclick="advShow()">🗺️ AVENTURA</button>
     <div id="h-tasks"></div>
     <button class="btn" onclick="showShop()">🛒 TIENDA DE CARTAS</button>
     <button class="btn ghost" onclick="showDex()">🃏 Mi álbum de cartas</button>
@@ -419,7 +503,8 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border
         <div class="stat"><b id="r-time">0s</b><span id="r-unit">por frase</span></div>
       </div>
     </div>
-    <button class="btn primary" onclick="showShop()">IR A LA TIENDA 🛒</button>
+    <button class="btn primary" id="r-adv" style="display:none" onclick="advShow()">🗺️ VOLVER A LA AVENTURA</button>
+    <button class="btn primary" id="r-shop" onclick="showShop()">IR A LA TIENDA 🛒</button>
     <button class="btn ghost" onclick="go('s-home')">Jugar otra cosa</button>
     <button class="btn ghost" onclick="go('s-home')">Inicio</button>
   </div>
@@ -854,11 +939,12 @@ var CHAINS = (function(){
 /* =====================================================================
    Estado y persistencia
    ===================================================================== */
-var KEY     = "letras_nil_v3";
+var KEY     = "letras_nil_v4";
+var KEY_V3  = "letras_nil_v3";
 var KEY_OLD = "letras_nil_v2";
 
 var state = {
-  v:3,
+  v:4,
   coins:0,
   dex:[],                                   /* ids comprados, en orden de compra */
   streak:{count:0, last:""},                /* días seguidos jugando */
@@ -872,12 +958,19 @@ var state = {
   day:{d:"", leer:0, escribir:0, mates:0},   /* items de hoy por tarea, para el tope de mates */
   fails:{},                                 /* frase -> veces fallada */
   mfails:{},                                /* operación -> veces fallada */
-  times:{}                                  /* "tarea:nivel" -> {n, ms} */
+  times:{},                                 /* "tarea:nivel" -> {n, ms} */
+  adv:null                                  /* aventura: posición, zonas abiertas, pasos, medallas */
 };
 
 /* v2 guardaba una sola dificultad para todo; v3 la separa por tarea.
    Si solo existe la clave vieja, se convierte y se conserva el progreso. */
+/* v4 añade la aventura. Se encadena: v2 → v3 → v4. Monedas, cartas y racha no se tocan. */
 function migrate(d){
+  if(!d.v || d.v < 3) d = migrateV3(d);
+  if(d.v < 4){ d.adv = advDefault(); d.v = 4; }
+  return d;
+}
+function migrateV3(d){
   var old = d.settings || {};
   var len = old.len || "corta", it = old.items || 8;
   var cs = old.case === "may" ? "may" : "min";   /* el modo puente "dos" ya no existe */
@@ -899,12 +992,12 @@ function load(){
   try{
     var raw = localStorage.getItem(KEY), migrated = false;
     if(!raw){
-      raw = localStorage.getItem(KEY_OLD);
+      raw = localStorage.getItem(KEY_V3) || localStorage.getItem(KEY_OLD);
       if(!raw) return;
       migrated = true;
     }
     var d = JSON.parse(raw);
-    if(migrated || !d.v || d.v < 3) d = migrate(d);
+    if(migrated || !d.v || d.v < 4) d = migrate(d);
     for(var k in state) if(d[k] !== undefined) state[k] = d[k];
 
     /* red de seguridad: cualquier ajuste que falte vuelve a su valor por defecto */
@@ -917,6 +1010,7 @@ function load(){
     if(!state.mfails) state.mfails = {};
     if(!state.day || !state.day.d) state.day = {d:"", leer:0, escribir:0, mates:0};
     if(!state.streak || state.streak.count === undefined) state.streak = {count:0, last:""};
+    advState();
     if(migrated) save();
   }catch(e){ console.warn("No se pudo leer el progreso", e); }
 }
@@ -945,6 +1039,7 @@ function go(id){
   document.getElementById(id).classList.add("active");
   window.scrollTo(0,0);
   if(id === "s-home") renderHome();
+  if(id === "s-adv") advStart(); else advStop();
 }
 function shuffle(a){
   a = a.slice();
@@ -1107,7 +1202,7 @@ function judge(ok){
 function quitSession(){
   if(!confirm("¿Salir de la sesión? No se guardará.")) return;
   clearInterval(S.timer); S = null;
-  go("s-home");
+  backAfterQuit();
 }
 
 function endSession(){
@@ -1142,6 +1237,7 @@ function finishRun(r){
     solo: r.task === "mates" ? true : !!state.settings.solo
   });
   state.history = state.history.slice(0, 40);
+  var advMsg = advAfterRun(r);                /* pasos de la aventura, si venía de un personaje */
   save();
 
   var avg = r.itemMs.length
@@ -1153,7 +1249,7 @@ function finishRun(r){
   document.getElementById("r-sub").innerHTML =
     (perfect ? "Ni un fallo: +" + COIN_PERFECT + " de regalo. " : "") +
     (mult > 1 ? "Racha de " + state.streak.count + " días 🔥 x1,5. " : "") +
-    "Tienes <b>" + state.coins + "</b> monedas.";
+    "Tienes <b>" + state.coins + "</b> monedas." + advMsg;
   document.getElementById("r-ok").textContent   = r.ok;
   document.getElementById("r-fail").textContent = r.fail;
   document.getElementById("r-time").textContent = avg + "s";
@@ -1267,6 +1363,9 @@ function showDad(){
   sum += kv("Aciertos a la primera", items ? acc + "%" : "—");
   sum += kv("Monedas", state.coins);
   sum += kv("Cartas en el álbum", state.dex.length + " / 151");
+  var av = advState();
+  sum += kv("🗺️ Aventura", ZONES[av.open-1] + " · " + av.prog[av.open-1] + "/" + ADV_GOAL + " pasos" +
+            (av.medals.length ? " · 🏅" : ""));
   var tasks = ["leer","escribir","mates"];
   for(var i=0;i<tasks.length;i++){
     var lv = levelsOf(tasks[i]);
@@ -1465,12 +1564,13 @@ function importData(input){
     try{
       var d = JSON.parse(r.result);
       if(!d || typeof d !== "object" || d.dex === undefined) throw new Error("formato");
-      var old = !d.v || d.v < 3;
-      if(old) d = migrate(d);                 /* copia hecha antes de separar las tareas */
+      var old = !d.v || d.v < 3;              /* copia hecha antes de separar las tareas */
+      if(!d.v || d.v < 4) d = migrate(d);     /* y antes de la aventura */
       for(var k in state) if(d[k] !== undefined) state[k] = d[k];
       if(!state.mfails) state.mfails = {};
       if(!state.day || !state.day.d) state.day = {d:"", leer:0, escribir:0, mates:0};
       normalizeCase();
+      advState();
       save(); showDad();
       alert("Progreso importado correctamente." + (old
         ? "\n\nEra una copia de la versión anterior: monedas, Pokémon y racha se conservan, " +
@@ -1697,7 +1797,7 @@ function quitMath(){
   if(!confirm("¿Salir de las mates? No se guardará.")) return;
   var t = M.tabla;
   clearInterval(M.timer); M = null;
-  if(t) showTablas(t); else go("s-home");
+  if(t) showTablas(t); else backAfterQuit();
 }
 
 function endMath(){
@@ -2072,10 +2172,772 @@ function startConfetti(){
 }
 
 /* =====================================================================
+   Aventura · Mundo 1
+   Mapa de casillas en pixel art (estilo consola portátil en color, todo dibujado aquí,
+   nada copiado). Nil camina con la cruceta y los personajes le dan las tareas de siempre:
+   leer, escribir o mates. Las monedas salen de las tareas como en el menú clásico; la
+   aventura solo da PASOS (abren la zona siguiente) y una medalla por mundo. Sin cofres,
+   sin premios al azar: la tienda sigue siendo la única recompensa.
+   Pasos por acierto: escribir 3 > leer 2 > mates 1 (misma jerarquía que las monedas).
+   ===================================================================== */
+var ADV_GOAL = 60;                                   /* pasos para abrir la zona siguiente */
+var STEP_W   = {escribir:3, leer:2, mates:1};
+var ZONES    = ["Pueblo Alba","Bosque Verde","Río Azul","Cueva Oscura","Montaña Nevada"];
+var ZONE_IC  = ["🏠","🌲","🌊","🪨","🏔️"];
+var ADV_START = {x:10, y:76};
+
+/* 20 × 80 casillas. Zona 1 abajo; se sube hacia el norte.
+   . hierba  , hierba alta  f flores  P camino  T árbol  W agua  S arena
+   R tejado  H pared  w ventana  D puerta  F valla  X cartel
+   K roca  C suelo de cueva  N nieve  Y abeto nevado  g/G gimnasio
+   2-5 obstáculos: se abren al llegar a esa zona (valla, tronco, puente roto, rocas) */
+var ADV_MAP = [
+"YYYYYYYYYYYYYYYYYYYY",
+"YNNNNNggggggggNNNNNY",
+"YNNNNNggggggggNNNNNY",
+"YNNNNNGGGDDGGGNNNNNY",
+"YNNNNNNNNPPNNNNNNNNY",
+"YNNYYNNNNPPNNNNYYNNY",
+"YNNYYNNNNPPNNNNYYNNY",
+"YNNNNNNPPPPPPNNNNNNY",
+"YNXNNNNPNNNNPNNNNNNY",
+"YNNNNNNPNNNNPNNYYNNY",
+"YNNYYNNPPPPPPNNYYNNY",
+"YNNYYNNNNPPNNNNNNNNY",
+"YNNNNNNNNPPNNNNNNNNY",
+"YNNNNYYNNPPNNYYNNNNY",
+"YNNNNYYNNPPNNYYNNNNY",
+"YYYYYYYYYNNYYYYYYYYY",
+"KKKKKKKKK55KKKKKKKKK",
+"KCCCCCCCCCCCCCCCCCCK",
+"KCCKKCCCCCCCCKKCCCCK",
+"KCCKKCCCKKKCCKKCCCCK",
+"KCCCCCCCKKKCCCCCCKKK",
+"KKKCCCCCCCCCCCCCCKKK",
+"KCCCCKKCCCCCCKKCCCCK",
+"KCXCCKKCCCCCCKKCCCCK",
+"KCCCCCCCCKKCCCCCCCCK",
+"KCCKKCCCCKKCCCCKKCCK",
+"KCCKKCCCCCCCCCCKKCCK",
+"KCCCCCCCCCCCCCCCCCCK",
+"KKKCCCCCCCCCCCCCKKKK",
+"KCCCCCCKKCCKKCCCCCCK",
+"KCCCCCCKKCCKKCCCCCCK",
+"KKKKKKKKKCCKKKKKKKKK",
+"KKKKKKKKKCCKKKKKKKKK",
+"T........PP........T",
+"WWWWWWWWW44WWWWWWWWW",
+"WWWWWWWWW44WWWWWWWWW",
+"SSSSSSSSSPPSSSSSSSSS",
+"T...SS...PP...SS...T",
+"T.......PPPP.......T",
+"T.X...PPP..PPP..ff.T",
+"T.....P......P.....T",
+"T.ff..P..WW..P.....T",
+"T.....P..WW..P..,,.T",
+"T.....PPPPPPPP..,,.T",
+"T........PP........T",
+"TT..,,...PP...TT..TT",
+"T...,,...PP...TT...T",
+"TTTTTTTTT..TTTTTTTTT",
+"TTTTTTTTT33TTTTTTTTT",
+"TT.,,....PP....,,.TT",
+"T..,,.TT.PP.TT.,,..T",
+"T.....TT.PP.TT.....T",
+"T..TT....PPPPPP..TTT",
+"T..TT.,,.....PP..TTT",
+"TT....,,..TT.PP....T",
+"T..X......TT.PP.,,.T",
+"T....PPPPPPPPPP.,,.T",
+"TT...PP....TT.....TT",
+"T....PP.,,.TT..TT..T",
+"T..TTPP.,,.....TT..T",
+"T..TTPPPPPP........T",
+"T.....,,.PP...,,...T",
+"TT....,,.PP...,,..TT",
+"TTTTTTTTT..TTTTTTTTT",
+"TTTTTTTTT22TTTTTTTTT",
+"T........PP........T",
+"T.RRRR...PP...RRRR.T",
+"T.HwDH...PP...HwDH.T",
+"T...P....PP.....P..T",
+"T.ffPPPPPPPPPPPPP..T",
+"T........PP....X...T",
+"T........PP........T",
+"T.RRRRR..PP...f..f.T",
+"T.HwDwH..PP........T",
+"T....P...PP........T",
+"T....PPPPPPPPPP..f.T",
+"T..ff....PP........T",
+"T........PP...WWW..T",
+"T..F.F.F.PP...WWW..T",
+"TTTTTTTTTTTTTTTTTTTT"
+];
+var ADV_W = 20, ADV_H = ADV_MAP.length;
+var ADV_SOLID = "TYKWRHwDFGgX";
+
+/* Los personajes. hi = saludo, ask = lo que pide. Todo frases bien escritas: Nil las lee. */
+var NPCS = [
+ {id:"mama", z:1, x:5, y:68, task:"leer", name:"Mamá",
+  look:{hair:"#6B3A1E", shirt:"#E05A9A", pants:"#3B3B7A", long:1},
+  hi:"¡Hola, Nil! Hoy empieza tu gran aventura.", ask:"Antes de salir, léeme unas frases en voz alta."},
+ {id:"abuelo", z:1, x:13, y:73, task:"escribir", name:"Abuelo",
+  look:{hair:"#D8D8D8", shirt:"#7A5A3A", pants:"#4A4A4A", beard:1},
+  hi:"Al bosque se va por la puerta de la valla.", ask:"Si me escribes unas frases, te ayudo a abrirla."},
+ {id:"lucia", z:1, x:7, y:76, task:"mates", op:"sum", name:"Lucía",
+  look:{hair:"#F2B630", shirt:"#2EB872", pants:"#2F5DA8", long:1},
+  hi:"Estoy contando las pelotas del cole.", ask:"¿Me ayudas con unas sumas?"},
+
+ {id:"guarda", z:2, x:4, y:51, task:"leer", name:"Guarda",
+  look:{hair:"#3A2A1A", shirt:"#4C7A34", pants:"#6B4A2A", cap:"#3E5E26"},
+  hi:"En el bosque viven muchos Pokémon.", ask:"Lee estas frases y te enseño el camino."},
+ {id:"lenador", z:2, x:12, y:49, task:"escribir", name:"Leñador",
+  look:{hair:"#5A2E12", shirt:"#C83A32", pants:"#3A3A6A", beard:1},
+  hi:"Un árbol enorme se ha caído en el camino.", ask:"Escríbeme unas frases y lo quitamos juntos."},
+ {id:"pablo", z:2, x:4, y:57, task:"mates", op:"res", name:"Pablo",
+  look:{hair:"#2A2A2A", shirt:"#E8C838", pants:"#5A7A3A", cap:"#E8C838"},
+  hi:"Se me han escapado mariposas por el bosque.", ask:"¿Me ayudas a restar las que faltan?"},
+
+ {id:"pesc", z:3, x:4, y:41, task:"leer", name:"Pescadora",
+  look:{hair:"#B84A1A", shirt:"#2F7FD0", pants:"#E8D8A0", cap:"#F0E060", long:1},
+  hi:"Hoy los peces saltan mucho en el río.", ask:"¿Me lees unas frases mientras pesco?"},
+ {id:"constr", z:3, x:11, y:33, task:"escribir", name:"Constructor",
+  look:{hair:"#3A2A1A", shirt:"#F08A24", pants:"#3A4A7A", cap:"#F2D21E"},
+  hi:"El puente se rompió con la tormenta.", ask:"Escríbeme unas frases y lo arreglamos."},
+ {id:"mari", z:3, x:15, y:39, task:"mates", op:"mul", name:"Marinero",
+  look:{hair:"#E8E8E8", shirt:"#FFFFFF", pants:"#2A3A7A", cap:"#2A3A7A", beard:1},
+  hi:"Tengo cajas llenas de peces para vender.", ask:"¿Me ayudas a multiplicar?"},
+
+ {id:"minera", z:4, x:4, y:23, task:"leer", name:"Minera",
+  look:{hair:"#2A1A0A", shirt:"#8A6A4A", pants:"#4A3A2A", cap:"#F2D21E", long:1},
+  hi:"En esta cueva hay piedras que brillan.", ask:"Lee conmigo y te doy luz para seguir."},
+ {id:"explo", z:4, x:11, y:17, task:"escribir", name:"Explorador",
+  look:{hair:"#C88A3A", shirt:"#C8A86A", pants:"#6A5A3A", cap:"#A88A4A"},
+  hi:"Unas rocas enormes tapan la salida.", ask:"Si escribes unas frases, las empujamos."},
+ {id:"martin", z:4, x:15, y:27, task:"mates", op:"sum", name:"Martín",
+  look:{hair:"#1A1A1A", shirt:"#7A3AC8", pants:"#2A2A4A"},
+  hi:"Estoy contando las piedras brillantes.", ask:"¿Me ayudas con unas sumas?"},
+
+ {id:"esqui", z:5, x:4, y:12, task:"leer", name:"Esquiadora",
+  look:{hair:"#F2B630", shirt:"#E03B6A", pants:"#2A2A5A", cap:"#3BB8E0", long:1},
+  hi:"La nieve de la montaña está muy blanda.", ask:"¿Me lees unas frases antes de bajar?"},
+ {id:"monta", z:5, x:15, y:7, task:"escribir", name:"Montañero",
+  look:{hair:"#5A3A1A", shirt:"#D03A2A", pants:"#3A3A3A", cap:"#3A6AD0", beard:1},
+  hi:"Arriba del todo está el gimnasio.", ask:"Escribe unas frases y llegarás más fuerte."},
+ {id:"iker", z:5, x:10, y:9, task:"mates", op:"res", name:"Iker",
+  look:{hair:"#3A2A1A", shirt:"#3AA8E0", pants:"#2A2A4A", cap:"#E03B2F"},
+  hi:"Estoy contando los copos que caen.", ask:"¿Me ayudas con unas restas?"},
+
+ {id:"lider", z:5, x:11, y:4, task:"gym", name:"Capitana Nieve",
+  look:{hair:"#CFE8FF", shirt:"#2F63CC", pants:"#1C2F6E", long:1}}
+];
+
+var SIGNS = {
+  "16,70":"Pueblo Alba. Aquí empieza la aventura.",
+  "3,55":"Bosque Verde. No hagas ruido, que los Pokémon duermen.",
+  "2,39":"Río Azul. Al otro lado está la cueva.",
+  "2,23":"Cueva Oscura. Camina despacio.",
+  "2,8":"Gimnasio de la Montaña. Solo para valientes."
+};
+var BLOCK_MSG = {
+  2:"La valla está cerrada con candado.",
+  3:"Un tronco enorme tapa el camino.",
+  4:"El puente está roto. No se puede pasar.",
+  5:"Unas rocas enormes tapan el camino."
+};
+var GYM_TASKS = ["leer","escribir","mates"];
+
+function advDefault(){
+  return {x:ADV_START.x, y:ADV_START.y, dir:"up", open:1, prog:[0,0,0,0,0],
+          gym:{}, medals:[], seen:1};
+}
+function advState(){
+  var a = state.adv;
+  if(!a || typeof a !== "object") a = state.adv = advDefault();
+  var d = advDefault();
+  for(var k in d) if(a[k] === undefined) a[k] = d[k];
+  if(!a.prog || a.prog.length !== 5) a.prog = [0,0,0,0,0];
+  return a;
+}
+
+/* ---------- pixel art ---------- */
+var TILE = 16, VIEW_W = 10, VIEW_H = 9;
+var TILES = {}, SPR = {};
+
+function px(g, x, y, w, h, c){ g.fillStyle = c; g.fillRect(x, y, w, h); }
+function mkTile(fn){
+  var c = document.createElement("canvas"); c.width = c.height = TILE;
+  fn(c.getContext("2d")); return c;
+}
+function rng(seed){ return function(){ seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
+function speckle(g, base, dots, n, seed){
+  px(g, 0, 0, 16, 16, base);
+  var r = rng(seed);
+  for(var i=0;i<n;i++) px(g, Math.floor(r()*16), Math.floor(r()*16), 1, 1, dots[i % dots.length]);
+}
+/* patrón de 16 × 16 con paleta: '.' es transparente */
+function pat(g, rows, pal){
+  for(var y=0;y<rows.length;y++) for(var x=0;x<rows[y].length;x++){
+    var c = rows[y][x]; if(c !== "." && pal[c]) px(g, x, y, 1, 1, pal[c]);
+  }
+}
+var TREE = [
+"....oooooooo....",
+"..oogggggggdoo..",
+".ogggggggggggdo.",
+".oggglgggggggdo.",
+"ogglllggggggggdo",
+"oggllggggggggddo",
+"ogggggggggggdddo",
+"ogggggggggggdddo",
+".ogggggggggdddo.",
+".odggggggdddddo.",
+"..oddddddddddo..",
+"...oooddddooo...",
+"......otto......",
+"......otto......",
+".....otttto.....",
+"......oooo......"];
+var ROCKB = [
+"................",
+"................",
+"....oooooooo....",
+"...ollllgggdo...",
+"..ollgggggggdo..",
+".olggggggggggdo.",
+".oggggggggggddo.",
+".ogggggggggdddo.",
+".ogggggggggdddo.",
+".oggggggggddddo.",
+".odgggggggddddo.",
+"..oddddddddddo..",
+"...oooooooooo...",
+"................",
+"................",
+"................"];
+
+function grass(g, v){
+  px(g, 0, 0, 16, 16, "#8CD05A");
+  var r = rng(v ? 77 : 31);
+  for(var i=0;i<5;i++){
+    var x = 1 + Math.floor(r()*13), y = 2 + Math.floor(r()*12);
+    px(g, x, y, 1, 1, "#5DA83A"); px(g, x+2, y, 1, 1, "#5DA83A"); px(g, x+1, y+1, 1, 1, "#5DA83A");
+  }
+}
+function buildTiles(){
+  TILES["."]  = mkTile(function(g){ grass(g, 0); });
+  TILES[".b"] = mkTile(function(g){ grass(g, 1); });
+  TILES[","]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#5DB84A");
+    for(var y=1;y<16;y+=5) for(var x=(y%2)*2;x<16;x+=4){
+      px(g, x, y+2, 1, 3, "#2F7A2A"); px(g, x+1, y, 1, 5, "#3E9A34"); px(g, x+2, y+2, 1, 3, "#2F7A2A");
+    }
+  });
+  TILES["f"]  = mkTile(function(g){
+    grass(g, 1);
+    var fl = [[3,3,"#FFFFFF"],[11,4,"#FF6A8A"],[6,10,"#FFE14A"],[12,12,"#FFFFFF"]];
+    for(var i=0;i<fl.length;i++){
+      var x = fl[i][0], y = fl[i][1];
+      px(g, x-1, y, 3, 1, fl[i][2]); px(g, x, y-1, 1, 3, fl[i][2]); px(g, x, y, 1, 1, "#E8A317");
+    }
+  });
+  TILES["P"]  = mkTile(function(g){ speckle(g, "#EAD49A", ["#CDB173","#F5E4B4"], 14, 9); });
+  TILES["S"]  = mkTile(function(g){ speckle(g, "#F4E6B0", ["#D9C285","#FFF4CC"], 12, 5); });
+  TILES["C"]  = mkTile(function(g){ speckle(g, "#5E5070", ["#4A3E5C","#6E6084"], 16, 3); });
+  TILES["N"]  = mkTile(function(g){ speckle(g, "#F2F7FF", ["#CFDDF2","#FFFFFF"], 12, 11); });
+  TILES["T"]  = mkTile(function(g){ grass(g, 0);
+    pat(g, TREE, {o:"#163A1C", g:"#3E9A44", l:"#7CCB6A", d:"#24692E", t:"#7A4A20"}); });
+  TILES["Y"]  = mkTile(function(g){ px(g, 0, 0, 16, 16, "#F2F7FF");
+    pat(g, TREE, {o:"#1C3A44", g:"#3E7E6A", l:"#FFFFFF", d:"#24584E", t:"#6A4A2A"}); });
+  TILES["K"]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#8B7B6B"); px(g, 0, 0, 16, 2, "#A8988A");
+    px(g, 0, 15, 16, 1, "#4E4236");
+    px(g, 3, 4, 1, 5, "#5E5044"); px(g, 4, 8, 4, 1, "#5E5044");
+    px(g, 11, 6, 1, 6, "#5E5044"); px(g, 9, 11, 3, 1, "#5E5044");
+    px(g, 7, 2, 2, 1, "#C4B6A8"); px(g, 13, 3, 1, 1, "#C4B6A8");
+  });
+  TILES["R"]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#D84838");
+    for(var y=3;y<16;y+=4) px(g, 0, y, 16, 1, "#A02E24");
+    for(var y2=1;y2<16;y2+=4) for(var x=(y2%8===1?0:4);x<16;x+=8) px(g, x, y2, 1, 2, "#B8392C");
+    px(g, 0, 0, 16, 1, "#F07A62");
+  });
+  TILES["H"]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#F4ECD8"); px(g, 0, 14, 16, 2, "#B8A888");
+    px(g, 0, 5, 16, 1, "#E2D6BA"); px(g, 0, 10, 16, 1, "#E2D6BA");
+  });
+  TILES["w"]  = mkTile(function(g){
+    g.drawImage(TILES["H"], 0, 0);
+    px(g, 3, 3, 10, 8, "#5A4A3A"); px(g, 4, 4, 8, 6, "#7CC4F4");
+    px(g, 8, 4, 1, 6, "#5A4A3A"); px(g, 4, 7, 8, 1, "#5A4A3A"); px(g, 5, 5, 2, 1, "#D8F0FF");
+  });
+  TILES["D"]  = mkTile(function(g){
+    g.drawImage(TILES["H"], 0, 0);
+    px(g, 4, 3, 8, 13, "#5A3418"); px(g, 5, 4, 6, 12, "#8A5428");
+    px(g, 9, 9, 1, 1, "#FFCB05");
+  });
+  TILES["F"]  = mkTile(function(g){
+    grass(g, 0);
+    px(g, 0, 6, 16, 2, "#8A5A2A"); px(g, 0, 11, 16, 2, "#8A5A2A");
+    px(g, 2, 4, 3, 11, "#6A4018"); px(g, 11, 4, 3, 11, "#6A4018");
+    px(g, 2, 4, 3, 1, "#B07A40"); px(g, 11, 4, 3, 1, "#B07A40");
+  });
+  /* el cartel lleva debajo el suelo de su zona: hierba, cueva o nieve */
+  [["X", null], ["XC", "C"], ["XN", "N"]].forEach(function(v){
+    TILES[v[0]] = mkTile(function(g){
+      if(v[1]) g.drawImage(TILES[v[1]], 0, 0); else grass(g, 1);
+      px(g, 7, 9, 2, 6, "#6A4018");
+      px(g, 2, 3, 12, 7, "#4A2A10"); px(g, 3, 4, 10, 5, "#C88A48");
+      px(g, 4, 5, 8, 1, "#8A5A2A"); px(g, 4, 7, 6, 1, "#8A5A2A");
+    });
+  });
+  TILES["g"]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#F0B020");
+    for(var y=3;y<16;y+=4) px(g, 0, y, 16, 1, "#C08010");
+    px(g, 0, 0, 16, 1, "#FFE070");
+  });
+  TILES["G"]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#E8ECF4"); px(g, 0, 2, 16, 3, "#2F63CC");
+    px(g, 0, 14, 16, 2, "#9AA4B8"); px(g, 3, 7, 4, 5, "#7CC4F4"); px(g, 9, 7, 4, 5, "#7CC4F4");
+  });
+  TILES["B"]  = mkTile(function(g){
+    px(g, 0, 0, 16, 16, "#4A90E0");
+    px(g, 1, 0, 14, 16, "#B07A40");
+    for(var y=3;y<16;y+=4) px(g, 1, y, 14, 1, "#7A4A20");
+    px(g, 0, 0, 1, 16, "#6A4018"); px(g, 15, 0, 1, 16, "#6A4018");
+  });
+  /* el agua tiene dos fotogramas: las olitas se mueven */
+  for(var f=0; f<2; f++) (function(f){
+    TILES["W" + f] = mkTile(function(g){
+      px(g, 0, 0, 16, 16, "#4A90E0");
+      var o = f ? 4 : 0;
+      px(g, (2+o)%16, 3, 4, 1, "#A8D8F8"); px(g, (10+o)%16, 7, 4, 1, "#A8D8F8");
+      px(g, (5+o)%16, 12, 4, 1, "#A8D8F8"); px(g, (13+o)%16, 14, 2, 1, "#7CB8F0");
+    });
+  })(f);
+  /* obstáculos cerrados */
+  TILES["2"] = mkTile(function(g){
+    g.drawImage(TILES["P"], 0, 0);
+    px(g, 0, 4, 16, 9, "#6A4018"); px(g, 1, 5, 14, 7, "#A06A30");
+    px(g, 7, 5, 1, 7, "#6A4018");
+    px(g, 6, 7, 4, 4, "#FFCB05"); px(g, 7, 6, 2, 1, "#C99700"); px(g, 7, 9, 2, 1, "#4A3A10");
+  });
+  TILES["3"] = mkTile(function(g){
+    g.drawImage(TILES["P"], 0, 0);
+    px(g, 0, 6, 16, 7, "#5A3418"); px(g, 0, 7, 16, 5, "#8A5428");
+    px(g, 0, 8, 16, 1, "#A8703A");
+    px(g, 11, 6, 5, 7, "#5A3418"); px(g, 12, 7, 3, 5, "#D8B078"); px(g, 13, 9, 1, 1, "#8A5428");
+  });
+  TILES["5"] = mkTile(function(g){
+    g.drawImage(TILES["C"], 0, 0);
+    pat(g, ROCKB, {o:"#2A2420", g:"#9A8C7E", l:"#C8BCB0", d:"#6A5E52"});
+  });
+}
+
+/* Personajes: dibujados con rectángulos y luego un contorno automático, como los sprites
+   de 8 bits. dir: down / up / left (right es left en espejo). step: 0/1 para andar. */
+function drawSprite(look, dir, step){
+  var c = document.createElement("canvas"); c.width = c.height = TILE;
+  var g = c.getContext("2d");
+  var skin = "#F6C9A0", eye = "#1A1A2A";
+  var hair = look.hair, cap = look.cap;
+  /* cabeza */
+  if(dir === "up"){
+    px(g, 4, 1, 8, 8, hair); px(g, 3, 2, 10, 6, hair);
+    if(look.long) px(g, 3, 7, 10, 3, hair);
+  }else if(dir === "down"){
+    px(g, 4, 1, 8, 4, hair); px(g, 3, 2, 10, 3, hair);
+    px(g, 4, 5, 8, 4, skin);
+    px(g, 3, 5, 1, look.long ? 5 : 2, hair); px(g, 12, 5, 1, look.long ? 5 : 2, hair);
+    px(g, 5, 6, 1, 2, eye); px(g, 10, 6, 1, 2, eye);
+    if(look.beard) px(g, 5, 8, 6, 1, hair);
+  }else{
+    px(g, 4, 1, 8, 4, hair); px(g, 3, 2, 10, 3, hair);
+    px(g, 3, 5, 7, 4, skin); px(g, 9, 4, 4, 4, hair);
+    if(look.long) px(g, 9, 4, 4, 6, hair);
+    px(g, 5, 6, 1, 2, eye);
+    if(look.beard) px(g, 3, 8, 5, 1, hair);
+  }
+  if(cap){
+    px(g, 3, 1, 10, 3, cap);
+    if(dir === "down") px(g, 3, 4, 10, 1, cap);
+    else if(dir === "left") px(g, 1, 3, 4, 1, cap);
+  }
+  /* cuerpo y piernas */
+  px(g, 4, 9, 8, 4, look.shirt);
+  if(dir === "left"){ px(g, 6, 10, 2, 2, skin); }
+  else { px(g, 3, 10, 1, 2, skin); px(g, 12, 10, 1, 2, skin); }
+  var pants = look.pants;
+  if(step){ px(g, 4, 13, 3, 2, pants); px(g, 9, 13, 3, 1, pants); px(g, 4, 15, 3, 1, "#2A1A10"); }
+  else    { px(g, 4, 13, 3, 1, pants); px(g, 9, 13, 3, 2, pants); px(g, 9, 15, 3, 1, "#2A1A10"); }
+  /* contorno: cada pixel vacío que toca uno lleno se pinta oscuro */
+  var d = g.getImageData(0, 0, 16, 16), a = d.data, out = [];
+  for(var y=0;y<16;y++) for(var x=0;x<16;x++){
+    if(a[(y*16+x)*4+3]) continue;
+    var n = [[1,0],[-1,0],[0,1],[0,-1]].some(function(o){
+      var xx = x+o[0], yy = y+o[1];
+      return xx>=0 && yy>=0 && xx<16 && yy<16 && a[(yy*16+xx)*4+3];
+    });
+    if(n) out.push([x,y]);
+  }
+  for(var i=0;i<out.length;i++) px(g, out[i][0], out[i][1], 1, 1, "#1A1420");
+  if(dir === "right"){
+    var m = document.createElement("canvas"); m.width = m.height = TILE;
+    var mg = m.getContext("2d"); mg.translate(16, 0); mg.scale(-1, 1); mg.drawImage(c, 0, 0);
+    return m;
+  }
+  return c;
+}
+function spriteSet(look){
+  var s = {};
+  ["down","up","left"].forEach(function(dd){ s[dd] = [drawSprite(look, dd, 0), drawSprite(look, dd, 1)]; });
+  /* "right" se dibuja como left y se refleja */
+  s.right = [mirror(s.left[0]), mirror(s.left[1])];
+  return s;
+}
+function mirror(src){
+  var m = document.createElement("canvas"); m.width = m.height = TILE;
+  var g = m.getContext("2d"); g.translate(16, 0); g.scale(-1, 1); g.drawImage(src, 0, 0);
+  return m;
+}
+var NIL_LOOK = {hair:"#4A2A14", shirt:"#2F63CC", pants:"#2A2A50", cap:"#E03B2F"};
+
+/* ---------- motor ---------- */
+var A = {ready:false, raf:0, cv:null, g:null, x:0, y:0, dir:"up",
+         mv:null, held:null, dlg:null, pending:null, justOpened:0, justMedal:false, lastT:0};
+
+function advInit(){
+  if(A.ready) return;
+  buildTiles();
+  SPR.nil = spriteSet(NIL_LOOK);
+  for(var i=0;i<NPCS.length;i++) SPR[NPCS[i].id] = spriteSet(NPCS[i].look);
+  A.cv = document.getElementById("adv-cv");
+  A.cv.width = VIEW_W * TILE; A.cv.height = VIEW_H * TILE;
+  A.g = A.cv.getContext("2d"); A.g.imageSmoothingEnabled = false;
+  bindPad();
+  A.ready = true;
+}
+function tileAt(x, y){
+  if(y < 0 || y >= ADV_H || x < 0 || x >= ADV_W) return "T";
+  return ADV_MAP[y][x];
+}
+function npcAt(x, y){
+  for(var i=0;i<NPCS.length;i++) if(NPCS[i].x === x && NPCS[i].y === y) return NPCS[i];
+  return null;
+}
+function lockedBlock(c){ return c >= "2" && c <= "5" && advState().open < +c; }
+function solidAt(x, y){
+  var c = tileAt(x, y);
+  if(c >= "2" && c <= "5") return lockedBlock(c);
+  return ADV_SOLID.indexOf(c) >= 0 || !!npcAt(x, y);
+}
+function zoneOfY(y){ return 5 - Math.floor(y / 16); }
+
+var DIRS = {up:[0,-1], down:[0,1], left:[-1,0], right:[1,0]};
+
+function advShow(){
+  advInit();
+  var a = advState();
+  A.x = a.x; A.y = a.y; A.dir = a.dir || "up";
+  if(solidAt(A.x, A.y)){ A.x = ADV_START.x; A.y = ADV_START.y; }
+  A.mv = null; A.held = null;
+  go("s-adv");
+  advHud();
+  if(A.justMedal){
+    A.justMedal = false;
+    advSay([{name:"Capitana Nieve", text:"¡Lo has conseguido! La medalla de la Montaña es tuya."},
+            {name:"Capitana Nieve", text:"Muy pronto se abrirá un mundo nuevo. ¡Sigue entrenando!"}]);
+  }else if(A.justOpened){
+    var z = A.justOpened; A.justOpened = 0;
+    advSay([{name:"", text:"¡Se ha abierto el camino a " + ZONES[z-1] + "!"},
+            {name:"", text:"Sube por el camino del norte para llegar."}]);
+  }
+}
+function advStart(){
+  if(!A.ready) return;
+  cancelAnimationFrame(A.raf);
+  A.lastT = 0;
+  A.raf = requestAnimationFrame(advLoop);
+}
+function advStop(){ cancelAnimationFrame(A.raf); A.raf = 0; A.held = null; }
+
+function advLoop(t){
+  if(!A.mv && A.held && !A.dlg) tryMove(A.held, false);
+  if(A.mv){
+    var k = (t - A.mv.t0) / 170;
+    if(!A.mv.t0) { A.mv.t0 = t; k = 0; }
+    if(k >= 1){
+      A.x = A.mv.tx; A.y = A.mv.ty; A.mv = null;
+      var a = advState(); a.x = A.x; a.y = A.y; a.dir = A.dir;
+      advHud();
+      if(!A.held) save();
+    }else A.mv.k = k;
+  }
+  drawWorld(t);
+  A.raf = requestAnimationFrame(advLoop);
+}
+
+function tryMove(dir, fresh){
+  A.dir = dir;
+  var d = DIRS[dir], nx = A.x + d[0], ny = A.y + d[1];
+  if(!solidAt(nx, ny)){ A.mv = {tx:nx, ty:ny, t0:0, k:0}; return; }
+  /* chocar con algo que habla abre su diálogo (más fácil que buscar el botón A) */
+  if(fresh) interact();
+}
+function interact(){
+  if(A.dlg){ advNext(); return; }
+  var d = DIRS[A.dir], tx = A.x + d[0], ty = A.y + d[1];
+  var n = npcAt(tx, ty);
+  if(n){ talk(n); return; }
+  var c = tileAt(tx, ty);
+  if(c === "X" && SIGNS[tx + "," + ty]){ advSay([{name:"Cartel", text:SIGNS[tx + "," + ty]}]); return; }
+  if(lockedBlock(c)){
+    var z = +c - 1, falta = ADV_GOAL - advState().prog[z-1];
+    advSay([{name:"", text:BLOCK_MSG[c]},
+            {name:"", text:"Ayuda a la gente de " + ZONES[z-1] + " para abrir el camino."},
+            {name:"", text:"Te faltan " + falta + " pasos.", small:true}]);
+  }
+}
+
+/* ---------- dibujo ---------- */
+function camera(){
+  var px_ = A.x * TILE, py_ = A.y * TILE;
+  if(A.mv){ px_ += (A.mv.tx - A.x) * TILE * A.mv.k; py_ += (A.mv.ty - A.y) * TILE * A.mv.k; }
+  var cx = px_ - (VIEW_W * TILE) / 2 + TILE / 2, cy = py_ - (VIEW_H * TILE) / 2 + TILE / 2;
+  cx = Math.max(0, Math.min(cx, ADV_W * TILE - VIEW_W * TILE));
+  cy = Math.max(0, Math.min(cy, ADV_H * TILE - VIEW_H * TILE));
+  return {px:Math.round(px_), py:Math.round(py_), cx:Math.round(cx), cy:Math.round(cy)};
+}
+function tileImg(c, x, y, wf){
+  if(c === "W") return TILES["W" + wf];
+  if(c === "X"){ var zz = zoneOfY(y); return TILES[zz === 4 ? "XC" : zz === 5 ? "XN" : "X"]; }
+  if(c === "." ) return ((x * 7 + y * 13) % 5 === 0) ? TILES[".b"] : TILES["."];
+  if(c >= "2" && c <= "5"){
+    if(lockedBlock(c)) return c === "4" ? TILES["W" + wf] : TILES[c];
+    return c === "4" ? TILES["B"] : c === "5" ? TILES["C"] : TILES["P"];
+  }
+  return TILES[c] || TILES["."];
+}
+function drawWorld(t){
+  var g = A.g, cam = camera(), wf = Math.floor(t / 500) % 2;
+  var x0 = Math.floor(cam.cx / TILE), y0 = Math.floor(cam.cy / TILE);
+  for(var y=y0; y<=y0+VIEW_H; y++) for(var x=x0; x<=x0+VIEW_W; x++){
+    if(y >= ADV_H || x >= ADV_W) continue;
+    g.drawImage(tileImg(tileAt(x, y), x, y, wf), x*TILE - cam.cx, y*TILE - cam.cy);
+  }
+  /* personajes por orden de fila, con sombra */
+  var list = [];
+  for(var i=0;i<NPCS.length;i++){
+    var n = NPCS[i];
+    if(n.x < x0-1 || n.x > x0+VIEW_W+1 || n.y < y0-1 || n.y > y0+VIEW_H+1) continue;
+    list.push({spr:SPR[n.id][npcDir(n)][Math.floor(t/600 + i) % 2 ? 0 : 0],
+               x:n.x*TILE, y:n.y*TILE, bob:Math.floor(t/700 + i) % 2, npc:n});
+  }
+  var step = A.mv ? (Math.floor(A.mv.k * 2) + A.x + A.y) % 2 : 0;
+  list.push({spr:SPR.nil[A.dir][step], x:cam.px, y:cam.py, bob:0});
+  list.sort(function(a, b){ return a.y - b.y; });
+  var dark = zoneOfY(A.y) === 4;
+  for(var j=0;j<list.length;j++){
+    var o = list[j], sx = o.x - cam.cx, sy = o.y - cam.cy - 3 - o.bob;
+    g.fillStyle = "rgba(0,0,0,.22)"; g.fillRect(sx + 3, o.y - cam.cy + 13, 10, 2);
+    g.drawImage(o.spr, sx, sy);
+    if(o.npc) drawBadge(g, o.npc, sx, sy, t);
+  }
+  if(dark){                                   /* la cueva: oscuro alrededor de Nil */
+    var lx = cam.px - cam.cx + 8, ly = cam.py - cam.cy + 6;
+    var gr = g.createRadialGradient(lx, ly, 18, lx, ly, 78);
+    gr.addColorStop(0, "rgba(10,6,20,0)"); gr.addColorStop(1, "rgba(10,6,20,.62)");
+    g.fillStyle = gr; g.fillRect(0, 0, VIEW_W*TILE, VIEW_H*TILE);
+  }
+}
+/* los personajes miran a Nil cuando está cerca */
+function npcDir(n){
+  var dx = A.x - n.x, dy = A.y - n.y;
+  if(Math.abs(dx) + Math.abs(dy) > 3) return "down";
+  if(Math.abs(dx) > Math.abs(dy)) return dx > 0 ? "right" : "left";
+  return dy > 0 ? "down" : "up";
+}
+/* bocadillo con la energía de la tarea, para que Nil sepa qué pide cada uno */
+var BADGE = {leer:"#3B8FE0", escribir:"#E2502F", mates:"#3FA34D", gym:"#FFCB05"};
+function drawBadge(g, n, sx, sy, t){
+  var a = advState();
+  if(n.z > a.open) return;
+  if(n.task === "gym" && a.medals.indexOf(1) >= 0) return;
+  var y = sy - 8 + (Math.floor(t / 400) % 2);
+  g.fillStyle = "#1A1420"; g.fillRect(sx + 4, y, 8, 7);
+  g.fillStyle = "#FFFFFF"; g.fillRect(sx + 5, y + 1, 6, 5);
+  g.fillStyle = BADGE[n.task]; g.fillRect(sx + 6, y + 2, 4, 3);
+  g.fillStyle = "#1A1420"; g.fillRect(sx + 7, y + 7, 2, 1);
+}
+
+/* ---------- HUD ---------- */
+function advHud(){
+  var a = advState(), z = Math.max(1, Math.min(5, zoneOfY(A.y)));
+  document.getElementById("adv-zone").textContent = ZONE_IC[z-1] + " " + ZONES[z-1];
+  var p = a.prog[z-1], pct = Math.min(100, Math.round(p / ADV_GOAL * 100));
+  document.getElementById("adv-bar").style.width = pct + "%";
+  var lbl;
+  if(z < 5) lbl = p >= ADV_GOAL ? "Camino a " + ZONES[z] + " abierto ✓"
+                                : "Camino a " + ZONES[z] + ": " + p + "/" + ADV_GOAL;
+  else lbl = a.medals.indexOf(1) >= 0 ? "🏅 Medalla de la Montaña"
+           : p >= ADV_GOAL ? "¡La Capitana te espera!" : "Hacia el gimnasio: " + p + "/" + ADV_GOAL;
+  document.getElementById("adv-prog").textContent = lbl;
+  document.getElementById("adv-coins").textContent = state.coins;
+  document.getElementById("adv-medal").style.display = a.medals.indexOf(1) >= 0 ? "" : "none";
+  var fav = state.dex.length ? state.dex[state.dex.length - 1] : 0;
+  document.getElementById("adv-fav").innerHTML = fav
+    ? cardImg(fav, ' onclick="zoomCard(' + fav + ')"') : '<div class="cback"><i></i></div>';
+}
+
+/* ---------- diálogo ---------- */
+function advCase(s){ return cfg("leer").case === "may" ? s.toUpperCase() : s; }
+function advSay(pages, choice){
+  A.dlg = {pages:pages, i:0, choice:choice || null};
+  A.held = null;
+  renderDlg();
+}
+function renderDlg(){
+  var box = document.getElementById("adv-dlg");
+  if(!A.dlg){ box.className = "adv-dlg"; return; }
+  var p = A.dlg.pages[A.dlg.i], last = A.dlg.i === A.dlg.pages.length - 1;
+  document.getElementById("adv-name").textContent = p.name || "";
+  document.getElementById("adv-name").style.display = p.name ? "" : "none";
+  var tx = document.getElementById("adv-text");
+  tx.textContent = advCase(p.text);
+  tx.className = p.small ? "small" : "";
+  var ch = document.getElementById("adv-choice");
+  if(last && A.dlg.choice){
+    ch.innerHTML = '<button class="btn primary" onclick="advChoose(true)">' + A.dlg.choice.yes + '</button>' +
+                   '<button class="btn ghost" onclick="advChoose(false)">Ahora no</button>' +
+                   (A.dlg.choice.note ? '<div class="adv-note">' + A.dlg.choice.note + '</div>' : '');
+    document.getElementById("adv-more").style.display = "none";
+  }else{
+    ch.innerHTML = "";
+    document.getElementById("adv-more").style.display = "";
+  }
+  box.className = "adv-dlg on";
+}
+function advNext(){
+  if(!A.dlg) return;
+  var last = A.dlg.i === A.dlg.pages.length - 1;
+  if(last && A.dlg.choice) return;             /* hay que elegir con los botones */
+  if(last){ A.dlg = null; A.held = null; renderDlg(); return; }
+  A.dlg.i++; renderDlg();
+}
+function advChoose(yes){
+  var c = A.dlg && A.dlg.choice;
+  A.dlg = null; renderDlg();
+  if(yes && c && c.go) c.go();
+}
+
+/* ---------- personajes y tareas ---------- */
+function taskVerb(t){ return t === "leer" ? "leer" : t === "escribir" ? "escribir" : "hacer mates"; }
+function talk(n){
+  var a = advState();
+  if(n.task === "gym") return talkLeader(n);
+  var pages = [{name:n.name, text:n.hi}, {name:n.name, text:n.ask}];
+  var note = "Cada acierto: +" + STEP_W[n.task] + " pasos";
+  if(n.z < 5 && a.prog[n.z-1] >= ADV_GOAL) note = "El camino ya está abierto. Las monedas siguen contando.";
+  advSay(pages, {yes: n.task === "leer" ? "📖 ¡VAMOS A LEER!" : n.task === "escribir" ? "✏️ ¡VAMOS A ESCRIBIR!" : "➕ ¡VAMOS!",
+                 note:note, go:function(){ startNpcTask(n, n.task); }});
+}
+function talkLeader(n){
+  var a = advState();
+  if(a.medals.indexOf(1) >= 0){
+    advSay([{name:n.name, text:"¡Hola, campeón! Ya tienes la medalla de la Montaña."},
+            {name:n.name, text:"Muy pronto se abrirá un mundo nuevo."}]);
+    return;
+  }
+  if(a.prog[4] < ADV_GOAL){
+    advSay([{name:n.name, text:"Soy la Capitana Nieve, la líder del gimnasio."},
+            {name:n.name, text:"Vuelve cuando seas más fuerte. Ayuda a la gente de la montaña."},
+            {name:"", text:"Te faltan " + (ADV_GOAL - a.prog[4]) + " pasos.", small:true}]);
+    return;
+  }
+  var next = null, done = 0;
+  for(var i=0;i<GYM_TASKS.length;i++){ if(a.gym[GYM_TASKS[i]]) done++; else if(!next) next = GYM_TASKS[i]; }
+  var pages = [{name:n.name, text:"Soy la Capitana Nieve, la líder del gimnasio."}];
+  if(!done) pages.push({name:n.name, text:"Para ganar mi medalla tienes que superar tres retos."});
+  else pages.push({name:n.name, text:"¡Ya has superado " + done + (done === 1 ? " reto" : " retos") + "! Vamos con el siguiente."});
+  pages.push({name:n.name, text: next === "leer" ? "Reto de lectura: lee mis frases en voz alta."
+                             : next === "escribir" ? "Reto de escritura: copia mis frases en el papel."
+                             : "Reto de mates: multiplica sin equivocarte."});
+  advSay(pages, {yes:"⚔️ ¡ACEPTO EL RETO!", note:"Reto " + (done+1) + " de 3 · se supera con 2 fallos como mucho",
+                 go:function(){ startNpcTask(n, next); }});
+}
+function startNpcTask(n, task){
+  A.pending = {z:n.z, task:task, gym:n.task === "gym"};
+  if(task === "mates") startMath(n.task === "gym" ? "mul" : n.op);
+  else startSession(task);
+}
+/* Lo llama finishRun antes de guardar. Devuelve una línea para la pantalla de resultado. */
+function advAfterRun(r){
+  var p = A.pending; A.pending = null;
+  document.getElementById("r-adv").style.display = p ? "" : "none";
+  document.getElementById("r-shop").className = p ? "btn" : "btn primary";
+  if(!p) return "";
+  var a = advState();
+  if(p.gym){
+    if(r.fail <= 2){
+      a.gym[p.task] = true;
+      var all = GYM_TASKS.every(function(k){ return a.gym[k]; });
+      if(all && a.medals.indexOf(1) < 0){ a.medals.push(1); A.justMedal = true;
+        return '<br><b style="color:var(--gold)">🏅 ¡MEDALLA DE LA MONTAÑA!</b>'; }
+      return '<br>⚔️ <b>¡Reto superado!</b> La Capitana te espera para el siguiente.';
+    }
+    return '<br>⚔️ Casi. Con ' + r.fail + ' fallos no vale: inténtalo otra vez.';
+  }
+  var z = p.z, before = a.prog[z-1], steps = r.ok * STEP_W[r.task];
+  a.prog[z-1] = Math.min(ADV_GOAL, before + steps);
+  var msg = '<br>🗺️ <b>+' + steps + ' pasos</b> en ' + ZONES[z-1] + '.';
+  if(before < ADV_GOAL && a.prog[z-1] >= ADV_GOAL){
+    if(z < 5){ a.open = Math.max(a.open, z + 1); A.justOpened = z + 1;
+      msg += ' <b style="color:var(--green-dk)">¡Camino a ' + ZONES[z] + ' abierto!</b>'; }
+    else msg += ' <b style="color:var(--green-dk)">¡La Capitana Nieve te espera!</b>';
+  }
+  return msg;
+}
+function backAfterQuit(){
+  if(A.pending){ A.pending = null; advShow(); } else go("s-home");
+}
+
+/* ---------- controles ---------- */
+function bindPad(){
+  var btns = document.querySelectorAll("#adv-pad [data-d]");
+  for(var i=0;i<btns.length;i++) (function(b){
+    var d = b.getAttribute("data-d");
+    b.addEventListener("pointerdown", function(e){
+      e.preventDefault();
+      if(A.dlg){ advNext(); return; }
+      A.held = d; b.classList.add("on");
+      if(!A.mv) tryMove(d, true);
+    });
+    var up = function(){ if(A.held === d) A.held = null; b.classList.remove("on"); };
+    b.addEventListener("pointerup", up); b.addEventListener("pointercancel", up);
+    b.addEventListener("pointerleave", up);
+  })(btns[i]);
+  document.getElementById("adv-a").addEventListener("pointerdown", function(e){
+    e.preventDefault(); interact();
+  });
+  document.getElementById("adv-dlg").addEventListener("pointerdown", function(e){
+    if(e.target.closest("button")) return;
+    advNext();
+  });
+  var KEYS = {ArrowUp:"up", ArrowDown:"down", ArrowLeft:"left", ArrowRight:"right"};
+  document.addEventListener("keydown", function(e){
+    if(!document.getElementById("s-adv").classList.contains("active")) return;
+    if(KEYS[e.key]){ e.preventDefault(); if(A.dlg){ return; }
+      var fresh = A.held !== KEYS[e.key]; A.held = KEYS[e.key]; if(!A.mv) tryMove(A.held, fresh); }
+    else if(e.key === " " || e.key === "Enter"){ e.preventDefault(); interact(); }
+  });
+  document.addEventListener("keyup", function(e){ if(KEYS[e.key] === A.held) A.held = null; });
+}
+
+/* =====================================================================
    Arranque
    ===================================================================== */
 load();
-renderHome();
+advShow();                                    /* la aventura es la entrada; el menú, detrás de ☰ */
 </script>
 </body>
 </html>
